@@ -29,6 +29,10 @@ int game_select_level(int level);
 void game_reset(void);
 void game_set_input(int mask);
 void game_set_paused(int paused);
+/* Optional invincibility, frozen clock and pit rescue. Off after game_init;
+ * preserved across restarts and level changes. Enabling also restores health. */
+void game_set_god_mode(int enabled);
+int game_get_god_mode(void);
 void game_step(void);               /* Exactly one 1/60 second simulation tick. */
 void game_update(int ticks);        /* Clamped to 0..600 ticks. */
 

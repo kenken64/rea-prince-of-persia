@@ -24,6 +24,17 @@ try {
       assert.ok(g.game_get_room()>=1&&g.game_get_room()<=24);
     }
     assert.equal(count,271);assert.equal(events,146);
+    g.game_init();assert.equal(g.game_get_god_mode(),0);
+    for(let p=0;p<30;p++)g.game_edit_tile(0,1,p,p>=20?1:0);
+    for(let d=0;d<4;d++)g.game_edit_link(0,1,d,0);
+    g.game_edit_guard(0,1,255);g.game_reset();g.game_set_player(1,80,184,1);g.game_update(2);
+    g.game_set_god_mode(1);const time=g.game_get_time_left();
+    g.game_edit_tile(0,1,24,0);g.game_set_player(1,144,184,1);g.game_update(60);
+    assert.equal(g.game_get_player_x(),80);assert.equal(g.game_get_health(),3);
+    assert.equal(g.game_get_time_left(),time);
+    g.game_edit_tile(0,1,22,2);g.game_update(60);assert.equal(g.game_get_flags()&1,0);
+    g.game_set_god_mode(0);g.game_step();assert.equal(g.game_get_flags()&1,1);
+    console.log('Wasm: god mode freezes time, survives spikes, rescues pits and disables correctly.');
     console.log('Wasm: no imports; all 14 levels / 271 rooms / 146 events; 84,000 simulation ticks passed.');
   }
 } finally { rmSync(scratch,{recursive:true,force:true}); }

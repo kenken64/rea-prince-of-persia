@@ -2,6 +2,10 @@
 
 
 /* Fit the playable area to both viewport axes, including its controls. */
+.game-bottom{flex-wrap:wrap}
+.game-bottom>div{margin-left:auto;align-items:center;gap:12px}
+.game-bottom #god-mode{border:1px solid #675842;border-radius:3px;padding:7px 9px;min-height:32px;white-space:nowrap;color:var(--gold-light)}
+.game-bottom #god-mode[aria-pressed=true]{background:var(--gold);color:#171716;border-color:var(--gold)}
 .game-card{min-width:0;scroll-margin-top:12px;--game-chrome:112px}
 .play-layout>*{min-width:0}
 .screen{aspect-ratio:var(--game-aspect,360 / 224);max-height:calc(100vh - var(--game-chrome));max-height:calc(100dvh - var(--game-chrome));min-height:0}
@@ -19,6 +23,7 @@
 .touch-controls button{min-width:0;width:clamp(30px,8vw,44px)}
 @media(hover:none),(pointer:coarse){.game-card{--game-chrome:176px}}
 @media(max-width:500px){
+  .game-card{--game-chrome:200px}
   .masthead{height:auto;min-height:80px;flex-wrap:wrap;padding-block:16px;gap:12px}
   nav{flex-wrap:wrap}
   .game-topbar>span:first-child{display:none}

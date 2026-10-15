@@ -58,6 +58,9 @@ function refreshHud() {
   const level=g('get_level'),room=g('get_room'),sec=g('get_time_left');
   $('#timer').textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
   $('#health').textContent=Array.from({length:g('get_max_health')},(_,i)=>i<g('get_health')?'♥':'♡').join(' ');
+  const godMode=!!g('get_god_mode');
+  $('#god-mode').textContent=`God mode: ${godMode?'On':'Off'}`;
+  $('#god-mode').setAttribute('aria-pressed',String(godMode));
   $('#room-label').textContent=`LEVEL ${String(level+1).padStart(2,'0')} / ROOM ${String(room).padStart(2,'0')}`;
   $('#level-badge').textContent=`${String(level+1).padStart(2,'0')} / 14`;
   $('.panel-title h2').textContent=g('get_theme')?'The palace':'The dungeon';
@@ -90,6 +93,7 @@ function start(){if(!ready)return;started=true;$('#game-overlay').hidden=true;$(
 $('#start').addEventListener('click',start);
 $('#pause').addEventListener('click',()=>{setPause(!paused);focusGame();});
 $('#restart').addEventListener('click',()=>{g('reset');setPause(false);focusGame();});
+$('#god-mode').addEventListener('click',()=>{if(!ready)return;g('set_god_mode',!g('get_god_mode'));refreshHud();draw();focusGame();});
 $('#camera-mode').addEventListener('click',()=>{setFullRoom(!fullRoom);if(started)revealGame();focusGame();});
 $('#fullscreen').addEventListener('click',async()=>{
   if(document.fullscreenElement)await document.exitFullscreen();else await $('#game-card').requestFullscreen?.();focusGame();
@@ -105,7 +109,7 @@ window.addEventListener('resize',()=>{
 });
 const keyMap={ArrowLeft:1,KeyA:1,ArrowRight:2,KeyD:2,ArrowUp:4,KeyW:4,ArrowDown:8,KeyS:8,Space:16,ShiftLeft:32,ShiftRight:32,KeyX:32,KeyR:64};
 window.addEventListener('keydown',e=>{
-  const active=document.activeElement;if(active?.tagName==='SELECT'||active?.tagName==='INPUT'||active?.tagName==='TEXTAREA')return;
+  const active=document.activeElement;if(['SELECT','INPUT','TEXTAREA','BUTTON'].includes(active?.tagName))return;
   if(keyMap[e.code]&&(started||active===canvas)){e.preventDefault();keyboard|=keyMap[e.code];}
   if(e.code==='KeyP'&&started&&!e.repeat){e.preventDefault();setPause(!paused);}
   if(e.code==='Enter'&&!started&&ready){e.preventDefault();start();}
@@ -168,7 +172,7 @@ function renderActorAtlas(){
 }
 
 async function boot(){
-  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=pace-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
+  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=god-mode-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
   if(!wasmResponse.ok)throw new Error(`Wasm fetch returned ${wasmResponse.status}`);
   const {instance}=await WebAssembly.instantiate(await wasmResponse.arrayBuffer(),{});
   game=instance.exports;campaign=levelsJson;actors=actorsJson;palettes=paletteJson;nativeTiles=nativeJson;
@@ -176,6 +180,7 @@ async function boot(){
   g('init');ready=true;
   const select=$('#level-select');for(const level of campaign.levels){const o=document.createElement('option');o.value=level.level_index;o.textContent=`Level ${String(level.number).padStart(2,'0')} · ${level.theme==='palace'?'Palace':'Dungeon'}`;select.append(o);}select.disabled=false;
   $('#start').disabled=false;selectedRoom=g('get_room');renderMap();draw();refreshHud();
+  $('#god-mode').disabled=false;
   // Exposed only for reproducible browser QA and console exploration.
   window.popStudy={game,campaign,actors,renderer,get ready(){return ready;},start,draw,renderMap,get started(){return started;}};
   requestAnimationFrame(frame);

@@ -74,6 +74,7 @@ static Effect effects[MAX_EFFECTS];
 static Player player;
 static int current_level, input, previous_input, tick, time_ticks;
 static int paused, complete, initialized, last_event, attack_hit;
+static int god_mode, safe_room, safe_x, safe_y, safe_facing;
 static uint32_t rng;
 
 static int clamp(int n, int low, int high) { return n < low ? low : n > high ? high : n; }
@@ -153,11 +154,12 @@ static int blocked(int32_t x, int32_t y, int actor_height) {
     return 0;
 }
 static void die(void) {
+    if (god_mode) return;
     player.health = 0; player.state = GAME_DEAD; player.grounded = 0;
     player.vx = 0; player.attack = 0; player.frame = 0; last_event = 4;
 }
 static void damage(int amount, int direction) {
-    if (player.state == GAME_DEAD || player.invulnerable || player.state == GAME_FINISH) return;
+    if (god_mode || player.state == GAME_DEAD || player.invulnerable || player.state == GAME_FINISH) return;
     player.health -= amount; last_event = 4;
     if (player.health <= 0) { die(); return; }
     player.invulnerable = 70; player.hurt = 18; player.state = GAME_HURT;
@@ -189,7 +191,7 @@ void game_init(void) {
         for (event = 0; event < LEVEL_MAX_EVENTS; ++event) campaign[level].events[event] = levels[level].events[event];
     }
     initialized = 1; current_level = 0; tick = 0; time_ticks = 60 * 60 * 60;
-    input = previous_input = paused = complete = 0; rng = 0x504f5031u;
+    input = previous_input = paused = complete = god_mode = 0; rng = 0x504f5031u;
     player.max_health = 3; player.sword = 0; game_reset();
 }
 int game_select_level(int level) {
@@ -226,6 +228,7 @@ void game_reset(void) {
     player.fall_distance = player.climb = player.finish = 0; player.hang_room = 0;
     player.native_frame = -1; player.ledge_step = player.ledge_clock = player.grab_cooldown = 0;
     previous_input = input; last_event = attack_hit = 0; complete = 0;
+    safe_room = player.room; safe_x = to_pixel(player.x); safe_y = to_pixel(player.y); safe_facing = player.facing;
 }
 
 int game_trigger(int room, int pos) {
@@ -302,6 +305,11 @@ static void transition_horizontal(void) {
         else { player.x = PX(GAME_WIDTH - 1 - BODY_HALF); player.vx = 0; }
     }
 }
+static void rescue_player(void) {
+    /* Keep room events, enemies and collected items intact during a rescue. */
+    game_set_player(safe_room, safe_x, safe_y, safe_facing);
+    player.health = player.max_health;
+}
 static void transition_vertical(void) {
     if (player.y < 0) {
         int next = link_from(player.room, GAME_LINK_UP);
@@ -310,6 +318,7 @@ static void transition_vertical(void) {
     } else if (player.y > PX(201)) {
         int next = link_from(player.room, GAME_LINK_DOWN);
         if (exists(next)) { player.room = next; player.y -= PX(192); }
+        else if (god_mode) rescue_player();
         else die();
     }
 }
@@ -325,6 +334,15 @@ static int standing_tile(int *room, int *pos) {
             absolute(to_pixel(player.y) - surface) <= 3) return 1;
     }
     return 0;
+}
+static void remember_safe_floor(void) {
+    int room, pos, type;
+    if (!player.grounded || player.state == GAME_DEAD || !standing_tile(&room, &pos)) return;
+    type = tile_type(room, pos);
+    if (type == TILE_SPIKES || type == TILE_CHOPPER || type == TILE_LOOSE || type == TILE_GATE || type == TILE_WALL) return;
+    /* The cell centre avoids rescuing onto the very edge of the same pit. */
+    safe_room = room; safe_x = (pos % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2;
+    safe_y = FLOOR_Y(pos / 10); safe_facing = player.facing;
 }
 static void touch_floor(int room, int pos, int impact) {
     int type = tile_type(room, pos);
@@ -764,6 +782,16 @@ static void update_hazards(void) {
 }
 void game_set_input(int mask) { input = mask & 127; }
 void game_set_paused(int value) { paused = value != 0; }
+void game_set_god_mode(int value) {
+    if (!initialized) game_init();
+    god_mode = value != 0;
+    if (!god_mode) return;
+    if (player.state == GAME_DEAD) rescue_player();
+    player.health = player.max_health; player.hurt = player.invulnerable = 0;
+    if (player.state == GAME_HURT) player.state = player.grounded ? GAME_STAND : GAME_FALL;
+    if (time_ticks <= 0) time_ticks = 60 * 60 * 60;
+}
+int game_get_god_mode(void) { return god_mode; }
 void game_step(void) {
     int edges;
     if (!initialized) game_init();
@@ -771,9 +799,10 @@ void game_step(void) {
     if (edges & GAME_INPUT_RESTART) { game_reset(); return; }
     if (paused || complete) return;
     ++tick; ++player.frame; last_event = 0;
-    if (time_ticks > 0 && player.state != GAME_DEAD && player.state != GAME_FINISH) --time_ticks;
+    if (!god_mode && time_ticks > 0 && player.state != GAME_DEAD && player.state != GAME_FINISH) --time_ticks;
     if (time_ticks <= 0 && player.state != GAME_DEAD) die();
     update_tiles(); update_player(edges); update_guard(); update_hazards();
+    remember_safe_floor();
 }
 void game_update(int ticks) { int i; for (i = 0; i < clamp(ticks, 0, 600); ++i) game_step(); }
 
@@ -892,5 +921,5 @@ int game_set_player(int room, int x, int y, int facing) {
     player.native_frame = -1; player.hang_room = player.grab_cooldown = player.ledge_step = player.ledge_clock = 0;
     return 1;
 }
-void game_set_health(int health) { player.health = clamp(health, 0, player.max_health); if (!player.health) die(); }
+void game_set_health(int health) { player.health = god_mode ? player.max_health : clamp(health, 0, player.max_health); if (!player.health) die(); }
 void game_set_has_sword(int value) { player.sword = value != 0; }

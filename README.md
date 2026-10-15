@@ -14,6 +14,7 @@ The hosted game uses the site's access settings and may require sign-in and perm
 - Full-room view without horizontal camera scrolling, plus a **Follow prince** option for the scrolling camera.
 - Responsive display, fullscreen controls, keyboard input, and touch buttons.
 - Translucent silhouettes keep the prince visible behind pillars, gates, and foreground scenery.
+- Optional **God mode**: full health, invincibility, a frozen timer, and rescue from bottomless pits.
 - Room-map exploration, graphics inspection, retained Rea evidence, and an editable-source download.
 
 ## Run locally
@@ -58,6 +59,8 @@ The build compiles the C sources into `dist/game.wasm`, copies the browser asset
 | Enter | Begin the game |
 
 Touch controls appear on touch devices. Use **Full room / Follow prince** to switch camera modes and **⛶** to enter or exit fullscreen. The level selector and room explorer let you inspect the recovered campaign.
+
+Click **God mode: Off** beside Pause to enable it. Bottomless falls return the prince to his last safe floor without resetting the level. God mode stays on through restarts and level changes; click it again to resume normal damage and the timer. Reloading the page starts with God mode off.
 
 ## How it works
 
@@ -113,6 +116,7 @@ node tests/browser.mjs
 node tests/ledge-browser.mjs
 node tests/guard-browser.mjs
 node tests/silhouette-browser.mjs
+node tests/god-mode-browser.mjs
 ```
 
 `TEST_URL` overrides the local server URL. `CHROME_PATH` selects an existing Chrome executable, and `PLAYWRIGHT_MODULE` can point to an existing Playwright module. Browser reports and screenshots are written to `../analysis/validation/` relative to the repository root.

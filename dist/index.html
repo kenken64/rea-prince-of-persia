@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2310151b'/%3E%3Ctext x='5' y='25' font-size='26' fill='%23cda968'%3E%E2%99%9C%3C/text%3E%3C/svg%3E">
   <title>Prince of Persia · A cartridge, reconstructed</title>
   <meta name="description" content="An independent C and WebAssembly reconstruction, with graphics and fourteen levels recovered from a Prince of Persia NES cartridge.">
-  <link rel="stylesheet" href="style.css?v=viewport-20261015">
+  <link rel="stylesheet" href="style.css?v=god-mode-20261015">
 </head>
 <body>
   <div class="site-wrap">
@@ -31,7 +31,7 @@
             <div class="screen-shade"></div>
             <div class="game-overlay" id="game-overlay"><p class="overlay-kicker">THE SANDS ARE RUNNING</p><h2>One hour.<br>One chance.</h2><p>Escape the dungeon.<br>Find your sword. Reach the palace.</p><button id="start" class="gold-button">Begin journey <span>→</span></button><small>ARROWS TO MOVE · SPACE TO JUMP</small></div>
           </div>
-          <div class="game-bottom"><span id="runtime-state">Loading the C/Wasm game…</span><div><button id="pause" disabled>Ⅱ Pause</button><button id="restart" disabled>↻ Restart</button></div></div>
+          <div class="game-bottom"><span id="runtime-state">Loading the C/Wasm game…</span><div><button id="god-mode" aria-pressed="false" title="Invincibility, frozen timer, and rescue from bottomless pits" disabled>God mode: Off</button><button id="pause" disabled>Ⅱ Pause</button><button id="restart" disabled>↻ Restart</button></div></div>
           <div class="touch-controls" aria-label="Touch game controls"><div><button data-key="1" aria-label="Move left">←</button><button data-key="4" aria-label="Climb">↑</button><button data-key="8" aria-label="Crouch">↓</button><button data-key="2" aria-label="Move right">→</button></div><div><button data-key="32">ACT</button><button data-key="16">JUMP</button></div></div>
         </div>
         <aside class="journey-panel">
@@ -69,6 +69,6 @@
     </main>
     <footer><a href="#play">♜ <b>PRINCE OF PERSIA</b></a><span>A cartridge study · Independently reconstructed in C / Wasm</span><a href="#source">VIEW THE SOURCE ↗</a></footer>
   </div>
-  <script type="module" src="app.js?v=silhouette-20261015"></script>
+  <script type="module" src="app.js?v=god-mode-20261015"></script>
 </body>
 </html>

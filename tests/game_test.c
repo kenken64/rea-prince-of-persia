@@ -246,6 +246,37 @@ static void test_ledge_grab_and_climb(void) {
     assert(game_get_room() == 2); assert(game_get_player_x() == 176);
     assert(game_get_player_y() == 185); assert(game_get_player_grounded());
 }
+static void test_god_mode(void) {
+    int before;
+    arena(); assert(!game_get_god_mode()); game_set_health(1);
+    game_set_god_mode(1); assert(game_get_god_mode());
+    assert(game_get_health() == game_get_max_health());
+    before = game_get_time_left(); steps(0, 600); assert(game_get_time_left() == before);
+    game_edit_tile(0, 1, 23, 2); steps(0, 120);
+    assert(!(game_get_flags() & GAME_FLAG_DEAD)); assert(game_get_health() == 3);
+    assert(!game_get_player_invulnerable());
+    game_set_god_mode(0); steps(0, 1); assert(game_get_flags() & GAME_FLAG_DEAD);
+    game_set_god_mode(1); assert(!(game_get_flags() & GAME_FLAG_DEAD)); assert(game_get_health() == 3);
+    game_edit_tile(0, 1, 23, 18); steps(0, 120); assert(game_get_health() == 3);
+    game_edit_tile(0, 1, 23, 1); game_set_player(1, 112, -20, 1); steps(0, 80);
+    assert(game_get_player_grounded()); assert(game_get_health() == 3);
+    /* Poison and guard hits use the damage path instead of direct death. */
+    game_edit_tile(0, 1, 23, 106); steps(0, 2); steps(GAME_INPUT_DOWN, 1);
+    assert(game_get_health() == 3); assert((game_get_tile(1, 23) & 31) == 1);
+    game_edit_guard(0, 1, 25); game_reset(); game_set_player(1, 150, 184, 1);
+    steps(0, 600); assert(game_get_health() == 3); assert(game_get_god_mode());
+    game_set_god_mode(0); steps(0, 600); assert(game_get_health() < 3);
+    /* Pit rescue retains pickups and destroyed tiles rather than restarting. */
+    arena(); game_set_player(1, 80, 184, -1); steps(0, 2); game_set_god_mode(1);
+    game_set_has_sword(1); game_edit_tile(0, 1, 24, 0); game_set_player(1, 144, 184, 1);
+    steps(0, 30); assert(game_get_player_x() == 80); assert(game_get_player_y() == 184);
+    assert(game_get_player_grounded()); assert(game_get_has_sword()); assert(game_get_tile(1, 24) == 0);
+    game_reset(); assert(game_get_god_mode());
+    game_select_level(3); assert(game_get_god_mode());
+    game_set_god_mode(0); before = game_get_time_left(); steps(0, 60);
+    assert(game_get_time_left() == before - 1);
+    game_init(); assert(!game_get_god_mode());
+}
 static void test_campaign_stress(void) {
     uint32_t seed = 0x71337337u;
     int level, frame;
@@ -271,7 +302,7 @@ int main(void) {
     test_campaign_and_bounds(); test_floor_wall_and_jump(); test_room_links();
     test_hazards_and_fall_damage(); test_gate_events_and_exit();
     test_pickups_and_loose_floor(); test_combat_and_timer(); test_guard_animation(); test_ledge_grab_and_climb();
-    test_campaign_stress();
-    puts("C gameplay tests passed: campaign bounds, collision, jump, room links, hazards, events, exits, pickups, loose floors, combat, timer, ledges.");
+    test_god_mode(); test_campaign_stress();
+    puts("C gameplay tests passed: campaign bounds, collision, jump, room links, hazards, events, exits, pickups, loose floors, combat, timer, ledges, god mode.");
     return 0;
 }
