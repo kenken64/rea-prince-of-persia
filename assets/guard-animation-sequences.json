@@ -1,0 +1,1301 @@
+{
+  "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+  "sequences": {
+    "idle": {
+      "action": 59,
+      "script_cpu": 38706,
+      "script_file_offset": 87874,
+      "steps": [
+        {
+          "frame": 158,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 59,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 38706,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 59,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 59,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 38706,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": 0,
+      "total_dy": 0
+    },
+    "advance": {
+      "action": 56,
+      "script_cpu": 40319,
+      "script_file_offset": 89487,
+      "steps": [
+        {
+          "frame": 164,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 56,
+          "pc": 40325,
+          "commands_before": [
+            {
+              "pc": 40319,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 40321,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 4,
+              "factor": 2,
+              "delta_right": 8
+            },
+            {
+              "pc": 40323,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 2,
+              "factor": 2,
+              "delta_right": 4
+            }
+          ]
+        },
+        {
+          "frame": 165,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 56,
+          "pc": 40326,
+          "commands_before": []
+        },
+        {
+          "frame": 158,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 56,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 40327,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 56,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 56,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 40319,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 40321,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 4,
+          "factor": 2,
+          "delta_right": 8
+        },
+        {
+          "pc": 40323,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 2,
+          "factor": 2,
+          "delta_right": 4
+        },
+        {
+          "pc": 40327,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": 12,
+      "total_dy": 0
+    },
+    "advance_variant": {
+      "action": 86,
+      "script_cpu": 40330,
+      "script_file_offset": 89498,
+      "steps": [
+        {
+          "frame": 164,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 86,
+          "pc": 40334,
+          "commands_before": [
+            {
+              "pc": 40330,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 40332,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 6,
+              "factor": 2,
+              "delta_right": 12
+            }
+          ]
+        },
+        {
+          "frame": 165,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 86,
+          "pc": 40335,
+          "commands_before": []
+        },
+        {
+          "frame": 158,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 86,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 40336,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 86,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 1,
+          "action": 86,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 40330,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 40332,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 6,
+          "factor": 2,
+          "delta_right": 12
+        },
+        {
+          "pc": 40336,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": 12,
+      "total_dy": 0
+    },
+    "retreat": {
+      "action": 57,
+      "script_cpu": 38695,
+      "script_file_offset": 87863,
+      "steps": [
+        {
+          "frame": 160,
+          "dx_right": -5,
+          "dy": 0,
+          "mode": 1,
+          "action": 57,
+          "pc": 38699,
+          "commands_before": [
+            {
+              "pc": 38695,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38697,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 253,
+              "factor": 2,
+              "delta_right": -5
+            }
+          ]
+        },
+        {
+          "frame": 157,
+          "dx_right": -8,
+          "dy": 0,
+          "mode": 1,
+          "action": 57,
+          "pc": 38702,
+          "commands_before": [
+            {
+              "pc": 38700,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 254,
+              "factor": 2,
+              "delta_right": -3
+            }
+          ]
+        },
+        {
+          "frame": 158,
+          "dx_right": -8,
+          "dy": 0,
+          "mode": 1,
+          "action": 57,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 38703,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": -8,
+          "dy": 0,
+          "mode": 1,
+          "action": 57,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": -8,
+          "dy": 0,
+          "mode": 1,
+          "action": 57,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 38695,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38697,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 253,
+          "factor": 2,
+          "delta_right": -5
+        },
+        {
+          "pc": 38700,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 254,
+          "factor": 2,
+          "delta_right": -3
+        },
+        {
+          "pc": 38703,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": -8,
+      "total_dy": 0
+    },
+    "attack": {
+      "action": 58,
+      "script_cpu": 38709,
+      "script_file_offset": 87877,
+      "steps": [
+        {
+          "frame": 151,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38716,
+          "commands_before": [
+            {
+              "pc": 38709,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38711,
+              "opcode": 248,
+              "kind": "reset_fall_globals",
+              "arguments": [
+                255,
+                0
+              ]
+            },
+            {
+              "pc": 38714,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 152,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38719,
+          "commands_before": [
+            {
+              "pc": 38717,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 153,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38720,
+          "commands_before": []
+        },
+        {
+          "frame": 154,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38721,
+          "commands_before": []
+        },
+        {
+          "frame": 155,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 58,
+          "pc": 38724,
+          "commands_before": [
+            {
+              "pc": 38722,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "frame": 156,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38727,
+          "commands_before": [
+            {
+              "pc": 38725,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 157,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38728,
+          "commands_before": []
+        },
+        {
+          "frame": 158,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 38729,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 58,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 38709,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38711,
+          "opcode": 248,
+          "kind": "reset_fall_globals",
+          "arguments": [
+            255,
+            0
+          ]
+        },
+        {
+          "pc": 38714,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38717,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38722,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 5
+        },
+        {
+          "pc": 38725,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38729,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": 0,
+      "total_dy": 0
+    },
+    "parry": {
+      "action": 69,
+      "script_cpu": 38732,
+      "script_file_offset": 87900,
+      "steps": [
+        {
+          "frame": 167,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38734,
+          "commands_before": [
+            {
+              "pc": 38732,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 155,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 69,
+          "pc": 38724,
+          "commands_before": [
+            {
+              "pc": 38735,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38722
+            },
+            {
+              "pc": 38722,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "frame": 156,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38727,
+          "commands_before": [
+            {
+              "pc": 38725,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 157,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38728,
+          "commands_before": []
+        },
+        {
+          "frame": 158,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 38729,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 69,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 38732,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38735,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38722
+        },
+        {
+          "pc": 38722,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 5
+        },
+        {
+          "pc": 38725,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38729,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": 0,
+      "total_dy": 0
+    },
+    "hurt": {
+      "action": 74,
+      "script_cpu": 38649,
+      "script_file_offset": 87817,
+      "steps": [
+        {
+          "frame": 172,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 74,
+          "pc": 38651,
+          "commands_before": [
+            {
+              "pc": 38649,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "frame": 173,
+          "dx_right": -1,
+          "dy": 1,
+          "mode": 5,
+          "action": 74,
+          "pc": 38656,
+          "commands_before": [
+            {
+              "pc": 38652,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 255,
+              "factor": 2,
+              "delta_right": -1
+            },
+            {
+              "pc": 38654,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 1,
+              "delta": 1
+            }
+          ]
+        },
+        {
+          "frame": 174,
+          "dx_right": -2,
+          "dy": 1,
+          "mode": 5,
+          "action": 74,
+          "pc": 38659,
+          "commands_before": [
+            {
+              "pc": 38657,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 255,
+              "factor": 2,
+              "delta_right": -1
+            }
+          ]
+        },
+        {
+          "frame": 156,
+          "dx_right": -15,
+          "dy": 0,
+          "mode": 1,
+          "action": 74,
+          "pc": 38727,
+          "commands_before": [
+            {
+              "pc": 38660,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 255,
+              "factor": 2,
+              "delta_right": -1
+            },
+            {
+              "pc": 38662,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 2,
+              "delta": 2
+            },
+            {
+              "pc": 38664,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 254,
+              "factor": 2,
+              "delta_right": -3
+            },
+            {
+              "pc": 38666,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 1,
+              "delta": 1
+            },
+            {
+              "pc": 38668,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 251,
+              "factor": 2,
+              "delta_right": -9
+            },
+            {
+              "pc": 38670,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 252,
+              "delta": -4
+            },
+            {
+              "pc": 38672,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38725
+            },
+            {
+              "pc": 38725,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "frame": 157,
+          "dx_right": -15,
+          "dy": 0,
+          "mode": 1,
+          "action": 74,
+          "pc": 38728,
+          "commands_before": []
+        },
+        {
+          "frame": 158,
+          "dx_right": -15,
+          "dy": 0,
+          "mode": 1,
+          "action": 74,
+          "pc": 38643,
+          "commands_before": [
+            {
+              "pc": 38729,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38639
+            },
+            {
+              "pc": 38639,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 38641,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 6
+            }
+          ]
+        },
+        {
+          "frame": 170,
+          "dx_right": -15,
+          "dy": 0,
+          "mode": 1,
+          "action": 74,
+          "pc": 38644,
+          "commands_before": []
+        },
+        {
+          "frame": 171,
+          "dx_right": -15,
+          "dy": 0,
+          "mode": 1,
+          "action": 74,
+          "pc": 38645,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 38649,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 5
+        },
+        {
+          "pc": 38652,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 255,
+          "factor": 2,
+          "delta_right": -1
+        },
+        {
+          "pc": 38654,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 1,
+          "delta": 1
+        },
+        {
+          "pc": 38657,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 255,
+          "factor": 2,
+          "delta_right": -1
+        },
+        {
+          "pc": 38660,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 255,
+          "factor": 2,
+          "delta_right": -1
+        },
+        {
+          "pc": 38662,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 2,
+          "delta": 2
+        },
+        {
+          "pc": 38664,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 254,
+          "factor": 2,
+          "delta_right": -3
+        },
+        {
+          "pc": 38666,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 1,
+          "delta": 1
+        },
+        {
+          "pc": 38668,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 251,
+          "factor": 2,
+          "delta_right": -9
+        },
+        {
+          "pc": 38670,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 252,
+          "delta": -4
+        },
+        {
+          "pc": 38672,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38725
+        },
+        {
+          "pc": 38725,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38729,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38639
+        },
+        {
+          "pc": 38639,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 38641,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 6
+        }
+      ],
+      "terminal_frame": 171,
+      "total_dx_right": -15,
+      "total_dy": 0
+    },
+    "death": {
+      "action": 85,
+      "script_cpu": 39906,
+      "script_file_offset": 89074,
+      "steps": [
+        {
+          "frame": 179,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39918,
+          "commands_before": [
+            {
+              "pc": 39906,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 5
+            },
+            {
+              "pc": 39908,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 39911
+            },
+            {
+              "pc": 39911,
+              "opcode": 249,
+              "kind": "mode",
+              "value": 1
+            },
+            {
+              "pc": 39913,
+              "opcode": 243,
+              "kind": "side_effect",
+              "argument": 1
+            },
+            {
+              "pc": 39915,
+              "opcode": 242,
+              "kind": "side_effect",
+              "argument": 14
+            },
+            {
+              "pc": 39917,
+              "opcode": 246,
+              "kind": "zero_argument_side_effect"
+            }
+          ]
+        },
+        {
+          "frame": 180,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39919,
+          "commands_before": []
+        },
+        {
+          "frame": 181,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39920,
+          "commands_before": []
+        },
+        {
+          "frame": 182,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39921,
+          "commands_before": []
+        },
+        {
+          "frame": 183,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39922,
+          "commands_before": []
+        },
+        {
+          "frame": 185,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 85,
+          "pc": 39923,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39906,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 5
+        },
+        {
+          "pc": 39908,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 39911
+        },
+        {
+          "pc": 39911,
+          "opcode": 249,
+          "kind": "mode",
+          "value": 1
+        },
+        {
+          "pc": 39913,
+          "opcode": 243,
+          "kind": "side_effect",
+          "argument": 1
+        },
+        {
+          "pc": 39915,
+          "opcode": 242,
+          "kind": "side_effect",
+          "argument": 14
+        },
+        {
+          "pc": 39917,
+          "opcode": 246,
+          "kind": "zero_argument_side_effect"
+        }
+      ],
+      "terminal_frame": 185,
+      "total_dx_right": 0,
+      "total_dy": 0
+    }
+  }
+}

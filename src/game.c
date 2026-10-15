@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "level_data.h"
 #include "ledge_sequences.h"
+#include "guard_sequences.h"
 
 /* This is independent C gameplay, not a 6502 interpreter. The extracted tiles,
  * room graph, spawns, guards, and button/door event records are exact ROM data.
@@ -18,6 +19,13 @@
 #define MAX_EFFECTS 16
 /* Logical animation updates are distinct from the 60 Hz physics ticks. */
 #define LEDGE_STEP_TICKS 4
+#define GUARD_STEP_TICKS 4
+
+/* Recovered frame order and nominal motion, selected by independent C AI. */
+#define GUARD_MOVE_TICKS (POP_GUARD_ADVANCE_COUNT * GUARD_STEP_TICKS)
+#define GUARD_ATTACK_TICKS (POP_GUARD_ATTACK_COUNT * GUARD_STEP_TICKS)
+#define GUARD_PARRY_TICKS (POP_GUARD_PARRY_COUNT * GUARD_STEP_TICKS)
+#define GUARD_HURT_TICKS (POP_GUARD_HURT_COUNT * GUARD_STEP_TICKS)
 
 /* The low five tile bits follow the recovered map's tile vocabulary. The
  * complete vocabulary is a compatibility interpretation; floor, pillar, gate,
@@ -47,6 +55,7 @@ typedef struct {
 typedef struct {
     int32_t x, y;
     int active, health, facing, state, attack, cooldown, hurt, skill;
+    int animation, parry, hit_done;
 } Guard;
 typedef struct { int active, room, type; int32_t x, y, vy; } Effect;
 
@@ -199,6 +208,7 @@ void game_reset(void) {
         g->x = PX((pos % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2); g->y = PX(FLOOR_Y(pos / 10));
         g->health = 3 + current_level / 4; g->facing = -1;
         g->state = g->attack = g->hurt = 0; g->cooldown = 35;
+        g->animation = g->parry = g->hit_done = 0;
         g->skill = clamp(current_level / 3, 0, 3);
     }
     for (pos = 0; pos < MAX_EFFECTS; ++pos) effects[pos].active = 0;
@@ -624,45 +634,110 @@ static void update_player(int edges) {
     if (player.hurt && player.state != GAME_DEAD) player.state = GAME_HURT;
     else if (player.drink && player.state != GAME_DEAD) player.state = GAME_DRINK;
 }
+static void guard_state(Guard *g, int state) {
+    if (g->state != state) { g->state = state; g->animation = 0; }
+}
+static const PopGuardStep *guard_pose(const Guard *g) {
+    const PopGuardStep *poses = pop_guard_idle;
+    int count = POP_GUARD_IDLE_COUNT, index;
+    switch (g->state) {
+        case GAME_GUARD_MOVE: poses = pop_guard_advance; count = POP_GUARD_ADVANCE_COUNT; break;
+        case GAME_GUARD_ATTACK: poses = pop_guard_attack; count = POP_GUARD_ATTACK_COUNT; break;
+        case GAME_GUARD_PARRY: poses = pop_guard_parry; count = POP_GUARD_PARRY_COUNT; break;
+        case GAME_GUARD_HURT: poses = pop_guard_hurt; count = POP_GUARD_HURT_COUNT; break;
+        case GAME_GUARD_DEAD: poses = pop_guard_death; count = POP_GUARD_DEATH_COUNT; break;
+        default: break;
+    }
+    index = g->animation / GUARD_STEP_TICKS;
+    if (g->state == GAME_GUARD_MOVE) index %= count;
+    else index = clamp(index, 0, count - 1);
+    return &poses[index];
+}
+static int guard_frame(const Guard *g) {
+    int frame = guard_pose(g)->frame;
+    /* Guard185 and183 point to exactly the same native descriptor. */
+    return frame == 185 ? 183 : frame;
+}
+static int guard_can_step(const Guard *g, int delta) {
+    int i, rr, pp, row = floor_div(to_pixel(g->y) - 56 + 3, 64);
+    /* Check every crossed pixel, so a scripted12px step cannot tunnel through
+     * a narrow gate, wall, hazard or the last supported edge. */
+    for (i = 1; i <= absolute(delta); ++i) {
+        int x = to_pixel(g->x) + sign(delta) * i;
+        if (x < 8 || x >= GAME_WIDTH - 8 ||
+            !support_at(player.room, x + sign(delta) * 10, row, &rr, &pp) ||
+            tile_type(rr, pp) == TILE_SPIKES || tile_type(rr, pp) == TILE_WALL ||
+            (tile_type(rr, pp) == TILE_GATE && gate_open[rr - 1][pp] < BODY_HEIGHT + 2)) return 0;
+    }
+    return 1;
+}
 static void update_guard(void) {
     Guard *g = &guards[player.room - 1];
-    int distance, direction, rr, pp;
-    if (!g->active || g->health <= 0) return;
+    int distance, direction;
+    if (!g->active && g->state != GAME_GUARD_DEAD) return;
+    if (g->animation < 60000) ++g->animation;
+    if (g->state == GAME_GUARD_DEAD) return;
     if (g->cooldown) --g->cooldown;
-    if (g->hurt) { --g->hurt; g->state = 4; return; }
+    if (g->hurt) {
+        int step = g->animation / GUARD_STEP_TICKS;
+        if (g->animation % GUARD_STEP_TICKS == 0 && step > 0 && step < POP_GUARD_HURT_COUNT) {
+            int delta = g->facing * (pop_guard_hurt[step].dx_right - pop_guard_hurt[step - 1].dx_right);
+            if (guard_can_step(g, delta)) g->x += PX(delta);
+        }
+        --g->hurt; return;
+    }
+    if (g->parry) { --g->parry; return; }
     distance = absolute(to_pixel(g->x - player.x));
-    direction = g->x < player.x ? 1 : -1; g->facing = direction;
+    direction = g->x < player.x ? 1 : -1;
+    if (g->facing != direction && g->state == GAME_GUARD_MOVE) guard_state(g, GAME_GUARD_IDLE);
+    g->facing = direction;
     if (player.state == GAME_DEAD || player.state == GAME_FINISH ||
-        absolute(to_pixel(g->y - player.y)) > 20 || distance > 150) { g->state = 0; return; }
+        absolute(to_pixel(g->y - player.y)) > 20 || distance > 150) {
+        g->attack = 0; guard_state(g, GAME_GUARD_IDLE); return;
+    }
     if (player.attack == 12 && !attack_hit && distance < 38 &&
         player.facing == -direction && player.sword) {
         attack_hit = 1;
         if (g->attack > 0 || g->cooldown > 24 || random_value() % 5u >= (uint32_t)g->skill) {
-            --g->health; g->hurt = 20; g->attack = 0; g->state = 4; last_event = 5;
-            if (g->health <= 0) { g->state = 5; g->active = 0; }
-        } else { g->state = 3; g->cooldown = 30; last_event = 5; }
-        return;
-    }
-    if (g->attack > 0) {
-        --g->attack; g->state = 2;
-        if (g->attack == 8 && distance < 35) {
-            if (player.sword && player.facing == -direction && (input & GAME_INPUT_UP) && !player.attack) {
-                g->hurt = 12; g->state = 3; last_event = 5;
-            } else damage(1, direction);
+            --g->health; g->hurt = GUARD_HURT_TICKS - 1; g->attack = g->parry = 0;
+            guard_state(g, GAME_GUARD_HURT); last_event = 5;
+            if (g->health <= 0) { guard_state(g, GAME_GUARD_DEAD); g->active = 0; g->hurt = 0; }
+        } else {
+            guard_state(g, GAME_GUARD_PARRY); g->parry = GUARD_PARRY_TICKS - 1;
+            g->attack = 0; g->cooldown = 30; last_event = 5;
         }
         return;
     }
+    if (g->attack > 0) {
+        --g->attack;
+        /* Damage occurs once at the extended sword pose, independently of
+         * the global game clock or another guard's animation phase. */
+        if (!g->hit_done && guard_frame(g) == 153) {
+            g->hit_done = 1;
+            if (distance < 35) {
+                if (player.sword && player.facing == -direction && (input & GAME_INPUT_UP) && !player.attack) {
+                    g->attack = 0; g->parry = GUARD_PARRY_TICKS - 1;
+                    guard_state(g, GAME_GUARD_PARRY); last_event = 5;
+                } else damage(1, direction);
+            }
+        }
+        return;
+    }
+    /* Finish the footwork before deciding the next action. Starting an attack
+     * immediately after the position step used to discard the walking poses. */
+    if (g->state == GAME_GUARD_MOVE && g->animation % GUARD_MOVE_TICKS != 0) return;
     if (distance < 30) {
-        g->state = 0;
-        if (!g->cooldown) { g->attack = 24; g->cooldown = 70 - g->skill * 8; g->state = 2; }
+        guard_state(g, GAME_GUARD_IDLE);
+        if (!g->cooldown) {
+            guard_state(g, GAME_GUARD_ATTACK); g->attack = GUARD_ATTACK_TICKS - 1;
+            g->hit_done = 0; g->cooldown = 70 - g->skill * 8;
+        }
     } else {
-        int32_t next_x = g->x + direction * (player.sword ? 130 : 190);
-        int row = floor_div(to_pixel(g->y) - 56 + 3, 64);
-        if (support_at(player.room, to_pixel(next_x) + direction * 10, row, &rr, &pp) &&
-            tile_type(rr, pp) != TILE_SPIKES && tile_type(rr, pp) != TILE_WALL &&
-            (tile_type(rr, pp) != TILE_GATE || gate_open[rr - 1][pp] >= BODY_HEIGHT + 2) &&
-            to_pixel(next_x) >= 8 && to_pixel(next_x) < GAME_WIDTH - 8) { g->x = next_x; g->state = 1; }
-        else g->state = 0;
+        int delta = direction * clamp(distance - 28, 1, 12);
+        if (guard_can_step(g, delta)) {
+            guard_state(g, GAME_GUARD_MOVE); g->animation %= GUARD_MOVE_TICKS;
+            g->x += PX(delta);
+        } else guard_state(g, GAME_GUARD_IDLE);
     }
 }
 static void update_hazards(void) {
@@ -738,6 +813,15 @@ int game_get_tile_state(int room, int pos) {
     return pressed[room - 1][pos];
 }
 int game_get_guard_active(int room) { return valid_room(room) ? guards[room - 1].active : 0; }
+int game_get_guard_visible(int room) {
+    return valid_room(room) && (guards[room - 1].active || guards[room - 1].state == GAME_GUARD_DEAD);
+}
+int game_get_guard_render_x(int room) { return valid_room(room) ? to_pixel(guards[room - 1].x) + 20 : 0; }
+int game_get_guard_render_y(int room) {
+    return valid_room(room) ? to_pixel(guards[room - 1].y) + 8 + guard_pose(&guards[room - 1])->dy : 0;
+}
+int game_get_guard_animation(int room) { return valid_room(room) ? guards[room - 1].animation : 0; }
+int game_get_guard_native_frame(int room) { return valid_room(room) ? guard_frame(&guards[room - 1]) : 171; }
 int game_get_guard_x(int room) { return valid_room(room) ? to_pixel(guards[room - 1].x) : 0; }
 int game_get_guard_y(int room) { return valid_room(room) ? to_pixel(guards[room - 1].y) : 0; }
 int game_get_guard_health(int room) { return valid_room(room) ? guards[room - 1].health : 0; }

@@ -21,6 +21,8 @@ enum {
 enum { GAME_FLAG_DEAD = 1, GAME_FLAG_LEVEL_COMPLETE = 2,
        GAME_FLAG_COMPLETE = 4, GAME_FLAG_PAUSED = 8 };
 enum { GAME_LINK_LEFT, GAME_LINK_RIGHT, GAME_LINK_UP, GAME_LINK_DOWN };
+enum { GAME_GUARD_IDLE, GAME_GUARD_MOVE, GAME_GUARD_ATTACK,
+       GAME_GUARD_PARRY, GAME_GUARD_HURT, GAME_GUARD_DEAD };
 
 void game_init(void);
 int game_select_level(int level);
@@ -63,11 +65,16 @@ int game_get_initial_tile(int room, int position);
 int game_get_gate(int room, int position);  /* Opening, 0..64 pixels. */
 int game_get_tile_state(int room, int position);
 int game_get_guard_active(int room);
+int game_get_guard_visible(int room); /* Includes a fallen guard's body. */
 int game_get_guard_x(int room);
 int game_get_guard_y(int room);
 int game_get_guard_health(int room);
 int game_get_guard_facing(int room);
 int game_get_guard_state(int room); /* 0 idle,1 move,2 attack,3 parry,4 hurt,5 dead. */
+int game_get_guard_animation(int room);
+int game_get_guard_native_frame(int room);
+int game_get_guard_render_x(int room);
+int game_get_guard_render_y(int room);
 int game_get_guard_raw(int room);
 int game_get_event_count(void);
 int game_get_event_value(int event, int field); /* srcRoom,srcPos,action,dstRoom,dstPos */

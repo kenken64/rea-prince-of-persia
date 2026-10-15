@@ -1,6 +1,6 @@
 // Original indexed graphics, layout write masks, PPU origins and attribute rules.
 // Native scroll geometry is recovered. C supplies recovered ledge frames and
-// anchors together; other state-to-animation mappings remain reconstruction choices.
+// anchors together. Guard sequences are recovered; other mappings remain reconstructed.
 export const ROOM_WIDTH = 360, ROOM_HEIGHT = 208;
 export class NativeRenderer {
   constructor(tiles, palettes, actors, campaign, game, animations) {
@@ -144,9 +144,9 @@ export class NativeRenderer {
   drawActor(c,x,y,facing,state,animation,guard=false,nativeFrame=-1){
     const actor=guard?'guard':'prince',frames=this.actors.frames.filter(f=>f.actor===actor&&f.pixels?.length);
     const map=this.actors.pose_sequences??{};
-    const action=guard?(state===10?'attack':'ready'):['stand','run','crouch','jump','fall','hang','climb','hurt','dead','ready','attack','drink','stand'][state]??'stand';
+    const action=guard?(['ready','approach','attack','parry','hurt','dead'][state]??'ready'):['stand','run','crouch','jump','fall','hang','climb','hurt','dead','ready','attack','drink','stand'][state]??'stand';
     const seq=map[actor]?.[action]??map[actor]?.[action==='ready'?(guard?'stand':'sword'):action==='fall'?'jump':action==='hurt'?'stand':'stand']??[15];
-    // Ledge actions supply the frame chosen by the C animation script. Their
+    // Ledge and guard actions supply the frame chosen by C. Their
     // frame changes and anchor moves must happen in the same simulation tick.
     const n=nativeFrame>=0?nativeFrame:seq[Math.floor(animation/6)%seq.length],frame=frames.find(f=>f.frame_index===n)??frames[0];if(!frame)return;
     c.save();c.translate(Math.round(x),Math.round(y));

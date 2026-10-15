@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+  "header_sha256": "f560719643728de38abaec7ac2da413e09dbd8ec25b44f704a3c4580d37bf5a5",
+  "sequence_json_sha256": "133cfee96bbffac38993253ba393d832bb5c4252e014550b4f2399585cafd42b",
+  "checks": [
+    "GeneratedheadercompilesasC11withWall/Wextra/Werror/pedantic.",
+    "EveryframehasrecoveredguardartorexactROMalias185\u2192183.",
+    "Advance+12,retreat\u22128,hurt\u221215X/0Yanchor totalschecked.",
+    "Guard183/184/185haveidenticaloriginaldescriptorpointer8915."
+  ]
+}

@@ -118,6 +118,63 @@ static void test_combat_and_timer(void) {
     game_set_paused(1); steps(GAME_INPUT_RIGHT, 120); assert(game_get_time_left() == initial - 1);
     assert(game_get_flags() & GAME_FLAG_PAUSED);
 }
+static void test_guard_animation(void) {
+    int i, before, attempts;
+    arena(); game_edit_guard(0, 1, 25); game_reset(); game_set_has_sword(1);
+    game_set_player(1, 70, 184, 1); steps(0, 1);
+    assert(game_get_guard_state(1) == GAME_GUARD_MOVE);
+    assert(game_get_guard_native_frame(1) == 164);
+    assert(game_get_guard_x(1) == 164);
+    /* Original advance: a12px step, followed by164/165/158/170/171.
+     * These poses must be visible even while the anchor stays still. */
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 165);
+    assert(game_get_guard_x(1) == 164);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 158);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 170);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 171);
+    before = game_get_guard_animation(1); game_set_paused(1); steps(0, 40);
+    assert(game_get_guard_animation(1) == before); game_set_paused(0);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 164);
+    assert(game_get_guard_x(1) == 152);
+    /* A wall prevents both the step and repeated walk animation. */
+    arena(); game_edit_guard(0, 1, 25); game_edit_tile(0, 1, 24, 20); game_reset();
+    game_set_player(1, 70, 184, 1); steps(0, 60);
+    assert(game_get_guard_x(1) == 176); assert(game_get_guard_state(1) == GAME_GUARD_IDLE);
+    assert(game_get_guard_native_frame(1) == 171);
+    /* Sword extension causes one hit; a successful block gets a complete
+     * parry sequence rather than immediately being mistaken for hurt. */
+    arena(); game_edit_guard(0, 1, 25); game_reset(); game_set_has_sword(1);
+    game_set_player(1, 150, 184, 1);
+    for (i = 0; i < 80 && game_get_guard_state(1) != GAME_GUARD_ATTACK; ++i) steps(0, 1);
+    assert(game_get_guard_native_frame(1) == 151);
+    steps(GAME_INPUT_UP, 4); assert(game_get_guard_native_frame(1) == 152);
+    steps(GAME_INPUT_UP, 4); assert(game_get_guard_state(1) == GAME_GUARD_PARRY);
+    assert(game_get_guard_native_frame(1) == 167); assert(game_get_health() == 3);
+    steps(GAME_INPUT_UP, 4); assert(game_get_guard_state(1) == GAME_GUARD_PARRY);
+    assert(game_get_guard_native_frame(1) == 155);
+    /* Death animation remains visible after active collision is disabled. */
+    arena(); game_edit_guard(0, 1, 25); game_reset(); game_set_has_sword(1);
+    for (attempts = 0; attempts < 6 && game_get_guard_active(1); ++attempts) {
+        game_set_health(3); game_set_player(1, game_get_guard_x(1) - 26, 184, 1);
+        steps(0, 1); steps(GAME_INPUT_ACTION, 1); steps(GAME_INPUT_UP, 5);
+        if (game_get_guard_active(1)) {
+            assert(game_get_guard_state(1) == GAME_GUARD_HURT);
+            assert(game_get_guard_native_frame(1) == 172);
+            steps(GAME_INPUT_UP, 4); assert(game_get_guard_native_frame(1) == 173);
+            steps(GAME_INPUT_UP, 4); assert(game_get_guard_native_frame(1) == 174);
+            steps(GAME_INPUT_UP, 4); assert(game_get_guard_native_frame(1) == 156);
+            steps(GAME_INPUT_UP, 22);
+        }
+    }
+    assert(!game_get_guard_active(1)); assert(game_get_guard_visible(1));
+    assert(game_get_guard_native_frame(1) == 179);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 180);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 181);
+    steps(0, 4); assert(game_get_guard_native_frame(1) == 182);
+    steps(0, 100); assert(game_get_guard_native_frame(1) == 183);
+    assert(game_get_guard_visible(1));
+    game_edit_guard(0, 1, 255); game_reset(); assert(!game_get_guard_visible(1));
+}
 static void test_ledge_grab_and_climb(void) {
     int i, side;
     for (side = -1; side <= 1; side += 2) {
@@ -213,7 +270,7 @@ static void test_campaign_stress(void) {
 int main(void) {
     test_campaign_and_bounds(); test_floor_wall_and_jump(); test_room_links();
     test_hazards_and_fall_damage(); test_gate_events_and_exit();
-    test_pickups_and_loose_floor(); test_combat_and_timer(); test_ledge_grab_and_climb();
+    test_pickups_and_loose_floor(); test_combat_and_timer(); test_guard_animation(); test_ledge_grab_and_climb();
     test_campaign_stress();
     puts("C gameplay tests passed: campaign bounds, collision, jump, room links, hazards, events, exits, pickups, loose floors, combat, timer, ledges.");
     return 0;

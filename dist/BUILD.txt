@@ -25,6 +25,7 @@ src/game.c          Gameplay, collision, combat, triggers, room traversal.
 src/game.h          Browser/native interface and editable constants.
 src/level_data.h    All 14 recovered level structures, with original raw bytes.
 src/ledge_sequences.h  Recovered ledge frames and nominal anchor deltas.
+src/guard_sequences.h  Original guard step, strike, parry, hurt and death poses.
 src/wasm_libc.c     Freestanding byte operations.
 assets/levels.json  Recovered campaign data with offsets and validation.
 assets/actor-frames.json  Original multipart indexed sprite frames and provenance.
@@ -52,5 +53,13 @@ anchor transfers during climb/lower. Climb uses four 60Hz ticks per pose, as
 observed in the original Level1 scenario. General jump/catch tolerance, release
 branch selection and room-boundary transitions still use the independent C
 collision model; this does not establish complete controller equivalence.
+
+GUARD ANIMATION
+Guards have their own C animation clocks, using the recovered advance, attack,
+parry, hurt and death sequences. Advancing takes a bounded12px step followed by
+footwork poses. Hurt movement is collision-limited. Dead guards finish falling
+and remain visible. The source frame185 aliases the exact frame183 descriptor.
+The C update uses four60Hz ticks per guard pose as a reconstruction choice;
+original combat cadence and full AI/retreat/death physics are not established.
 
 Original game, character and art remain the work of their respective authors.

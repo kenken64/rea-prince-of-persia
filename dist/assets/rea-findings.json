@@ -2247,5 +2247,341 @@
       "Originalledge collision probing and boundary room transitions are reported by the independent geometry scope.",
       "Noweb or gameplay C source edits made by this scope."
     ]
+  },
+  "guard_animation": {
+    "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+    "deliverables": [
+      "tools/extract_guard_sequences.py",
+      "analysis/graphics/guard_sequences.h",
+      "analysis/rea/guard-animation-sequences.json",
+      "analysis/rea/guard-animation-validation.json"
+    ],
+    "conclusion": "Originalguardsuse distinct combatidle, stepping, strike, parry, hitreaction anddeath frames. Frame151alone is not the original persistent idle or walking animation.",
+    "sequences": {
+      "idle": {
+        "action": 59,
+        "script_bank": 5,
+        "script_cpu": 38706,
+        "frames": [
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          0,
+          0,
+          0
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "advance": {
+        "action": 56,
+        "script_bank": 5,
+        "script_cpu": 40319,
+        "frames": [
+          164,
+          165,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "advance_variant": {
+        "action": 86,
+        "script_bank": 5,
+        "script_cpu": 40330,
+        "frames": [
+          164,
+          165,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          12,
+          12,
+          12,
+          12,
+          12
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "retreat": {
+        "action": 57,
+        "script_bank": 5,
+        "script_cpu": 38695,
+        "frames": [
+          160,
+          157,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          -5,
+          -8,
+          -8,
+          -8,
+          -8
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "attack": {
+        "action": 58,
+        "script_bank": 5,
+        "script_cpu": 38709,
+        "frames": [
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "parry": {
+        "action": 69,
+        "script_bank": 5,
+        "script_cpu": 38732,
+        "frames": [
+          167,
+          155,
+          156,
+          157,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "hurt": {
+        "action": 74,
+        "script_bank": 5,
+        "script_cpu": 38649,
+        "frames": [
+          172,
+          173,
+          174,
+          156,
+          157,
+          158,
+          170,
+          171
+        ],
+        "accumulated_dx_right": [
+          0,
+          -1,
+          -2,
+          -15,
+          -15,
+          -15,
+          -15,
+          -15
+        ],
+        "accumulated_dy": [
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 171
+      },
+      "death": {
+        "action": 85,
+        "script_bank": 5,
+        "script_cpu": 39906,
+        "frames": [
+          179,
+          180,
+          181,
+          182,
+          183,
+          185
+        ],
+        "accumulated_dx_right": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "accumulated_dy": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "terminal_frame": 185
+      }
+    },
+    "proven_bindings": [
+      "Bank4ABC9 guarddecisionroutine usesactor indexY0E. AC4Floadsaction38andAC53jumpsD6DD:guard advance.",
+      "Bank4AC83 comparesguard/opponentframes andtimers; ACC8loads3AandACCAjumpsD6DD:strike.",
+      "Theopponentframe169branch reachesACCE; ACD0loads45andcallsD6DD:parryreaction.",
+      "FixedE99Bloads4AandjumpsD6DDfollowinghitprocessing:hitreaction.",
+      "Bank4AD4Eloads55andAD53jumpsD6DDafterhealth/deathhandling:death.",
+      "Action39is a recovered shared swordbackstep script. Its specific guardAIselectioncondition is not claimed."
+    ],
+    "motion": [
+      "Every FB normally doubles itsbyteargument. Negative valuesuseones-complement magnitude afterscaling: FBFD=\u22125,FBFE=\u22123,FBFF=\u22121.",
+      "Advance38:FB04+FB02 before164 means+12RIGHT; remaining164/165/158/170/171positionsretainthisanchor.",
+      "Retreat39:frame160at\u22125RIGHT;frame157andrestat\u22128RIGHT.",
+      "Attack/parry/deathscripts havezeroX/Yanchorchange. Their body/weapon metapixels stillmove substantially betweenposes.",
+      "Hurt4A:172at0,0;173at\u22121,+1;174at\u22122,+1;156andrestat\u221215,0. LEFTnegatesDX.",
+      "Idleentry96EF plays158,170,171;96F5selfloops171."
+    ],
+    "art_alias": {
+      "guard_frames": [
+        183,
+        184,
+        185
+      ],
+      "original_frame_descriptor_cpu": 35093,
+      "fact": "Allthreeguardpointerentriesareidentical. Existingguard183pixels faithfullyrenderoriginalframe185."
+    },
+    "cadence": {
+      "verified": "One row is one original VM logicalanimationstep. Per-state cadencesare not encoded as delays in these scripts.",
+      "static_schedule": "F13Eadvancesallactorsinmainphase0. Mainphase2isguard-specificandisskippedwhen06E0=0; sourceimpliesguardpresentgameplaycanhaveanextraVBLANKperglobalcycle.",
+      "runtime_limit": "FourVBLANKperstepwasverifiedforearliernoguardledgecase. Guard/combatVBLANKcadencewasnotruntimeverifiedinthisboundedtask.",
+      "integration": "Keepanindependentactoranimationclockandadvanceframeswhilemoving,return171whenidle,andhold185/alias183afterdeath."
+    },
+    "evidence": [
+      {
+        "path": "analysis/rea/guard-ai-abc9.json",
+        "evidence_id": "ev_5cd94390ae6639d29f790a0638069f3eb99f674a0e79c0d8cbb94e555b4874dd"
+      },
+      {
+        "path": "analysis/rea/guard-ai-ac83.json",
+        "evidence_id": "ev_cd555399c73133e703a114929a517727b79cada34825d032654b761ce1dec045"
+      },
+      {
+        "path": "analysis/rea/guard-command-f6.json",
+        "evidence_id": "ev_f3e9e8a83e6122832da19ba2a9f91232facc756d33d56d084586d97db2c7ef26"
+      },
+      {
+        "path": "analysis/rea/guard-command-f3.json",
+        "evidence_id": "ev_bea5dc30b34ca494102a950f64478a397db78668dcb27af552bebde7cbc71d6b"
+      },
+      {
+        "path": "analysis/rea/ledge-vm-f13e.json",
+        "evidence_id": "ev_4cd78abfdb627a7f65d59a64fa42e753ba0ef0db155a528c7289d8eb4d22c850"
+      },
+      {
+        "path": "analysis/rea/ledge-action-selector.json",
+        "evidence_id": "ev_05c26509f948add1234f787ff69272bb7b28e5ee467185bbf4af68dc1635996b"
+      },
+      {
+        "path": "analysis/rea/ledge-command-fb.json",
+        "evidence_id": "ev_1c36f8d66e99a653da1fabf191c6408b71915458aa17dccf0b8e2f9dd5c51188"
+      },
+      {
+        "path": "analysis/rea/ledge-command-fa.json",
+        "evidence_id": "ev_f1447ffe80a77b098dd0346d2eab6febca76cf91a60d8b8322ac037067dda02d"
+      },
+      {
+        "path": "analysis/rea/guard-hit-death-acd6.json",
+        "evidence_id": "ev_3c9c41089c5830748b38976ce12eade57e54fe0c24ca37821aae088758bccb7e"
+      },
+      {
+        "path": "analysis/rea/guard-hurt-e95a.json",
+        "evidence_id": "ev_94a532f07bcc89400358e71060ac80454d208e50ef47c0d00e90ec377c3306ed"
+      }
+    ],
+    "limitations": [
+      "No fullguardAIportorbehavior-equivalenceclaim.",
+      "Retreatscriptframes/motionare recovered; its guardAItriggerremainsunbound.",
+      "Physics, attackdamagewindows andruntimecadencecan be controlledoutsidebytecode.",
+      "ReaanalysisderivativeshaveseededJSRentryprefixes only; extractionreads immutable originalROM.",
+      "No web files were edited."
+    ],
+    "limits_controller_death": "Bank4AD3Dclears06DBthenAD42..AD48subtracts32fromtargetactorYbeforeselectingdeath55. Subsequentfallphysicsisoutsideanimationbytecode; headerdoesnotapplythiscontrollerlaunch."
   }
 }

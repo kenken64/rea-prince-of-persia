@@ -1,4 +1,4 @@
-import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=ledge-20261015';
+import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=guards-20261015';
 const $ = s => document.querySelector(s);
 const canvas = $('#game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -20,7 +20,7 @@ function draw() {
   const world=renderer.world,w=world.getContext('2d');w.imageSmoothingEnabled=false;
   roomDraw(w,room,true,tick);
   if(ready)for(let i=0;i<g('get_effect_count');i++)if(g('get_effect_value',i,0)&&g('get_effect_value',i,1)===room)renderer.drawLooseFloor(w,g('get_effect_value',i,2),g('get_effect_value',i,3));
-  if(ready&&g('get_guard_active',room))renderer.drawActor(w,20+g('get_guard_x',room),8+g('get_guard_y',room),g('get_guard_facing',room),g('get_guard_state',room)===2?10:9,tick,true);
+  if(ready&&g('get_guard_visible',room))renderer.drawActor(w,g('get_guard_render_x',room),g('get_guard_render_y',room),g('get_guard_facing',room),g('get_guard_state',room),g('get_guard_animation',room),true,g('get_guard_native_frame',room));
   if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawActor(w,g('get_player_render_x'),g('get_player_render_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'),false,g('get_player_native_frame'));
   // Display profile: crop8 overscan lines from each end of the native240-line image.
   ctx.save();ctx.translate(0,-8);ctx.fillStyle='#000';ctx.fillRect(0,0,256,240);
@@ -143,7 +143,7 @@ function renderActorAtlas(){
 }
 
 async function boot(){
-  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=ledge-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
+  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=guards-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
   if(!wasmResponse.ok)throw new Error(`Wasm fetch returned ${wasmResponse.status}`);
   const {instance}=await WebAssembly.instantiate(await wasmResponse.arrayBuffer(),{});
   game=instance.exports;campaign=levelsJson;actors=actorsJson;palettes=paletteJson;nativeTiles=nativeJson;
