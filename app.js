@@ -5,6 +5,7 @@ const ctx = canvas.getContext('2d', { alpha: false });
 ctx.imageSmoothingEnabled = false;
 let game, campaign, actors, nativeTiles, palettes, renderer, started = false, paused = false, ready = false;
 let camera = 8, cameraTick = -1, cameraRoom = null;
+let fullRoom = true;
 let selectedRoom = 1, keyboard = 0, touch = 0, lastTime = 0, accumulator = 0, lastRoom = 0;
 const names = ['Empty','Floor','Spikes','Pillar','Gate','Stuck plate','Closing plate','Tapestry','Pillar base','Pillar top','Potion','Loose floor','Tapestry top','Mirror','Rubble','Opening plate','Exit left','Exit right','Chopper','Torch','Wall','Skeleton','Sword','Balcony','Lattice pillar','Lattice support','Small lattice','Lattice left','Lattice right','Torch rubble'];
 const stateNames = ['STANDING','RUNNING','CROUCHING','JUMPING','FALLING','HANGING','CLIMBING','HURT','FALLEN','SWORD READY','ATTACKING','DRINKING','LEVEL COMPLETE','LOWERING','RELEASING'];
@@ -23,7 +24,7 @@ function draw() {
   if(ready&&g('get_guard_visible',room))renderer.drawActor(w,g('get_guard_render_x',room),g('get_guard_render_y',room),g('get_guard_facing',room),g('get_guard_state',room),g('get_guard_animation',room),true,g('get_guard_native_frame',room));
   if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawActor(w,g('get_player_render_x'),g('get_player_render_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'),false,g('get_player_native_frame'));
   // Display profile: crop8 overscan lines from each end of the native240-line image.
-  ctx.save();ctx.translate(0,-8);ctx.fillStyle='#000';ctx.fillRect(0,0,256,240);
+  ctx.save();ctx.translate(0,-8);ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,240);
   // Bank5 $87E9..$884E: clamp scroll8..80, approach by4px/update.
   const actorX=g('get_player_render_x');
   const desired=Math.max(8,Math.min(80,(actorX&~3)-120));
@@ -31,7 +32,8 @@ function draw() {
   if(cameraRoom!==scene||tick<cameraTick){camera=desired;cameraRoom=scene;}
   else if(tick!==cameraTick)camera+=Math.sign(desired-camera)*Math.min(Math.abs(desired-camera),4*Math.min(6,Math.max(1,tick-cameraTick)));
   cameraTick=tick;
-  ctx.drawImage(world,camera,0,256,208,0,0,256,208);
+  // Full-room view keeps every column visible without changing world geometry.
+  ctx.drawImage(world,fullRoom?0:camera,0,canvas.width,208,0,0,canvas.width,208);
   if(ready){
     // HUD glyph source remains unresolved. These pixel icons are reconstructed
     // at the original PPU coordinates, using original background palette3.
@@ -44,9 +46,9 @@ function draw() {
       }
     };
     for(let i=0;i<g('get_max_health');i++)healthIcon(16+i*8,216,i<g('get_health'));
-    if(g('get_guard_active',room))for(let i=0;i<g('get_guard_health',room);i++)healthIcon(240-i*8,216,true,true);
-    if(g('get_flags')&1){ctx.fillStyle='#000c';ctx.fillRect(25,78,206,68);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='10px monospace';ctx.fillText('PRESS R TO RESTART',128,113);ctx.textAlign='start';}
-    if(g('get_flags')&4){ctx.fillStyle='#000d';ctx.fillRect(25,78,206,68);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='10px monospace';ctx.fillText('THE PALACE AWAITS',128,113);ctx.textAlign='start';}
+    if(g('get_guard_active',room))for(let i=0;i<g('get_guard_health',room);i++)healthIcon(canvas.width-16-i*8,216,true,true);
+    if(g('get_flags')&1){ctx.fillStyle='#000c';ctx.fillRect(canvas.width/2-103,78,206,68);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='10px monospace';ctx.fillText('PRESS R TO RESTART',canvas.width/2,113);ctx.textAlign='start';}
+    if(g('get_flags')&4){ctx.fillStyle='#000d';ctx.fillRect(canvas.width/2-103,78,206,68);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='10px monospace';ctx.fillText('THE PALACE AWAITS',canvas.width/2,113);ctx.textAlign='start';}
   }
   ctx.restore();
 }
@@ -72,12 +74,35 @@ function frame(time) {
   requestAnimationFrame(frame);
 }
 function focusGame(){canvas.focus({preventScroll:true});}
+function revealGame(){
+  if(!document.fullscreenElement)window.scrollTo({top:window.scrollY+$('#game-card').getBoundingClientRect().top-12,behavior:'instant'});
+}
+function setFullRoom(value){
+  fullRoom=value;canvas.width=fullRoom?ROOM_WIDTH:256;ctx.imageSmoothingEnabled=false;
+  $('#screen-wrap').style.setProperty('--game-aspect',`${canvas.width} / ${canvas.height}`);
+  $('#camera-mode').textContent=fullRoom?'Full room':'Follow prince';
+  $('#camera-mode').setAttribute('aria-pressed',String(fullRoom));
+  $('#camera-mode').title=fullRoom?'Switch to the original scrolling camera':'Show the whole room without scrolling';
+  if(ready)draw();
+}
 function setPause(value){if(!started)return;paused=value;g('set_paused',+paused);$('#pause').textContent=paused?'▶ Resume':'Ⅱ Pause';$('#screen-wrap').classList.toggle('paused',paused);keyboard=touch=0;}
-function start(){if(!ready)return;started=true;$('#game-overlay').hidden=true;$('#pause').disabled=$('#restart').disabled=false;setPause(false);focusGame();}
+function start(){if(!ready)return;started=true;$('#game-overlay').hidden=true;$('#pause').disabled=$('#restart').disabled=false;setPause(false);revealGame();focusGame();}
 $('#start').addEventListener('click',start);
 $('#pause').addEventListener('click',()=>{setPause(!paused);focusGame();});
 $('#restart').addEventListener('click',()=>{g('reset');setPause(false);focusGame();});
-$('#fullscreen').addEventListener('click',async()=>{if(document.fullscreenElement)await document.exitFullscreen();else await $('#screen-wrap').requestFullscreen?.();focusGame();});
+$('#camera-mode').addEventListener('click',()=>{setFullRoom(!fullRoom);if(started)revealGame();focusGame();});
+$('#fullscreen').addEventListener('click',async()=>{
+  if(document.fullscreenElement)await document.exitFullscreen();else await $('#game-card').requestFullscreen?.();focusGame();
+});
+document.addEventListener('fullscreenchange',()=>{
+  const label=document.fullscreenElement?'Exit full screen':'Enter full screen';
+  $('#fullscreen').title=label;$('#fullscreen').setAttribute('aria-label',label);
+  if(!document.fullscreenElement&&started)revealGame();
+});
+window.addEventListener('resize',()=>{
+  const card=$('#game-card').getBoundingClientRect();
+  if(started&&card.bottom>0&&card.top<innerHeight)revealGame();
+});
 const keyMap={ArrowLeft:1,KeyA:1,ArrowRight:2,KeyD:2,ArrowUp:4,KeyW:4,ArrowDown:8,KeyS:8,Space:16,ShiftLeft:32,ShiftRight:32,KeyX:32,KeyR:64};
 window.addEventListener('keydown',e=>{
   const active=document.activeElement;if(active?.tagName==='SELECT'||active?.tagName==='INPUT'||active?.tagName==='TEXTAREA')return;
@@ -121,7 +146,7 @@ function renderInspector(){
 $('#visit-room').addEventListener('click',()=>{
   const data=roomData(selectedRoom);if(!data?.present)return;
   let pos=data.tiles_raw.findIndex(t=>![0,9,12,20,25,26,27,28,30,31].includes(t&31));if(pos<0)pos=0;
-  g('set_player',selectedRoom,(pos%10)*32+16,Math.floor(pos/10)*64+56,1);g('set_health',g('get_max_health'));start();$('#play').scrollIntoView({behavior:'smooth'});focusGame();
+  g('set_player',selectedRoom,(pos%10)*32+16,Math.floor(pos/10)*64+56,1);g('set_health',g('get_max_health'));start();
 });
 $('#level-select').addEventListener('change',()=>{g('select_level',+$('#level-select').value);selectedRoom=g('get_room');lastRoom=0;renderMap();if(started){setPause(false);focusGame();}});
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{

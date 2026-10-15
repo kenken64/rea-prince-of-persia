@@ -7,7 +7,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2310151b'/%3E%3Ctext x='5' y='25' font-size='26' fill='%23cda968'%3E%E2%99%9C%3C/text%3E%3C/svg%3E">
   <title>Prince of Persia · A cartridge, reconstructed</title>
   <meta name="description" content="An independent C and WebAssembly reconstruction, with graphics and fourteen levels recovered from a Prince of Persia NES cartridge.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=viewport-20261015">
 </head>
 <body>
   <div class="site-wrap">
@@ -24,10 +24,10 @@
       </section>
 
       <section class="play-layout" aria-label="Game and controls">
-        <div class="game-card">
-          <div class="game-topbar"><span><i class="live-dot"></i><b id="game-status">READY WHEN YOU ARE</b></span><span id="room-label">LEVEL 01 / ROOM 01</span><button id="fullscreen" title="Full screen" aria-label="Enter full screen">⛶</button></div>
+        <div class="game-card" id="game-card">
+          <div class="game-topbar"><span><i class="live-dot"></i><b id="game-status">READY WHEN YOU ARE</b></span><span id="room-label">LEVEL 01 / ROOM 01</span><div class="game-view-controls"><button id="camera-mode" aria-label="Show full room" aria-pressed="true" title="Switch to the original scrolling camera">Full room</button><button id="fullscreen" title="Enter full screen" aria-label="Enter full screen">⛶</button></div></div>
           <div class="screen" id="screen-wrap">
-            <canvas id="game" width="256" height="224" tabindex="0" aria-label="Prince of Persia game. Arrow keys to move, Space to jump, Shift to act. Select Begin journey to start."></canvas>
+            <canvas id="game" width="360" height="224" tabindex="0" aria-label="Prince of Persia game. Arrow keys to move, Space to jump, Shift to act. Select Begin journey to start."></canvas>
             <div class="screen-shade"></div>
             <div class="game-overlay" id="game-overlay"><p class="overlay-kicker">THE SANDS ARE RUNNING</p><h2>One hour.<br>One chance.</h2><p>Escape the dungeon.<br>Find your sword. Reach the palace.</p><button id="start" class="gold-button">Begin journey <span>→</span></button><small>ARROWS TO MOVE · SPACE TO JUMP</small></div>
           </div>
@@ -69,6 +69,6 @@
     </main>
     <footer><a href="#play">♜ <b>PRINCE OF PERSIA</b></a><span>A cartridge study · Independently reconstructed in C / Wasm</span><a href="#source">VIEW THE SOURCE ↗</a></footer>
   </div>
-  <script type="module" src="app.js?v=guards-20261015"></script>
+  <script type="module" src="app.js?v=viewport-20261015"></script>
 </body>
 </html>

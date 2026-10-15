@@ -12,9 +12,12 @@ BUILD
 4. Open http://localhost:8000 in your browser.
 
 No npm dependency installation is required.
-Display profile crops 8 lines from the top and bottom of the native 240-line
-image to show 256x224, as in a typical NES screenshot. This is a display choice.
-HUD icon pixels are reconstructed at their recovered original PPU coordinates.
+Full room view defaults to 360x224: the entire room stays visible without camera
+scrolling. The Full room / Follow prince toggle restores the recovered scrolling
+camera and 256x224 display. Both views crop 8 overscan lines at the top and bottom
+and scale to the browser viewport while preserving pixel proportions. Fullscreen
+includes the controls. HUD icons are reconstructed; full room view moves the
+enemy health icons to the wider right edge. These are browser display choices.
 The original author's NES game source was not recovered. The C code is a new
 implementation. Exact animation timing, enemy AI, level-specific scripts,
 audio and some dynamic display behavior remain subject to further ROM analysis
