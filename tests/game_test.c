@@ -45,7 +45,7 @@ static void test_campaign_and_bounds(void) {
 static void test_floor_wall_and_jump(void) {
     int min_y = 184, i;
     arena(); game_edit_tile(0, 1, 26, 20);
-    assert(game_set_player(1, 100, 184, 1)); steps(GAME_INPUT_RIGHT, 60);
+    assert(game_set_player(1, 100, 184, 1)); steps(GAME_INPUT_RIGHT, 120);
     assert(game_get_player_x() <= 187); assert(game_get_player_y() == 184);
     assert(game_get_health() == 3);
     arena(); game_edit_tile(0, 1, 24, 20); game_set_player(1, 144, 90, 1); steps(0, 25);
@@ -86,7 +86,7 @@ static void test_gate_events_and_exit(void) {
     assert(game_edit_event(0, 0, 1, 23, 0, 1, 26));
     game_set_player(1, 112, 184, 1); steps(0, 40);
     assert(game_get_gate(1, 26) == 64);
-    steps(GAME_INPUT_RIGHT, 45); assert(game_get_player_x() > 198);
+    steps(GAME_INPUT_RIGHT, 75); assert(game_get_player_x() > 198);
     assert(game_edit_event(0, 0, 1, 23, 1, 1, 26));
     game_trigger(1, 23); steps(0, 270); assert(game_get_gate(1, 26) == 0);
     arena(); game_edit_tile(0, 1, 23, 15); game_edit_tile(0, 1, 26, 16);

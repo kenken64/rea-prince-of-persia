@@ -20,6 +20,11 @@
 /* Logical animation updates are distinct from the 60 Hz physics ticks. */
 #define LEDGE_STEP_TICKS 4
 #define GUARD_STEP_TICKS 4
+/* Browser play tuning, in fixed-point units per 60 Hz tick. Ground running
+ * is deliberately slower; aerial movement retains its tested jump reach. */
+#define RUN_SPEED 400
+#define RUN_ACCELERATION 28
+#define AIR_SPEED 675
 
 /* Recovered frame order and nominal motion, selected by independent C AI. */
 #define GUARD_MOVE_TICKS (POP_GUARD_ADVANCE_COUNT * GUARD_STEP_TICKS)
@@ -566,8 +571,9 @@ static void update_player(int edges) {
     }
     if (player.attack) { --player.attack; player.state = GAME_ATTACK; direction = 0; }
     if (!player.hurt) {
-        int speed = player.state == GAME_CROUCH ? 140 : combat ? 185 : (input & GAME_INPUT_ACTION) ? 190 : 675;
-        int acceleration = player.grounded ? 46 : 15;
+        int running = player.grounded && player.state == GAME_RUN && !combat && !(input & GAME_INPUT_ACTION);
+        int speed = player.state == GAME_CROUCH ? 140 : combat ? 185 : (input & GAME_INPUT_ACTION) ? 190 : player.grounded ? RUN_SPEED : AIR_SPEED;
+        int acceleration = running ? RUN_ACCELERATION : player.grounded ? 46 : 15;
         if (direction && !player.drink && !player.attack) {
             int target = direction * speed;
             if (player.vx < target) player.vx = clamp(player.vx + acceleration, -speed, target);

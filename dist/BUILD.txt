@@ -49,6 +49,13 @@ Down at an exposed edge lowers the Prince; Down while hanging lets go.
 Up also interacts; Down elsewhere crouches. R restart; P pause.
 The original hanging swing is finite, so climb before it finishes.
 
+RUNNING PACE
+Ground running is tuned to 93.75 pixels/second (400 fixed-point units/tick),
+about 41% below the previous 158.2 pixels/second. Acceleration is 28 units/tick
+and running poses last ten ticks. These are playability choices, not recovered
+NES timing. Airborne movement retains its tested jump reach; ledge scripts,
+combat, the countdown and the 60 Hz simulation retain their existing timing.
+
 LEDGE VALIDATION
 ROM bytecode and controlled original-ROM execution establish the catch anchors,
 pre-climb alignment, frame order (including skipped frame148), and +/-63 pixel

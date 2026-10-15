@@ -1,4 +1,4 @@
-import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=guards-20261015';
+import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=pace-20261015';
 const $ = s => document.querySelector(s);
 const canvas = $('#game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -168,7 +168,7 @@ function renderActorAtlas(){
 }
 
 async function boot(){
-  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=guards-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
+  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=pace-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
   if(!wasmResponse.ok)throw new Error(`Wasm fetch returned ${wasmResponse.status}`);
   const {instance}=await WebAssembly.instantiate(await wasmResponse.arrayBuffer(),{});
   game=instance.exports;campaign=levelsJson;actors=actorsJson;palettes=paletteJson;nativeTiles=nativeJson;

@@ -148,7 +148,8 @@ export class NativeRenderer {
     const seq=map[actor]?.[action]??map[actor]?.[action==='ready'?(guard?'stand':'sword'):action==='fall'?'jump':action==='hurt'?'stand':'stand']??[15];
     // Ledge and guard actions supply the frame chosen by C. Their
     // frame changes and anchor moves must happen in the same simulation tick.
-    const n=nativeFrame>=0?nativeFrame:seq[Math.floor(animation/6)%seq.length],frame=frames.find(f=>f.frame_index===n)??frames[0];if(!frame)return;
+    const poseTicks=!guard&&action==='run'?10:6;
+    const n=nativeFrame>=0?nativeFrame:seq[Math.floor(animation/poseTicks)%seq.length],frame=frames.find(f=>f.frame_index===n)??frames[0];if(!frame)return;
     c.save();c.translate(Math.round(x),Math.round(y));
     // B419 reflects an8px tile anchor: flippedOrigin=8-origin-width.
     if(facing>0){c.translate(8,0);c.scale(-1,1);}
