@@ -1,4 +1,4 @@
-import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=pace-20261015';
+import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=silhouette-20261015';
 const $ = s => document.querySelector(s);
 const canvas = $('#game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -22,7 +22,7 @@ function draw() {
   roomDraw(w,room,true,tick);
   if(ready)for(let i=0;i<g('get_effect_count');i++)if(g('get_effect_value',i,0)&&g('get_effect_value',i,1)===room)renderer.drawLooseFloor(w,g('get_effect_value',i,2),g('get_effect_value',i,3));
   if(ready&&g('get_guard_visible',room))renderer.drawActor(w,g('get_guard_render_x',room),g('get_guard_render_y',room),g('get_guard_facing',room),g('get_guard_state',room),g('get_guard_animation',room),true,g('get_guard_native_frame',room));
-  if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawActor(w,g('get_player_render_x'),g('get_player_render_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'),false,g('get_player_native_frame'));
+  if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawPrince(w,room,tick,g('get_player_render_x'),g('get_player_render_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'),g('get_player_native_frame'));
   // Display profile: crop8 overscan lines from each end of the native240-line image.
   ctx.save();ctx.translate(0,-8);ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,240);
   // Bank5 $87E9..$884E: clamp scroll8..80, approach by4px/update.

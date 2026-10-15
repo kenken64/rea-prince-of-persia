@@ -21,7 +21,12 @@ try {
   await page.waitForTimeout(1100);
   const fidelity=await page.evaluate(()=>{
     const study=window.popStudy,canvas=document.querySelector('#game');
-    const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+    // Check recovered artwork before the intentionally blended silhouette aid.
+    const art=document.createElement('canvas');art.width=360;art.height=208;
+    const c=art.getContext('2d'),g=study.game,r=study.renderer;
+    r.drawRoom(c,g.game_get_room(),true,g.game_get_tick());
+    r.drawActor(c,g.game_get_player_render_x(),g.game_get_player_render_y(),g.game_get_player_facing(),g.game_get_player_state(),g.game_get_player_animation(),false,g.game_get_player_native_frame());
+    const pixels=c.getImageData(0,0,art.width,art.height).data;
     const colors=new Set();
     for(let i=0;i<pixels.length;i+=4)colors.add('#'+Array.from(pixels.slice(i,i+3)).map(x=>x.toString(16).padStart(2,'0')).join(''));
     const profile=new Set(study.renderer.palettes.hex64);
@@ -29,7 +34,7 @@ try {
   });
   assert.equal(fidelity.cellPitch,32,'room cells preserve original horizontal pitch');
   assert.equal(fidelity.actorFrames,296,'original multipart actor records are loaded');
-  assert.deepEqual(fidelity.nonProfileColors,[],'pixel display uses recovered palette profile without filtering');
+  assert.deepEqual(fidelity.nonProfileColors,[],'artwork uses recovered palette profile before silhouette blending');
   assert.ok(fidelity.colors.includes('#a8e4fc')&&fidelity.colors.includes('#8000f0'),'native cyan wall and purple scenery palettes appear');
   await page.locator('#game').screenshot({path:resolve(output,'fidelity-dungeon.png')});
   const initial=await page.evaluate(()=>({x:popStudy.game.game_get_player_x(),y:popStudy.game.game_get_player_y(),room:popStudy.game.game_get_room()}));

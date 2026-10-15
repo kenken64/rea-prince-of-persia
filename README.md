@@ -13,6 +13,7 @@ The hosted game uses the site's access settings and may require sign-in and perm
 - C gameplay for running, jumping, crouching, ledge grabs, climbing, sword combat, gates, pressure plates, potions, and loose floors.
 - Full-room view without horizontal camera scrolling, plus a **Follow prince** option for the scrolling camera.
 - Responsive display, fullscreen controls, keyboard input, and touch buttons.
+- Translucent silhouettes keep the prince visible behind pillars, gates, and foreground scenery.
 - Room-map exploration, graphics inspection, retained Rea evidence, and an editable-source download.
 
 ## Run locally
@@ -75,6 +76,8 @@ The browser advances a deterministic, fixed-point C simulation at 60 ticks per s
 
 Ground running is tuned to **93.75 pixels per second**, with ten simulation ticks per running pose. These are playability settings in the reconstruction; [BUILD.txt](BUILD.txt) describes the movement and animation choices in more detail.
 
+The silhouette is a reconstruction-specific visibility aid. Foreground masks follow the recovered artwork and animated gate positions using independently defined layering rules; they do not establish the original NES sprite priority. Only covered prince pixels receive the translucent tint. Exposed pixels retain their original colors.
+
 ## Recovery status
 
 The C code is independently written. This project does **not** recover the original author's source code or execute the ROM through an NES emulator.
@@ -109,6 +112,7 @@ npx playwright install chromium
 node tests/browser.mjs
 node tests/ledge-browser.mjs
 node tests/guard-browser.mjs
+node tests/silhouette-browser.mjs
 ```
 
 `TEST_URL` overrides the local server URL. `CHROME_PATH` selects an existing Chrome executable, and `PLAYWRIGHT_MODULE` can point to an existing Playwright module. Browser reports and screenshots are written to `../analysis/validation/` relative to the repository root.

@@ -7,6 +7,7 @@ export class NativeRenderer {
     Object.assign(this,{tiles,palettes,actors,campaign,game,animations});
     this.cache=new Map();this.spriteCache=new Map();
     this.world=document.createElement('canvas');this.world.width=ROOM_WIDTH;this.world.height=ROOM_HEIGHT;
+    this.princeLayer=this.world.cloneNode();this.silhouetteLayer=this.world.cloneNode();
   }
   level(){return this.campaign.levels[this.game.game_get_level()];}
   palette(){return this.palettes.levels[this.game.game_get_level()];}
@@ -15,6 +16,20 @@ export class NativeRenderer {
   tile(room,pos,live){return live?this.game.game_get_tile(room,pos):(this.room(room)?.tiles_raw[pos]??0);}
   theme(){return this.tiles.themes.find(t=>t.id===(this.level().theme_raw?'palace':'dungeon'));}
   variant(id){return this.theme().variants.find(t=>t.id===id);}
+  // Reconstructed foreground rules for the visibility aid, not recovered NES
+  // sprite priority. Metatiles contain both front posts and distant scenery.
+  foregroundPixel(type,x,y){
+    if([3,8,25].includes(type))return x>=8&&x<32&&y<76;
+    if(type===9)return x<32;
+    if(type===4)return x>=24&&x<48&&y<64;
+    if(type===7)return x>=24&&y<64;
+    if(type===12)return x>=24;
+    if(type===13)return x<32&&y<64;
+    if(type===16)return x>=32&&x<40&&y<64;
+    if(type===17)return x<8&&y<64;
+    if([18,23,24].includes(type))return y<64;
+    return type>=26&&type<=29;
+  }
   roomImage(room,live=false,tick=0){
     const neighbors=this.room(room)?.links??{};
     const link=k=>Array.isArray(neighbors)?neighbors[['left','right','up','down'].indexOf(k)]:neighbors[k];
@@ -27,15 +42,18 @@ export class NativeRenderer {
       if(type===18)signature.push(this.chomperFrame(this.game.game_get_tile_state(room,p)));
     }
     const key=signature.join(',');if(this.cache.has(key))return this.cache.get(key);
-    const indices=new Uint8Array(ROOM_WIDTH*ROOM_HEIGHT),qw=Math.ceil(ROOM_WIDTH/16),attributes=new Uint8Array(qw*Math.ceil(ROOM_HEIGHT/16));
+    const indices=new Uint8Array(ROOM_WIDTH*ROOM_HEIGHT),foreground=new Uint8Array(indices.length),qw=Math.ceil(ROOM_WIDTH/16),attributes=new Uint8Array(qw*Math.ceil(ROOM_HEIGHT/16));
     const setAttribute=(x,y,p)=>{if(x>=0&&x<ROOM_WIDTH&&y>=0&&y<ROOM_HEIGHT)attributes[(y>>4)*qw+(x>>4)]=p;};
     let wallCounter=0;
-    const paint=(item,x,y,{wall=false,top=0,bottom=80,paletteGroup=null}={})=>{
+    const paint=(item,x,y,{wall=false,top=0,bottom=80,paletteGroup=null,front=null}={})=>{
       if(!item?.pixels?.length)return;
       for(let yy=top;yy<Math.min(bottom,item.height);yy++)for(let xx=0;xx<item.width;xx++){
         const i=yy*item.width+xx,dx=x+xx,dy=y+yy;
         if(dx<0||dx>=ROOM_WIDTH||dy<0||dy>=ROOM_HEIGHT||!item.write_mask[i]||item.pixel_known_mask?.[i]===0)continue;
         indices[dy*ROOM_WIDTH+dx]=item.pixels[i];
+        // A later nametable write replaces both the art and its foreground
+        // coverage. Index zero leaves openings between bars/posts visible.
+        foreground[dy*ROOM_WIDTH+dx]=+(!!item.pixels[i]&&!!front?.(xx,yy));
         if(wall&&xx<32)setAttribute(dx,dy,1);
         if(paletteGroup!==null)setAttribute(dx,dy,paletteGroup);
       }
@@ -48,7 +66,7 @@ export class NativeRenderer {
       if(type===13)item=this.variant('mirror_inactive_background')??item;
       if(type===12&&y<0)item=this.variant('clipped_type12')??item;
       if(type===12&&normal&&[26,27,28,29].includes(leftType))item=this.variant('left_neighbor_26_to29')??item;
-      paint(item,x,y,{wall:normal&&type===20,...clip});
+      paint(item,x,y,{wall:normal&&type===20,front:(xx,yy)=>this.foregroundPixel(type,xx,yy),...clip});
       if(normal&&type===0&&modifier===3)paint(this.variant('empty_modifier3_overlay'),x,y);
       if(normal&&modifier===1&&[0,1,10,11,22].includes(type))paint(this.variant('modifier1_floor_overlay'),x,y);
       if(normal){
@@ -58,7 +76,7 @@ export class NativeRenderer {
           const rule=overlay.selector_rule;
           if(rule.current_type!==type)continue;
           if(overlay.side==='left_front'?rule.left_type!==leftType:rule.below_type!==belowType||!rule.right_type_in.includes(rightType))continue;
-          paint(overlay,x+overlay.origin_x,y+overlay.origin_y,{bottom:overlay.height});
+          paint(overlay,x+overlay.origin_x,y+overlay.origin_y,{bottom:overlay.height,front:()=>true});
         }
       }
     };
@@ -92,7 +110,7 @@ export class NativeRenderer {
       if(type===18){const leftType=pos%10?this.tile(room,pos-1,live)&31:0;id=leftType===3?binding.chomper_left_pillar:binding.chomper;phase=this.chomperFrame(live?this.game.game_get_tile_state(room,pos):0);}
       if(id===undefined)continue;
       const pattern=this.animations.patterns.find(p=>p.pattern_id===id),frame=this.animations.frames[pattern.frame_ids[phase]];
-      paint(frame,x+pattern.origin_offset_pixels[0],y+pattern.origin_offset_pixels[1],{bottom:pattern.height,paletteGroup:pattern.palette_group});
+      paint(frame,x+pattern.origin_offset_pixels[0],y+pattern.origin_offset_pixels[1],{bottom:pattern.height,paletteGroup:pattern.palette_group,front:type===4||type===18?()=>true:null});
     }
     const image=document.createElement('canvas');image.width=ROOM_WIDTH;image.height=ROOM_HEIGHT;
     const c=image.getContext('2d'),data=c.createImageData(ROOM_WIDTH,ROOM_HEIGHT);
@@ -101,9 +119,27 @@ export class NativeRenderer {
       const i=y*ROOM_WIDTH+x,color=palettes[attributes[(y>>4)*qw+(x>>4)]][indices[i]];
       data.data[i*4]=color[0];data.data[i*4+1]=color[1];data.data[i*4+2]=color[2];data.data[i*4+3]=255;
     }
-    c.putImageData(data,0,0);this.cache.set(key,image);if(this.cache.size>160)this.cache.delete(this.cache.keys().next().value);return image;
+    c.putImageData(data,0,0);
+    image.foregroundMask=image.cloneNode();
+    const mc=image.foregroundMask.getContext('2d'),mask=mc.createImageData(ROOM_WIDTH,ROOM_HEIGHT);
+    for(let i=0;i<foreground.length;i++)mask.data[i*4+3]=foreground[i]*255;
+    mc.putImageData(mask,0,0);
+    this.cache.set(key,image);if(this.cache.size>160)this.cache.delete(this.cache.keys().next().value);return image;
   }
   drawRoom(c,room,live=false,tick=0){c.imageSmoothingEnabled=false;c.drawImage(this.roomImage(room,live,tick),0,0);}
+  drawPrince(c,room,tick,x,y,facing,state,animation,nativeFrame=-1){
+    const mask=this.roomImage(room,true,tick).foregroundMask;
+    const actor=this.princeLayer.getContext('2d'),hidden=this.silhouetteLayer.getContext('2d');
+    actor.clearRect(0,0,ROOM_WIDTH,ROOM_HEIGHT);hidden.clearRect(0,0,ROOM_WIDTH,ROOM_HEIGHT);
+    this.drawActor(actor,x,y,facing,state,animation,false,nativeFrame);
+    // Compose in world coordinates before either camera mode crops the room.
+    hidden.save();hidden.drawImage(this.princeLayer,0,0);
+    hidden.globalCompositeOperation='destination-in';hidden.drawImage(mask,0,0);
+    hidden.globalCompositeOperation='source-in';hidden.fillStyle='#101018';hidden.fillRect(0,0,ROOM_WIDTH,ROOM_HEIGHT);hidden.restore();
+    actor.save();actor.globalCompositeOperation='destination-out';actor.drawImage(mask,0,0);actor.restore();
+    c.drawImage(this.princeLayer,0,0);
+    c.save();c.globalAlpha=0.6;c.drawImage(this.silhouetteLayer,0,0);c.restore();
+  }
   chomperFrame(phase){return phase>=12&&phase<21?4:(phase>=8&&phase<25?2:0);}
   frameImage(frame){
     const key=`${this.game.game_get_level()}:${frame.id}`;if(this.spriteCache.has(key))return this.spriteCache.get(key);
