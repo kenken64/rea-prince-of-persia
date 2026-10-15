@@ -1,7 +1,7 @@
 PRINCE OF PERSIA / NES RECONSTRUCTION
 
 This is an independent C gameplay reconstruction compiled to WebAssembly.
-It uses level bytes and selected graphics recovered from the supplied NES ROM.
+It uses level bytes, original sprite layouts, background compositions and palettes recovered from the supplied NES ROM.
 It contains no NES CPU interpreter and does not execute the original ROM.
 
 BUILD
@@ -12,9 +12,13 @@ BUILD
 4. Open http://localhost:8000 in your browser.
 
 No npm dependency installation is required.
+Display profile crops 8 lines from the top and bottom of the native 240-line
+image to show 256x224, as in a typical NES screenshot. This is a display choice.
+HUD icon pixels are reconstructed at their recovered original PPU coordinates.
 The original author's NES game source was not recovered. The C code is a new
 implementation. Exact animation timing, enemy AI, level-specific scripts,
-palettes, and audio remain subject to further ROM analysis and validation.
+audio and some dynamic display behavior remain subject to further ROM analysis
+and validation.
 
 FILES
 src/game.c          Gameplay, collision, combat, triggers, room traversal.
@@ -22,11 +26,16 @@ src/game.h          Browser/native interface and editable constants.
 src/level_data.h    All 14 recovered level structures, with original raw bytes.
 src/wasm_libc.c     Freestanding byte operations.
 assets/levels.json  Recovered campaign data with offsets and validation.
-assets/actors.json  ROM-derived indexed sprite candidates and provenance.
+assets/actor-frames.json  Original multipart indexed sprite frames and provenance.
+assets/native-metatiles.json  Original background layouts, masks and joins.
+assets/palettes.json  Original palette indices, FCEUX RGB profile and torch frames.
+assets/background-animations.json  Original gate, chomper and spike frame maps.
+native-renderer.js  Native pixel composition and sprite display.
 app.js             Canvas display, browser input, map/data inspection.
 
 The parent project's analysis/rea directory contains saved Rea Evidence JSON.
-tools/extract_levels.py, tools/extract_chr.py and tools/extract_sprite_candidates.py
+tools/extract_levels.py, tools/extract_actor_frames.py,
+tools/extract_palettes.py and tools/extract_native_metatiles.py --fidelity-v2
 reproduce extraction from the SHA256-verified user-supplied ROM.
 
 Controls: arrows / WASD move; Space jump; Shift or X action/attack;

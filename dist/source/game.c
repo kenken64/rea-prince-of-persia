@@ -102,7 +102,7 @@ static int supports(int type) {
            type != TILE_LATTICE_RIGHT && type != 30 && type != 31;
 }
 static int support_at(int room, int x, int row, int *out_room, int *out_pos) {
-    if (!tile_reference(room, floor_div(x, 24), row, out_room, out_pos)) return 0;
+    if (!tile_reference(room, floor_div(x, GAME_TILE_WIDTH), row, out_room, out_pos)) return 0;
     return supports(tile_type(*out_room, *out_pos));
 }
 static int surface_at(int room, int x, int row, int *out_room, int *out_pos, int *surface) {
@@ -112,7 +112,7 @@ static int surface_at(int room, int x, int row, int *out_room, int *out_pos, int
 }
 static int solid_point(int room, int x, int y, int actor_top) {
     int ref_room, ref_pos;
-    if (!tile_reference(room, floor_div(x, 24), floor_div(y, 64), &ref_room, &ref_pos)) {
+    if (!tile_reference(room, floor_div(x, GAME_TILE_WIDTH), floor_div(y, 64), &ref_room, &ref_pos)) {
         /* Screen sides with no link are walls; an unlinked bottom is lethal. */
         return x < 0 || x >= GAME_WIDTH;
     }
@@ -192,14 +192,14 @@ void game_reset(void) {
         }
         pos = data->guard[room - 1] & 31;
         g->active = data->present[room - 1] && pos < 30;
-        g->x = PX((pos % 10) * 24 + 12); g->y = PX(FLOOR_Y(pos / 10));
+        g->x = PX((pos % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2); g->y = PX(FLOOR_Y(pos / 10));
         g->health = 3 + current_level / 4; g->facing = -1;
         g->state = g->attack = g->hurt = 0; g->cooldown = 35;
         g->skill = clamp(current_level / 3, 0, 3);
     }
     for (pos = 0; pos < MAX_EFFECTS; ++pos) effects[pos].active = 0;
     spawn = data->start_pos;
-    player.room = data->start_room; player.x = PX((spawn % 10) * 24 + 12);
+    player.room = data->start_room; player.x = PX((spawn % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2);
     player.y = PX(FLOOR_Y(spawn / 10)); player.facing = data->start_direction < 0 ? -1 : 1;
     player.vx = player.vy = 0; player.state = GAME_STAND; player.grounded = 0;
     player.health = player.max_health; player.frame = player.invulnerable = 0;
@@ -232,7 +232,7 @@ static void loose_fall(int room, int pos) {
     last_event = 7;
     for (i = 0; i < MAX_EFFECTS; ++i) if (!effects[i].active) {
         effects[i].active = 1; effects[i].type = TILE_LOOSE; effects[i].room = room;
-        effects[i].x = PX((pos % 10) * 24 + 12);
+        effects[i].x = PX((pos % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2);
         effects[i].y = PX(FLOOR_Y(pos / 10)); effects[i].vy = 0; break;
     }
 }
@@ -274,12 +274,12 @@ static void update_tiles(void) {
 static void transition_horizontal(void) {
     if (player.x < 0) {
         int next = link_from(player.room, GAME_LINK_LEFT);
-        if (exists(next)) { player.room = next; player.x += PX(240); }
+        if (exists(next)) { player.room = next; player.x += PX(GAME_WIDTH); }
         else { player.x = PX(BODY_HALF); player.vx = 0; }
-    } else if (player.x >= PX(240)) {
+    } else if (player.x >= PX(GAME_WIDTH)) {
         int next = link_from(player.room, GAME_LINK_RIGHT);
-        if (exists(next)) { player.room = next; player.x -= PX(240); }
-        else { player.x = PX(239 - BODY_HALF); player.vx = 0; }
+        if (exists(next)) { player.room = next; player.x -= PX(GAME_WIDTH); }
+        else { player.x = PX(GAME_WIDTH - 1 - BODY_HALF); player.vx = 0; }
     }
 }
 static void transition_vertical(void) {
@@ -324,9 +324,9 @@ static int try_grab(void) {
         if (absolute(hands - surface) > 9 ||
             !support_at(player.room, edge_x, row, &rr, &pp) ||
             tile_type(rr, pp) == TILE_WALL || tile_type(rr, pp) == TILE_SPIKES) continue;
-        if (support_at(player.room, edge_x - side * 24, row, &air_room, &air_pos)) continue;
+        if (support_at(player.room, edge_x - side * GAME_TILE_WIDTH, row, &air_room, &air_pos)) continue;
         {
-            int edge = side > 0 ? floor_div(edge_x, 24) * 24 : (floor_div(edge_x, 24) + 1) * 24;
+            int edge = side > 0 ? floor_div(edge_x, GAME_TILE_WIDTH) * GAME_TILE_WIDTH : (floor_div(edge_x, GAME_TILE_WIDTH) + 1) * GAME_TILE_WIDTH;
             if (absolute(to_pixel(player.x) - edge) > 17) continue;
             player.x = PX(edge - side * 6); player.y = PX(surface + BODY_HEIGHT - 3);
             player.vx = player.vy = 0; player.state = GAME_HANG; player.grounded = 0;
@@ -344,7 +344,7 @@ static void update_hanging(int edges) {
     if (edges & (GAME_INPUT_UP | GAME_INPUT_JUMP)) {
         player.state = GAME_CLIMB; player.climb = 24;
         player.climb_room = player.hang_room;
-        player.climb_x = (player.hang_position % 10) * 24 + 12;
+        player.climb_x = (player.hang_position % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2;
         player.climb_y = FLOOR_Y(player.hang_position / 10);
         player.frame = 0;
     }
@@ -403,7 +403,7 @@ static void update_player(int edges) {
                     player.y = PX(surface); player.vy = 0; player.grounded = 1; break;
                 }
             }
-            if (player.y > PX(240)) player.y = PX(240);
+            if (player.y > PX(GAME_HEIGHT + 48)) player.y = PX(GAME_HEIGHT + 48);
         }
         return;
     }
@@ -554,21 +554,21 @@ static void update_guard(void) {
         if (support_at(player.room, to_pixel(next_x) + direction * 10, row, &rr, &pp) &&
             tile_type(rr, pp) != TILE_SPIKES && tile_type(rr, pp) != TILE_WALL &&
             (tile_type(rr, pp) != TILE_GATE || gate_open[rr - 1][pp] >= BODY_HEIGHT + 2) &&
-            to_pixel(next_x) >= 8 && to_pixel(next_x) < 232) { g->x = next_x; g->state = 1; }
+            to_pixel(next_x) >= 8 && to_pixel(next_x) < GAME_WIDTH - 8) { g->x = next_x; g->state = 1; }
         else g->state = 0;
     }
 }
 static void update_hazards(void) {
     int row = floor_div(to_pixel(player.y) - 56 + 8, 64), col, rr, pp;
     if (player.state == GAME_DEAD || player.state == GAME_FINISH) return;
-    for (col = floor_div(to_pixel(player.x) - 7, 24); col <= floor_div(to_pixel(player.x) + 7, 24); ++col) {
+    for (col = floor_div(to_pixel(player.x) - 7, GAME_TILE_WIDTH); col <= floor_div(to_pixel(player.x) + 7, GAME_TILE_WIDTH); ++col) {
         if (!tile_reference(player.room, col, row, &rr, &pp)) continue;
         if (tile_type(rr, pp) == TILE_CHOPPER) {
             int phase = (tick + pp * 7) % 96;
-            if (phase >= 12 && phase < 21 && absolute(to_pixel(player.x) - (col * 24 + 12)) <= 10 &&
+            if (phase >= 12 && phase < 21 && absolute(to_pixel(player.x) - (col * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2)) <= 10 &&
                 to_pixel(player.y) > FLOOR_Y(row) - 42) die();
         } else if (tile_type(rr, pp) == TILE_SPIKES && player.grounded &&
-                   absolute(to_pixel(player.x) - (col * 24 + 12)) < 12) {
+                   absolute(to_pixel(player.x) - (col * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2)) < 12) {
             spike[rr - 1][pp] = 90;
             if (!(input & GAME_INPUT_ACTION) || absolute(player.vx) > 220) die();
         }
@@ -685,7 +685,7 @@ int game_edit_event(int level, int index, int source_room, int source_pos, int a
     return 1;
 }
 int game_set_player(int room, int x, int y, int facing) {
-    if (!exists(room) || x < -24 || x > 264 || y < -64 || y > 256) return 0;
+    if (!exists(room) || x < -GAME_TILE_WIDTH || x > GAME_WIDTH + GAME_TILE_WIDTH || y < -64 || y > 256) return 0;
     player.room = room; player.x = PX(x); player.y = PX(y); player.facing = facing < 0 ? -1 : 1;
     player.vx = player.vy = 0; player.state = GAME_STAND; player.grounded = 0;
     player.fall_distance = player.hurt = player.invulnerable = player.attack = player.drink = 0;

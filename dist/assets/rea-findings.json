@@ -881,119 +881,1172 @@
     }
   ],
   "graphics": {
-    "scope": "Focused static graphics analysis through Rea/Ghidra plus exact original-ROM data extraction; no ROM execution",
-    "source_rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
-    "derived_analysis_target": {
-      "file": "analysis/rom/bank05-fixed07.bin",
-      "sha256": "07c188867d54cf71e88795649fad0d2f5cbaa75fd801bb992d48a60fb131e374",
-      "mapping": "PRG bank5[8:] at CPU$8008..BFFF, fixed PRG bank7 atCPU$C000..FFFF; caller-selected static bank window"
-    },
-    "rea_snapshot": "analysis/rea/graphics-snapshot.json",
-    "observations": [
-      {
-        "finding": "E605 reads 16-bit graphics IDs through $5A, skips $0000, terminates at $FFFF, selects bank 3, and uploads 16-byte 2bpp tiles from $8000 + 16*ID to PPU $2007.",
-        "evidence": {
-          "file": "analysis/rea/graphics-function-e67f.json",
-          "evidence_id": "ev_aa9fa7dbe4f7f1dbe0eb395b44ed3e2ba5d5b581218ca73f2da1c1bee38acb00",
-          "procedure": "0xe605"
+    "backgrounds": {
+      "asset": "analysis/graphics/native-metatiles-v2.json",
+      "sha256": "310dec962ac4cb378e69fdda3e3b6cc1f81891afa7eb83e15d1f2436942fe0f2",
+      "schema_version": 2,
+      "counts": {
+        "dungeon": {
+          "type_slots": 32,
+          "decoded": 20,
+          "partial": 2,
+          "context_required": 1,
+          "unavailable": 9,
+          "context_variants": 6,
+          "context_overlays": 233,
+          "decoded_overlays": 232
+        },
+        "palace": {
+          "type_slots": 32,
+          "decoded": 29,
+          "partial": 1,
+          "context_required": 0,
+          "unavailable": 2,
+          "context_variants": 5,
+          "context_overlays": 382,
+          "decoded_overlays": 380
         }
       },
-      {
-        "finding": "E0C4 indexes original layout pointer tables in bank 4: $8E26 when RAM $04BB = 0, or $8DEA otherwise. Each entry is indexed by 2*type.",
-        "evidence": {
+      "native_geometry": {
+        "columns": 7,
+        "rows": 10,
+        "width": 56,
+        "height": 80,
+        "advance_x": 32,
+        "advance_y": 64,
+        "room_columns": 10,
+        "room_rows": 3,
+        "room_origin_x": 16,
+        "room_origin_y": 0,
+        "main_room_extent_x": [
+          16,
+          360
+        ],
+        "main_room_extent_y": [
+          0,
+          208
+        ],
+        "logical_room_extent_x": [
+          16,
+          336
+        ],
+        "viewport_width": 256,
+        "camera": {
+          "scroll_min": 8,
+          "scroll_max": 80,
+          "easing_step": 4,
+          "desired_scroll": "clamp((player_x_low &252)-120,8,80); player_x_high!=0 forces80",
+          "source": "bank5:87E9..884E, separately traced by actor agent",
+          "rea_file": "analysis/rea/actor-camera-8830.json"
+        },
+        "hud": {
+          "glyph_width": 8,
+          "glyph_height": 8,
+          "y": 216,
+          "background_palette_slot": 3,
+          "player": {
+            "x": 16,
+            "ppu_address": 9058,
+            "advance_x": 8,
+            "filled_chr_tile": 253,
+            "empty_chr_tile": 254
+          },
+          "opponent": {
+            "x": 240,
+            "ppu_address": 9086,
+            "advance_x": -8,
+            "filled_chr_tile": 251,
+            "empty_chr_tile": 0
+          },
+          "glyph_pixels": null,
+          "glyph_status": "Original CHR source for health glyphs not recovered; no guessed glyph pixels exported",
+          "coordinate_evidence": [
+            "analysis/rea/background-v2-function-8296.json",
+            "analysis/rea/background-v2-function-82c3.json"
+          ],
+          "output_height": 240,
+          "optional_crop": {
+            "top": 8,
+            "bottom": 8,
+            "status": "display profile choice; not claimed as original ROM behavior"
+          }
+        },
+        "origin_table_cpu_address": 60338,
+        "origin_table_file_offset": 125890,
+        "origin_table_sha256": "9b1da259fced5fdb20c4de48fd9363b125a3a16b68ad28ac514f4aa2e2aeb520",
+        "cell_origins": [
+          {
+            "position": 0,
+            "row": 0,
+            "column": 0,
+            "ppu_address": 8194,
+            "world_x": 16,
+            "world_y": 0
+          },
+          {
+            "position": 1,
+            "row": 0,
+            "column": 1,
+            "ppu_address": 8198,
+            "world_x": 48,
+            "world_y": 0
+          },
+          {
+            "position": 2,
+            "row": 0,
+            "column": 2,
+            "ppu_address": 8202,
+            "world_x": 80,
+            "world_y": 0
+          },
+          {
+            "position": 3,
+            "row": 0,
+            "column": 3,
+            "ppu_address": 8206,
+            "world_x": 112,
+            "world_y": 0
+          },
+          {
+            "position": 4,
+            "row": 0,
+            "column": 4,
+            "ppu_address": 8210,
+            "world_x": 144,
+            "world_y": 0
+          },
+          {
+            "position": 5,
+            "row": 0,
+            "column": 5,
+            "ppu_address": 8214,
+            "world_x": 176,
+            "world_y": 0
+          },
+          {
+            "position": 6,
+            "row": 0,
+            "column": 6,
+            "ppu_address": 8218,
+            "world_x": 208,
+            "world_y": 0
+          },
+          {
+            "position": 7,
+            "row": 0,
+            "column": 7,
+            "ppu_address": 8222,
+            "world_x": 240,
+            "world_y": 0
+          },
+          {
+            "position": 8,
+            "row": 0,
+            "column": 8,
+            "ppu_address": 9218,
+            "world_x": 272,
+            "world_y": 0
+          },
+          {
+            "position": 9,
+            "row": 0,
+            "column": 9,
+            "ppu_address": 9222,
+            "world_x": 304,
+            "world_y": 0
+          },
+          {
+            "position": 10,
+            "row": 1,
+            "column": 0,
+            "ppu_address": 8450,
+            "world_x": 16,
+            "world_y": 64
+          },
+          {
+            "position": 11,
+            "row": 1,
+            "column": 1,
+            "ppu_address": 8454,
+            "world_x": 48,
+            "world_y": 64
+          },
+          {
+            "position": 12,
+            "row": 1,
+            "column": 2,
+            "ppu_address": 8458,
+            "world_x": 80,
+            "world_y": 64
+          },
+          {
+            "position": 13,
+            "row": 1,
+            "column": 3,
+            "ppu_address": 8462,
+            "world_x": 112,
+            "world_y": 64
+          },
+          {
+            "position": 14,
+            "row": 1,
+            "column": 4,
+            "ppu_address": 8466,
+            "world_x": 144,
+            "world_y": 64
+          },
+          {
+            "position": 15,
+            "row": 1,
+            "column": 5,
+            "ppu_address": 8470,
+            "world_x": 176,
+            "world_y": 64
+          },
+          {
+            "position": 16,
+            "row": 1,
+            "column": 6,
+            "ppu_address": 8474,
+            "world_x": 208,
+            "world_y": 64
+          },
+          {
+            "position": 17,
+            "row": 1,
+            "column": 7,
+            "ppu_address": 8478,
+            "world_x": 240,
+            "world_y": 64
+          },
+          {
+            "position": 18,
+            "row": 1,
+            "column": 8,
+            "ppu_address": 9474,
+            "world_x": 272,
+            "world_y": 64
+          },
+          {
+            "position": 19,
+            "row": 1,
+            "column": 9,
+            "ppu_address": 9478,
+            "world_x": 304,
+            "world_y": 64
+          },
+          {
+            "position": 20,
+            "row": 2,
+            "column": 0,
+            "ppu_address": 8706,
+            "world_x": 16,
+            "world_y": 128
+          },
+          {
+            "position": 21,
+            "row": 2,
+            "column": 1,
+            "ppu_address": 8710,
+            "world_x": 48,
+            "world_y": 128
+          },
+          {
+            "position": 22,
+            "row": 2,
+            "column": 2,
+            "ppu_address": 8714,
+            "world_x": 80,
+            "world_y": 128
+          },
+          {
+            "position": 23,
+            "row": 2,
+            "column": 3,
+            "ppu_address": 8718,
+            "world_x": 112,
+            "world_y": 128
+          },
+          {
+            "position": 24,
+            "row": 2,
+            "column": 4,
+            "ppu_address": 8722,
+            "world_x": 144,
+            "world_y": 128
+          },
+          {
+            "position": 25,
+            "row": 2,
+            "column": 5,
+            "ppu_address": 8726,
+            "world_x": 176,
+            "world_y": 128
+          },
+          {
+            "position": 26,
+            "row": 2,
+            "column": 6,
+            "ppu_address": 8730,
+            "world_x": 208,
+            "world_y": 128
+          },
+          {
+            "position": 27,
+            "row": 2,
+            "column": 7,
+            "ppu_address": 8734,
+            "world_x": 240,
+            "world_y": 128
+          },
+          {
+            "position": 28,
+            "row": 2,
+            "column": 8,
+            "ppu_address": 9730,
+            "world_x": 272,
+            "world_y": 128
+          },
+          {
+            "position": 29,
+            "row": 2,
+            "column": 9,
+            "ppu_address": 9734,
+            "world_x": 304,
+            "world_y": 128
+          }
+        ],
+        "draw_order": [
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "draw_passes": [
+          {
+            "order": 0,
+            "routine": "DED0",
+            "purpose": "left-neighbor edge; context details retained as unresolved"
+          },
+          {
+            "order": 1,
+            "routine": "DDCA",
+            "purpose": "bottom-neighbor first row",
+            "origin_y": 192,
+            "clip": "first2 PPU tile rows because RAM$5E is set"
+          },
+          {
+            "order": 2,
+            "routine": "DC24:E11A",
+            "purpose": "currentroom bottom row",
+            "positions": [
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29
+            ],
+            "origin_y": 128
+          },
+          {
+            "order": 3,
+            "routine": "DC24:E11A",
+            "purpose": "currentroom middle row",
+            "positions": [
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19
+            ],
+            "origin_y": 64
+          },
+          {
+            "order": 4,
+            "routine": "DC24:E11A",
+            "purpose": "currentroom top row",
+            "positions": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "origin_y": 0
+          },
+          {
+            "order": 5,
+            "routine": "DDE9",
+            "purpose": "above-neighbor bottom row",
+            "origin_y": -64,
+            "clip": "PPU address clipping suppresses writes outside visible nametable rows"
+          }
+        ],
+        "zero_pixel_rule": "Draw index0 when write_mask is1; zero layout index means no nametable write",
+        "unresolved_pixel_rule": "When pixel_known_mask is0, no source pixel has been established; do not substitute art"
+      },
+      "previews": [
+        "native-metatiles-v2-dungeon-diagnostic.png",
+        "native-metatiles-v2-palace-diagnostic.png"
+      ],
+      "rea_evidence": [
+        {
+          "file": "analysis/rea/background-v2-bank02-function-ad40.json",
+          "evidence_id": "ev_1d7baa475946f2ee4dab95879aefd90ea7aa0e0a72a3767bad16654e7febda5f"
+        },
+        {
+          "file": "analysis/rea/background-v2-bank02-function-b4fa.json",
+          "evidence_id": "ev_68adae90b51fc57b7ded9d2b27bf0fcf5f56b276f1ea8fe2df7e3ea4413d28c2"
+        },
+        {
+          "file": "analysis/rea/background-v2-bank02-function-b7f2.json",
+          "evidence_id": "ev_ac7a7c6aaf63e3b9af69af35a8f4c3c0003468621fa1adbcccdb48dddf2cebc2"
+        },
+        {
+          "file": "analysis/rea/background-v2-bank04-function-bb57.json",
+          "evidence_id": "ev_ca4a7c5af52863cdb1dfd64993d5876ab5e1319955daa138956c1086b62556f7"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-824d.json",
+          "evidence_id": "ev_400ec62051568a2805cab5aeffb78c0584f68bd5f9439398f466550e6d3ed135"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-8296.json",
+          "evidence_id": "ev_0a954de998e55b5a189adea1215de2cd5e4cddb11a48b1c1925723dcede197d3"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-82c3.json",
+          "evidence_id": "ev_371f6085ed1293dda7d42747d4db1eb3088bbbfc204524ed8a59096a6ebfe22c"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-832c.json",
+          "evidence_id": "ev_f0922345f2a25c570a392d66d237b5ec37c58e1d04fecf29bf90e2d275ee7126"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-8336.json",
+          "evidence_id": "ev_a7fb1364db3db10964703c17e87fa42a40b55cd21b1ea852a9514d66f96e5dfb"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-87b7.json",
+          "evidence_id": "ev_35415665efc48aaa590e2430a46d807d90fbb8654fb933417ed1887ccee9a307"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-c6f3.json",
+          "evidence_id": "ev_0b1b3fa3ee4884f803d9119848da2572f9958541cb678435dc9f922079c7f8c1"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-db18.json",
+          "evidence_id": "ev_9ecced254af67c71ac718dc9c0aae3e15b17c69b26781c268b819ee64a8c29ce"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-dc24.json",
+          "evidence_id": "ev_3602424abf07acbed962e0cd248037435701c8dc31d935b91113d776c52982be"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-dd70.json",
+          "evidence_id": "ev_ecf7f874712bc4ab58f2863dbb8b2f52bdb2469da3e5b0d6e1afdb355eca5a7b"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-ddca.json",
+          "evidence_id": "ev_c0197fea162f60d6510ef4b15bff1717c3efd6f902122dc3d04406c644bba94c"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-dde9.json",
+          "evidence_id": "ev_c49c10b537f4ad68a70ce4f3052071d882e6f4e0a9185257ec68aaa543d92937"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-ded0.json",
+          "evidence_id": "ev_ef422e3dd6b72f06bcdeabdaffcf0c728999f16f99319b0228266cfd5b2273e5"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e071.json",
+          "evidence_id": "ev_b38abb40d0407682c6c534680be895c158d614a686d1a9ea50067946555329fe"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e0bb.json",
+          "evidence_id": "ev_cbbaef60bac4443807da95e413877fb8108f5fed35730a0e1461fc9483c27afa"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e0e6.json",
+          "evidence_id": "ev_85740edd9467914ef2f9e5171b24d28aace65ebb13328dcda259a6786f038358"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e860.json",
+          "evidence_id": "ev_de3d8405a9e7adc073b8587e93b6164f79ba04d5d1deaf12742bab787a081282"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e896.json",
+          "evidence_id": "ev_2451a5f4de236b08a6d76c9ab0995038a5c0e5f27ec0b617c3ed7b4d5b9a2088"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e8b6.json",
+          "evidence_id": "ev_3c563da1c0e847ed282b3d7dc02548eaa0a0e576b4371719e600d5a513bdc4e4"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e9c5.json",
+          "evidence_id": "ev_d9a17b5b6ea251233a39bd756a1fd3ea96f4becac3f48b3a0a617a5c3df7b006"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-e9ff.json",
+          "evidence_id": "ev_99755e1451bc3f2a128015fdd724db810ece65857ced700116e984fde1729fa5"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-ea13.json",
+          "evidence_id": "ev_6fa4f0a644ea9b8f0973ec3800935848357edb5f4e436273a6cf61c3c0804ade"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-ea32.json",
+          "evidence_id": "ev_a0edd7dba6763d82e4f42d88edac30297ee0810c05a1519ae2e2c246699cf2ba"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-f9a7.json",
+          "evidence_id": "ev_04cd832f21f56164dbae8afe3bcf5807c8f891d3912c9d09193898235d45fa5e"
+        },
+        {
+          "file": "analysis/rea/background-v2-function-f9e0.json",
+          "evidence_id": "ev_dbf18428fbc131ab8cdd196bc0027bf44b6296ffeda751fc00e159f75a5b2396"
+        },
+        {
           "file": "analysis/rea/graphics-function-e0c4.json",
-          "evidence_id": "ev_988d7a0977f48890c502768ffab14b9f38458167ed0032ceec01071d63d19573",
-          "procedure": "0xe0c4"
+          "evidence_id": "ev_988d7a0977f48890c502768ffab14b9f38458167ed0032ceec01071d63d19573"
         },
-        "supporting_raw_anchor": {
-          "rom_file_offset": 121100,
-          "hex": "a9 04 4c d3 f2",
-          "meaning": "D8FC adapter selectsbank4 viaF2D3"
-        }
-      },
-      {
-        "finding": "E593 indexes graphics-list pointers in bank 2: $B0E9 when RAM $04BB = 0, or $B043 otherwise, using 2*type. E605 reads the pointed lists in bank 5.",
-        "evidence": {
+        {
           "file": "analysis/rea/graphics-function-e593.json",
-          "evidence_id": "ev_179141ee22aa45e20f715d7bc776d28b6d5b9e7f8475a751414261fc4abd7f47",
-          "procedure": "0xe593"
+          "evidence_id": "ev_179141ee22aa45e20f715d7bc776d28b6d5b9e7f8475a751414261fc4abd7f47"
         },
-        "supporting_raw_anchor": {
-          "rom_file_offset": 117520,
-          "hex": "a9 02 4c d3 f2",
-          "meaning": "CB00 adapter selectsbank2 viaF2D3"
-        }
-      },
-      {
-        "finding": "E6CB draws 7 nametable columns for 10 rows minus layout-header row skips. A zero layout byte leaves the previous nametable tile unchanged; a nonzero byte adds the allocated CHR base.",
-        "evidence": {
+        {
+          "file": "analysis/rea/graphics-function-e67f.json",
+          "evidence_id": "ev_aa9fa7dbe4f7f1dbe0eb395b44ed3e2ba5d5b581218ca73f2da1c1bee38acb00"
+        },
+        {
           "file": "analysis/rea/graphics-function-e723.json",
-          "evidence_id": "ev_f817723998bc1b7be7beb55989090d934043fd9330a4c49b25722068b7278ee3",
-          "procedure": "0xe6cb"
+          "evidence_id": "ev_f817723998bc1b7be7beb55989090d934043fd9330a4c49b25722068b7278ee3"
         },
-        "supporting_raw_anchor": {
-          "rom_file_offset": 124584,
-          "hex": "f0 09 aa 20 a4 e6 c6 1a ca d0 f8 60",
-          "meaning": "E698 decrements remainingrow count while advancing row for each header skip"
-        }
-      },
-      {
-        "finding": "The initializer at ROM $B81E sets PPU destination $1010 and allocation counter $76 = 0. Layout index 1 therefore names the first uploaded graphics word.",
-        "method": "exact rawROM byte anchor and manual6502 decoding",
-        "byte_anchor": {
-          "rom_file_offset": 47134,
-          "bytes_hex": "a9 10 85 72 85 73 a9 00 85 75 8d 9a 04 85 76",
-          "method": "raw byte anchor plus manual6502 decoding",
-          "observation": "LDA#$10; STA$72; STA$73; LDA#0; STA$75; STA$049A; STA$76. PPU destination$1010 and allocation counter0 prove layout index1 uses first loaded word."
-        }
-      },
-      {
-        "finding": "E11D advances each logical horizontal cell by 4 nametable columns, or 32 pixels.",
-        "evidence": {
+        {
           "file": "analysis/rea/graphics-function-e11d.json",
-          "evidence_id": "ev_01cb177f2dd9a10adb0681d73345cef8335149ee2de507a51c989a2669f04d14",
-          "procedure": "0xe11d"
+          "evidence_id": "ev_01cb177f2dd9a10adb0681d73345cef8335149ee2de507a51c989a2669f04d14"
         }
+      ],
+      "validation": {
+        "definitions_checked": 678,
+        "known_pixels_checked": 515712,
+        "source_written_pixels_checked": 216704,
+        "explicit_unknown_pixels": 2688
       },
-      {
-        "finding": "F32B reads word lists through $7B. Source bank is RAM $52 + (word >> 10), and source address is $8000 + 16*(word & 1023). It copies 16-byte tiles to PPU or RAM; full sprite framing remains unknown.",
-        "evidence": {
-          "file": "analysis/rea/graphics-function-f39e.json",
-          "evidence_id": "ev_4e543f2b79b44c85b95883b7c1a48651b631c071251d60b89af71d23a1056f99",
-          "procedure": "0xf32b"
-        }
-      }
-    ],
-    "exports": [
-      {
-        "file": "web/assets/native-metatiles.json",
-        "sha256": "4bc356f30b5ff7190e19657eb505a711ba3a04f5402ce9be5ac2c6f42a829c04",
-        "status": "10 original static base background compositions: 5 core types x 2 table variants; indexed pixels and write masks preserved."
-      },
-      {
-        "file": "web/assets/actors.json",
-        "status": "3 visual assembly candidates; head reuse and action mapping are reconstruction choices, unchanged by new tracing."
-      },
-      {
-        "file": "web/assets/background-tiles.json",
-        "status": "1024 exact indexed bank 3 tile patterns. E605 confirms native background graphics use of bank 3."
-      }
-    ],
-    "validation": {
-      "composition_pixels_checked": 44800,
-      "source_written_pixels_checked": 19136,
-      "method": "Every written pixel independently recomputed from original ROM source bitplanes; layout bytes, word lists, source offsets, masks and SHA256 hashes verified."
+      "limitations": [
+        "Original tables contain23 dungeon layout entries and30 palace entries; unused type slots are explicit unavailable records, not invented definitions.",
+        "Some original base pairs reference indices beyond their standalone graphics list; these remain partial pending complete CHR allocation/context recovery.",
+        "Original theme palettes/attributes are recovered separately and are not replaced with guessed colors here.",
+        "Context variants are exact source combinations selected by observed code. The full original condition tree and room-global CHR allocation are not executed by this extractor.",
+        "Native scroll8..80 with4-pixel easing was recovered separately by actor tracing; PPU origins and draw order are observed, not inferred from screenshots.",
+        "Health HUD coordinates, tile IDs, and palette slot are proven, but original glyph pixels remain unrecovered. No substitute glyph data is exported."
+      ]
     },
-    "inferences": [
-      "Theme names dungeon/palace follow visual appearance; the original code selects tables using RAM $04BB."
-    ],
-    "unknowns": [
-      "Original palettes and nametable attribute palettes are not decoded.",
-      "Neighbor/state-dependent replacements after base pointer selection are not executed or fully reconstructed.",
-      "Native sprite/frame/OAM composition and animation sequencing are not recovered.",
-      "Original world/collision vertical anchor and room row advance are not traced. Origin 0,0 denotes the E6CB call base.",
-      "Only types 0, 1, 3, 4, 20 are exported as native base compositions; no complete 32-type mapping is claimed."
-    ],
-    "stop_reason": "Requested core native floor/pillar/gate/wall compositions recovered and validated; broader tracing bounded at requested concrete asset delivery."
-  }
+    "actors": {
+      "source_rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+      "deliverables": {
+        "extractor": "tools/extract_actor_frames.py",
+        "indexed_frames": "analysis/graphics/actor-frames.json",
+        "prince_preview": "analysis/rea/actor-frames-preview-prince.png",
+        "guard_preview": "analysis/rea/actor-frames-preview-guard.png",
+        "validation": "analysis/rea/actor-validation.json"
+      },
+      "counts": {
+        "frames": 296,
+        "actors": {
+          "prince": 253,
+          "guard": 33,
+          "object": 10
+        },
+        "complete_frames": 293,
+        "errors": 2
+      },
+      "observed": [
+        {
+          "id": "actor-frame-pointers",
+          "facts": [
+            "Bank4B2C3 uses player frame low bytes at8008 and high bytes at810F.",
+            "Normal guard branch uses8216/825D with index frameID-151 when guard context06E0 is active.",
+            "Each frame is a stream of8-byte part descriptors terminated byFF."
+          ],
+          "evidence": [
+            "analysis/rea/actor-pointer-b2c3.json"
+          ]
+        },
+        {
+          "id": "oam-part-layout",
+          "facts": [
+            "Descriptor bytes: graphicsID,xOffset,yOffset,widthTiles,heightTiles,OAMattribute,tileGridLow,tileGridHigh.",
+            "B3B7 reads width/height and row-major sprite tile grids; zero grid entries leave transparent holes.",
+            "Unflipped B550 positions columns at+8pixels; flipped B49C at-8pixels with OAMattributeOR40.",
+            "B419 interprets negative horizontal offsets through ones-complement arithmetic; vertical offsets are conventional signed byte addition.",
+            "Original frame15 descriptor82F8 is0E0200020501548E, grid8E54 is01000203040506070809."
+          ],
+          "evidence": [
+            "analysis/rea/actor-grid-b3b7.json",
+            "analysis/rea/actor-position-b419.json",
+            "analysis/rea/actor-oam-full-b49c.json"
+          ]
+        },
+        {
+          "id": "actor-graphics-uploads",
+          "facts": [
+            "Bank5:8008 looks up original upload lists atA42F for player and9D93 for alternate/guard context.",
+            "F32B reads little-endian tile words: source bank=RAM52+(word>>10), source tile=word&1023.",
+            "Actor wordlists terminateFFFF; ordinary zero words do not allocate a destination CHR slot.",
+            "Standing frame15 uses upload ID14: tile words1,126,127,128,129,130,131,132,133.",
+            "The head reuse is explicitly encoded: grid1 at top-left uses original tile1; top-right grid0 is transparent."
+          ],
+          "evidence": [
+            "analysis/rea/actor-upload-8008.json",
+            "analysis/rea/graphics-function-f39e.json"
+          ]
+        },
+        {
+          "id": "shared-weapon-graphics",
+          "facts": [
+            "D40B configures destinationPPU0400, source bank base3, alternate upload-list table9D93,index0=>A2C1.",
+            "89F5 loops overFFFF-separated chunks; doubleFFFF ends the stream. The first6chunks force copying zero words, then06C2 clears and subsequent zero words are skipped.",
+            "This recovers142fixed CHR slots40..CD.",
+            "Multipart descriptors after the body change the tile base to83+descriptor.graphicsID. Combining that with fixed CHR mapping recovers actual sword sprites."
+          ],
+          "evidence": [
+            "analysis/rea/actor-shared-init-d40b.json",
+            "analysis/rea/graphics-function-89f5.json",
+            "analysis/rea/graphics-function-f39e.json"
+          ]
+        },
+        {
+          "id": "sprite-palettes",
+          "facts": [
+            "Player frame15 descriptor OAMattribute01 proves palette group1.",
+            "Guard frame151 descriptor bank4:87E6 is01FFFE040502CB98 and proves body palette group2.",
+            "Guard sword part bank4:87EE is00FEF9010201D0BF and uses palette group1.",
+            "All pixel indices0..3 and per-pixel palette groups are preserved; no source pixels are painted."
+          ],
+          "evidence": [
+            "analysis/graphics/actor-frames.json",
+            "analysis/graphics/palettes.json"
+          ]
+        },
+        {
+          "id": "native-camera",
+          "facts": [
+            "Bank5:87E9..884E uses RAM6F for horizontal scroll.",
+            "Desired scroll is clamp((actorX&FC)-128+8,8,80), with special-state/actor-alive guards.",
+            "The scroll approaches that target in4pixel steps.",
+            "Bank4:B449 subtracts16bit scroll6F from actorX060F/0610 before applying metasprite offsets."
+          ],
+          "evidence": [
+            "analysis/rea/actor-camera-8830.json"
+          ]
+        },
+        {
+          "id": "native-spawn",
+          "facts": [
+            "Bank4:BA80 calls fixedD7DF withA24hex(36),X40hex(64).",
+            "D7DF preserves those offsets in17/18, selectsbank2 throughD141 and callsAE78.",
+            "Bank2:AE78 indexes three-byte tile-coordinate triplets atA5F5 using startPosition*3.",
+            "Triplets contain X=32*column as16bits and Y=64*row; ordinary spawn anchor isX=36+32*column,Y=64+64*row.",
+            "There is a conditional30pixel X adjustment when0615=0 and04FE is nonzero.",
+            "Level1 separately overrides actorX to2 and starts script96AE, making its intro a special case.",
+            "Frame15 has native origin(+2,-37), canvas16x40, and its lowest canvas row extends to native actorY+3.",
+            "Level7(index6) instead callsD7DF(A2Ehex=46,X66hex=102) and script994E.",
+            "Level13(index12) forces facing0 and first-entryX0; original scripted startup states require separate reconstruction."
+          ],
+          "evidence": [
+            "analysis/rea/actor-spawn-ba80.json",
+            "analysis/rea/actor-spawn-d7df.json",
+            "analysis/rea/actor-spawn-d141.json",
+            "analysis/rea/actor-spawn-ae78.json",
+            "analysis/graphics/actor-frames.json"
+          ]
+        },
+        {
+          "id": "pickup-entities",
+          "facts": [
+            "Swordtype22 entity templatebank2AD10 referencesbank5animation9C96, whose initial frameA1=161 cycles with sparkleframe162.",
+            "Potiontype10 templateADA1 references9CB3, initialframe96=150. Rawbit40selectsADB1/script9CB7, initialframeA3=163.",
+            "Everypotion also createsADC1/script9CD8 bubbleentity, cyclingframes151..156.",
+            "Objects useframepointertablebank4:82B0/82D4 indexedframeID-150, sharedCHRtilebase40.",
+            "BuilderE825 placesnativeobjectanchoratX32column,Y64row. Offsetsinframeparts alreadyinclude native roomplacement.",
+            "Smallpotion150:origin32,55,size16x16; variant163:origin32,58,size16x16; bubble151:origin36,51,size8x8.",
+            "Sword161 template direction80selectshorizontalflip. Originalunflippedorigin-39,63,size32x8; flippedorigin15,63.",
+            "OAMimagehorizontalreflection mapsglobalpixelX to7-X: reflectedcanvasoriginX=8-originX-width."
+          ],
+          "evidence": [
+            "analysis/rea/actor-object-builder-e801.json",
+            "analysis/rea/actor-object-copy-db85.json",
+            "analysis/rea/actor-object-position-e825.json",
+            "analysis/graphics/actor-frames.json"
+          ]
+        }
+      ],
+      "inferred": [
+        "Editable frame-to-gameplay-state mappings in pose_sequences are based on the recovered visual atlas; original action bytecode timing/control is not reconstructed.",
+        "C renderer alignment and interpolated climb motion adapt the independent gameplay engine to the original artwork.",
+        "The native climb artwork changes coordinate regime between frames140/141 as the original actor anchor moves up one row; C animation interpolation needs its own alignment."
+      ],
+      "unresolved": {
+        "excluded_main_frame_ids": [
+          241,
+          242
+        ],
+        "incomplete_frames": [
+          {
+            "id": "prince_036",
+            "missing_chr_slots": [
+              {
+                "part": 0,
+                "cell": 15,
+                "tile_id": 14,
+                "reason": "CHR slot is not defined by the traced upload"
+              },
+              {
+                "part": 0,
+                "cell": 16,
+                "tile_id": 15,
+                "reason": "CHR slot is not defined by the traced upload"
+              },
+              {
+                "part": 0,
+                "cell": 18,
+                "tile_id": 16,
+                "reason": "CHR slot is not defined by the traced upload"
+              },
+              {
+                "part": 0,
+                "cell": 19,
+                "tile_id": 17,
+                "reason": "CHR slot is not defined by the traced upload"
+              }
+            ]
+          },
+          {
+            "id": "guard_175",
+            "missing_chr_slots": [
+              {
+                "part": 0,
+                "cell": 14,
+                "tile_id": 11,
+                "reason": "CHR slot is not defined by the traced upload"
+              },
+              {
+                "part": 0,
+                "cell": 18,
+                "tile_id": 12,
+                "reason": "CHR slot is not defined by the traced upload"
+              }
+            ]
+          },
+          {
+            "id": "guard_176",
+            "missing_chr_slots": [
+              {
+                "part": 0,
+                "cell": 14,
+                "tile_id": 11,
+                "reason": "CHR slot is not defined by the traced upload"
+              },
+              {
+                "part": 0,
+                "cell": 18,
+                "tile_id": 12,
+                "reason": "CHR slot is not defined by the traced upload"
+              }
+            ]
+          }
+        ],
+        "interpretation": "These context-dependent or unresolved source entries are reported explicitly and are not repaired with guessed pixels."
+      },
+      "analysis_derivatives": [
+        {
+          "path": "analysis/rea/actor-bank02-spawn-seeded.bin",
+          "sha256": "1a9939dadd72743304c2daaf05c46f77a941618fb80ede795b587042b59b6ceb",
+          "mapping": "Switchable16KiB PRG bank plus fixedbank7 mapped atCPU8000..FFFF",
+          "analysis_only_modification": "Bytes0..2 replaced by syntheticJMP to selected routine to seed Ghidra analysis; extraction always reads immutable original ROM."
+        },
+        {
+          "path": "analysis/rea/actor-bank04-pointer-seeded.bin",
+          "sha256": "3029422a2a78c4fbcd4d295ebbc0052188b05cbc12cb8ba2a1316f0722c820c7",
+          "mapping": "Switchable16KiB PRG bank plus fixedbank7 mapped atCPU8000..FFFF",
+          "analysis_only_modification": "Bytes0..2 replaced by syntheticJMP to selected routine to seed Ghidra analysis; extraction always reads immutable original ROM."
+        },
+        {
+          "path": "analysis/rea/actor-bank04-render-seeded.bin",
+          "sha256": "e39a712eb1b369044914bf771059bd3a0c91efb456e0a61874d75408213ab956",
+          "mapping": "Switchable16KiB PRG bank plus fixedbank7 mapped atCPU8000..FFFF",
+          "analysis_only_modification": "Bytes0..2 replaced by syntheticJMP to selected routine to seed Ghidra analysis; extraction always reads immutable original ROM."
+        },
+        {
+          "path": "analysis/rea/actor-bank04-seeded.bin",
+          "sha256": "ff5c772a134be51a6387f26da3ae5857a49b8c61a7097bdec552b8385a62062e",
+          "mapping": "Switchable16KiB PRG bank plus fixedbank7 mapped atCPU8000..FFFF",
+          "analysis_only_modification": "Bytes0..2 replaced by syntheticJMP to selected routine to seed Ghidra analysis; extraction always reads immutable original ROM."
+        },
+        {
+          "path": "analysis/rea/actor-bank04-spawn-seeded.bin",
+          "sha256": "45104b172fc843e4e664e3c0a474f6184f7c2513b348a1873334af226b517ff5",
+          "mapping": "Switchable16KiB PRG bank plus fixedbank7 mapped atCPU8000..FFFF",
+          "analysis_only_modification": "Bytes0..2 replaced by syntheticJMP to selected routine to seed Ghidra analysis; extraction always reads immutable original ROM."
+        }
+      ],
+      "source_immutable": true
+    },
+    "palettes": {
+      "schema": "pop-nes-palette-findings-v1",
+      "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+      "palette_export": "analysis/graphics/palettes.json",
+      "observations": [
+        {
+          "finding": "B68A selects the level's sequence from14 little-endian pointers at bank2:B6A4, using2*RAM70;0735 nonzero forces index0.",
+          "evidence": {
+            "file": "analysis/rea/palette-selector.json",
+            "evidence_id": "ev_e9e73b1d49a01b8fe3bc79b685ff7cb0b4a5b71731852aa9db35bc5ba77e2436",
+            "procedure": "0xb68a"
+          }
+        },
+        {
+          "finding": "B63C reads the sequence word through4D/4E+7D. FFFF resets7D/7E; otherwise setsPPUADDR3F00 and callsB67C, then advances7D by2.",
+          "evidence": {
+            "file": "analysis/rea/palette-upload.json",
+            "evidence_id": "ev_f9a6a113532d562173f6e6ce5b15dbf4a28a71790dbfdf5f003fb1565d0401cc",
+            "procedure": "0xb63c"
+          }
+        },
+        {
+          "finding": "B67C initializesY=0/X=20hex, copies exactly32 bytes from(0017),Y toPPUDATA2007 and returns.",
+          "evidence": {
+            "file": "analysis/rea/palette-copy32.json",
+            "evidence_id": "ev_ba4897d2934ae451a3f2ed0abb5cbeff237057ff01f3fbe18c6f550d30834450",
+            "procedure": "0xb67c"
+          }
+        },
+        {
+          "finding": "The normal14 level sequences each contain one32-byte palette. Six distinct tables are used. Player sprite-group1 is0F271620 in all14.",
+          "method": "exact ROM pointer/data extraction with SHA-bound offsets"
+        },
+        {
+          "finding": "Bank5:831C sets lowPPUADDR=C0 and writes7*8 zero bytes. Callers provide high23/27, clearing normal gameplay attributes to palette0.",
+          "evidence": {
+            "file": "analysis/rea/palette-gameplay-attribute-clear.json",
+            "evidence_id": "ev_986cc1531e7721984fdc16f5e6672709ac3ff5122dc0cee574199e01b8656256",
+            "procedure": "0x831c"
+          }
+        },
+        {
+          "finding": "Bank4:BF30 is called after each E723 base-layout tile write. Normal flags5E=0/04BC=0, Xremaining>=4 andlogicaltype20 cause a masked attribute update using55hex, selecting palette1 for the wall's first32px only.",
+          "evidence": {
+            "file": "analysis/rea/palette-attribute-writer.json",
+            "evidence_id": "ev_31caf7db559bdb383751bc8f2ef12e94e22933c051866cb04d7ba16a171f3095",
+            "procedure": "0xbf30"
+          },
+          "caller_evidence": "analysis/rea/graphics-function-e723.json"
+        },
+        {
+          "finding": "Bank4:B28A computes the attribute address and16x16 quadrant mask for a nametable tile address. Palette writes preserve the other three quadrants.",
+          "evidence": {
+            "file": "analysis/rea/palette-attribute-address.json",
+            "evidence_id": "ev_792652d94a340384e64833770a43d83a9fe62693e5809c2b1c548873844275b4",
+            "procedure": "0xb28a"
+          }
+        },
+        {
+          "finding": "Bank4:AD56 reads0100 background-queue records; patternID&3F selects a9-byte header viaA45E. Headerbyte3 is the attribute fill pattern, applied by read/modify/write withB28A's quadrantmask.",
+          "evidence": {
+            "file": "analysis/rea/palette-background-queue.json",
+            "evidence_id": "ev_ba008133d7ec4f24460aadd77dca89e1ddaf70fc6b875b681440838107054902",
+            "procedure": "0xad56"
+          }
+        },
+        {
+          "finding": "Fixed codeE379..E3AB queues pattern0 for dungeon torchtype19 and pattern11 for palace, when61 is enabled and the next tile is not18. Both headers are1x2 tiles at offset45hex, attrAAhex:8x16 flame at originalcell+(40,16), palette2.",
+          "method": "exact fixed-ROM byte decoding, corroborated by graphics-function-e11d.json and AD56 header parsing",
+          "caller_evidence": "analysis/rea/graphics-function-e11d.json"
+        },
+        {
+          "finding": "DungeonA2BA andpalaceA2C6 each list five frame-data pointers. Relative tile numbers49..52 or30..39 resolve through their theme's type19 graphics lists to the identical bank3 tileIDs336..33F. All5 frames are exported8x16 indexed pixels with complete tile write masks.",
+          "method": "independent original word-list and CHR-bitplane extraction; all10 tile mappings asserted",
+          "source_file_offsets": [
+            62320,
+            62480
+          ],
+          "renderer_evidence": {
+            "file": "analysis/rea/palette-background-render.json",
+            "evidence_id": "ev_94bf88a821aa9d0285a6a180b27aa3872fc3c5912f36e2b6994447d26e50aaf8",
+            "procedure": "0xaf88"
+          }
+        },
+        {
+          "finding": "E533 reads the TYPE of the cell below, including neighbor-room handling. RAM59 feeds context tile overlays, not color-palette selection.",
+          "evidence": {
+            "file": "analysis/rea/palette-below-tile.json",
+            "evidence_id": "ev_dd0cecaef48c1111025c9d89812092eeab59d62e283c85a80ed57308adce19eb",
+            "procedure": "0xe533"
+          }
+        },
+        {
+          "finding": "Normal player body usesOAMpalette1; normalguardbody uses2 and its swordpart uses1. Preserve each individual part's original attribute byte.",
+          "method": "exact original frame-header evidence recovered by actor agent",
+          "details": {
+            "player_group": 1,
+            "player_indices": [
+              15,
+              39,
+              22,
+              32
+            ],
+            "proof": "Normal player frame15 record bank4:82F8 has OAMattribute01 at headerbyte5; B407/B40A copies this toRAM38; B49C frame writer emitsRAM38.",
+            "guard_group": 2,
+            "guard_group_status": "proven normal guard body; individual frame-part attributes remain authoritative",
+            "guard_proof": "Alternate guard frame151 indexes bank4 record87E6 [01,FF,FE,04,05,02,CB,98], OAMattribute02 at byte5.",
+            "guard_secondary_part_group": 1,
+            "guard_secondary_proof": "Record87EE [00,FE,F9,01,02,01,D0,BF] emits sword with OAMattribute01."
+          }
+        },
+        {
+          "finding": "The unmodified official FCEUX RGB profile was selected by comparison after converting the screenshot's Display ICC profile to sRGB. Weighted nearest-color squared error18.41 forFCEUX versus402.70 NestopiaYUV and986.23 NestopiaRGB. No sampled screenshotRGB enters the palette data.",
+          "details": {
+            "name": "FCEUX default (FCEU0.12 and earlier), unmodified192-byte .pal",
+            "source": "https://raw.githubusercontent.com/TASEmulators/fceux/master/output/palettes/FCEUX.pal",
+            "documentation": "https://fceux.com/web/help/PaletteOptions.html",
+            "sha256": "bbb0355bcadc4be771efeb81930b09b17d97dcb8c70167a652902a789158c5f8",
+            "normal_emphasis_bits": 0,
+            "rgb_values_are": "display conversion choice, not RGB values stored in the NES ROM"
+          },
+          "comparison": {
+            "reference": "user-supplied screenshot, dungeon panel",
+            "source_icc_profile": "Display",
+            "comparison_space": "sRGB after Pillow ImageCms ICC conversion",
+            "top_nonblack_colors": [
+              [
+                [
+                  172,
+                  230,
+                  252
+                ],
+                245214
+              ],
+              [
+                [
+                  91,
+                  151,
+                  252
+                ],
+                48336
+              ],
+              [
+                [
+                  68,
+                  2,
+                  156
+                ],
+                34884
+              ],
+              [
+                [
+                  132,
+                  1,
+                  244
+                ],
+                34413
+              ],
+              [
+                [
+                  212,
+                  202,
+                  252
+                ],
+                27832
+              ],
+              [
+                [
+                  4,
+                  2,
+                  172
+                ],
+                23726
+              ],
+              [
+                [
+                  252,
+                  254,
+                  252
+                ],
+                1588
+              ],
+              [
+                [
+                  252,
+                  154,
+                  59
+                ],
+                1580
+              ],
+              [
+                [
+                  252,
+                  118,
+                  101
+                ],
+                1490
+              ],
+              [
+                [
+                  220,
+                  43,
+                  5
+                ],
+                464
+              ],
+              [
+                [
+                  253,
+                  191,
+                  180
+                ],
+                102
+              ]
+            ],
+            "weighted_nearest_color_squared_error": {
+              "FCEUX": 18.41,
+              "nestopia_rgb": 986.23,
+              "nestopia_yuv": 402.7
+            },
+            "chosen_profile": "FCEUX.pal",
+            "note": "Used only to select an explicit emulator RGB conversion profile; no screenshot colors are substituted for original ROM palette indices."
+          }
+        }
+      ],
+      "reproduction": "python3 tools/extract_palettes.py",
+      "limitations": [
+        "A background palette applies per16x16 attribute quadrant, never independently per object or pixel.",
+        "Attribute rules here cover the normal static room pass and identified background-object queue; full dynamic screen state is not emulated.",
+        "Sprite palette selection must use each original OAM/frame attribute byte; group1 is proven for normal player frames.",
+        "PPUMASK emphasis/grayscale and analog/composite video effects are not applied by this normal RGB conversion.",
+        "The supplied screenshot selects a documented RGB profile; original colors remain the recovered ROM indices."
+      ],
+      "background_rules": {
+        "grid_unit_pixels": 16,
+        "base_palette": 0,
+        "attribute_address": "nametable_base+0x3C0+floor(tile_y/4)*8+floor(tile_x/4)",
+        "quadrant_shift": "((tile_y&2)<<1)|(tile_x&2)",
+        "masked_write": "new_attribute=(old_attribute & ~(3<<shift)) | (palette_group<<shift)",
+        "wall": {
+          "logical_type": 20,
+          "palette_group": 1,
+          "apply_on": "each actual8x8 base-layout nametable write, after that tile write",
+          "layout_columns": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "conditions": {
+            "zero_page_005e": 0,
+            "ram_04bc": 0
+          },
+          "ignored_columns": [
+            4,
+            5,
+            6
+          ],
+          "original_routine": {
+            "bank": 4,
+            "cpu_address": "0xbf30",
+            "file_offset": 81728
+          },
+          "note": "Do not recolor the full56px metatile; the right24px belong to overlapping neighboring cells."
+        },
+        "torch": {
+          "logical_type": 19,
+          "palette_group": 2,
+          "dungeon_pattern_id": 0,
+          "palace_pattern_id": 11,
+          "pixel_offset_from_original_cell_ppu_origin": [
+            40,
+            16
+          ],
+          "graphic_size_pixels": [
+            8,
+            16
+          ],
+          "attribute_extent": "one containing16x16 quadrant, shared with any other pixels in that quadrant",
+          "conditions": {
+            "queue_enabled_zero_page_0061": "nonzero",
+            "right_neighbor_type": "not18"
+          },
+          "apply_order": "after static room layout, through the0100 background-object queue",
+          "queue_builder_cpu_range": [
+            "0xe379",
+            "0xe3ab"
+          ],
+          "attribute_writer": {
+            "bank": 4,
+            "cpu_address": "0xad56",
+            "file_offset": 77158
+          }
+        },
+        "other_dynamic_background_patterns": "Use the header attribute_fill_pattern with the affected quadrant mask. Most patterns use0; patterns0/11 useAA (palette2).",
+        "status_region": "Separate setup modifies bottom attribute-row half-quadrants to palette3. Gameplay-grid defaults apply above the status strip.",
+        "context_note": "E533 returns the neighboring cell TYPE; zero-page59 is a tile overlay selector, not a palette index."
+      },
+      "validation": {
+        "all14_palette_lists_have_one32_byte_frame": true,
+        "all_original_color_ids_below64": true,
+        "all14_player_quartets_match": true,
+        "raw_bytes_from_exact_rom": true,
+        "rgb_profile_sha256_verified": true
+      },
+      "derived_target_mapping": "palette-*entry.bin files seed exact switched-bank tails followed by fixedbank7; earlier selected-bank addresses may be unmapped. No target bytes are modified.",
+      "failed_probe_retained": "palette-selector-unseeded.json has missing-function error; the explicit B68A-seeded probe succeeds. Initial AF89 probe begins one byte after the AF88 entry and is excluded from findings; its artifact is retained as palette-background-render-offset89.json."
+    }
+  },
+  "display_reconstruction_limits": [
+    "C gameplay, animation/state selection and cadence remain independently reconstructed.",
+    "HUD icon pixels are reconstructed; original glyph IDs and PPU positions are established.",
+    "Some context variants, scene scripts, audio, sprite clipping/priority and exact AI remain incomplete.",
+    "Display profile crops8 overscan lines from each end of native240px output."
+  ]
 }

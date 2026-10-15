@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const output=resolve('../analysis/validation');mkdirSync(output,{recursive:true});
+const output=resolve(dirname(fileURLToPath(import.meta.url)),'../../analysis/validation');mkdirSync(output,{recursive:true});
 const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});
 const errors=[];
 const page=await browser.newPage({viewport:{width:1440,height:1100},deviceScaleFactor:1});
@@ -18,6 +19,19 @@ try {
   await page.click('#start');
   assert.equal(await page.locator('#game-overlay').isVisible(),false);
   await page.waitForTimeout(1100);
+  const fidelity=await page.evaluate(()=>{
+    const study=window.popStudy,canvas=document.querySelector('#game');
+    const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+    const colors=new Set();
+    for(let i=0;i<pixels.length;i+=4)colors.add('#'+Array.from(pixels.slice(i,i+3)).map(x=>x.toString(16).padStart(2,'0')).join(''));
+    const profile=new Set(study.renderer.palettes.hex64);
+    return {width:canvas.width,height:canvas.height,cellPitch:study.renderer.tiles.native_layout.advance_x,actorFrames:study.actors.frames.length,colors:[...colors],nonProfileColors:[...colors].filter(c=>!profile.has(c))};
+  });
+  assert.equal(fidelity.cellPitch,32,'room cells preserve original horizontal pitch');
+  assert.equal(fidelity.actorFrames,296,'original multipart actor records are loaded');
+  assert.deepEqual(fidelity.nonProfileColors,[],'pixel display uses recovered palette profile without filtering');
+  assert.ok(fidelity.colors.includes('#a8e4fc')&&fidelity.colors.includes('#8000f0'),'native cyan wall and purple scenery palettes appear');
+  await page.locator('#game').screenshot({path:resolve(output,'fidelity-dungeon.png')});
   const initial=await page.evaluate(()=>({x:popStudy.game.game_get_player_x(),y:popStudy.game.game_get_player_y(),room:popStudy.game.game_get_room()}));
   await page.keyboard.down('ArrowRight');await page.waitForTimeout(250);await page.keyboard.up('ArrowRight');
   const moved=await page.evaluate(()=>({x:popStudy.game.game_get_player_x(),y:popStudy.game.game_get_player_y(),room:popStudy.game.game_get_room()}));
@@ -56,7 +70,7 @@ try {
   await mobile.screenshot({path:resolve(output,'mobile-touch.png'),fullPage:true});
   await mobile.close();
   assert.deepEqual(errors,[]);
-  const results={passed:true,checks:['Wasm boot','14-level selector','24-room map','start','keyboard movement','jump input','pause','level select','graphics/code tabs','room exploration','mobile overflow','touch controls','no browser or HTTP errors'],initial,moved,errors};
+  const results={passed:true,checks:['Wasm boot','14-level selector','24-room map','original32px room pitch','296 original sprite frames','unfiltered NES palette colors','start','keyboard movement','jump input','pause','level select','graphics/code tabs','room exploration','mobile overflow','touch controls','no browser or HTTP errors'],fidelity,initial,moved,errors};
   writeFileSync(resolve(output,'browser.json'),JSON.stringify(results,null,2)+'\n');
   console.log(JSON.stringify(results,null,2));
 } finally {await browser.close();}

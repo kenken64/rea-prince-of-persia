@@ -5,8 +5,8 @@
  * pixels; x is the actor's center and y is the actor's feet. Room IDs retain
  * the ROM's 1..24 convention. Levels are zero based (0..13). */
 enum {
-    GAME_WIDTH = 240, GAME_HEIGHT = 192,
-    GAME_TILE_WIDTH = 24, GAME_TILE_HEIGHT = 64,
+    GAME_WIDTH = 320, GAME_HEIGHT = 192,
+    GAME_TILE_WIDTH = 32, GAME_TILE_HEIGHT = 64,
     GAME_TILE_FLOOR_OFFSET = 56,
     GAME_INPUT_LEFT = 1, GAME_INPUT_RIGHT = 2,
     GAME_INPUT_UP = 4, GAME_INPUT_DOWN = 8,
