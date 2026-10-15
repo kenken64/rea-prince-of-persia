@@ -1,0 +1,11 @@
+{
+  "name": "prince-of-persia-nes-reconstruction",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/test.mjs",
+    "dev": "python3 -m http.server 8000 --directory dist"
+  }
+}

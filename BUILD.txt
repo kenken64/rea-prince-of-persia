@@ -1,0 +1,35 @@
+PRINCE OF PERSIA / NES RECONSTRUCTION
+
+This is an independent C gameplay reconstruction compiled to WebAssembly.
+It uses level bytes and selected graphics recovered from the supplied NES ROM.
+It contains no NES CPU interpreter and does not execute the original ROM.
+
+BUILD
+1. Install/extract an official WebAssembly/wasi-sdk release for your computer.
+   https://github.com/WebAssembly/wasi-sdk/releases
+2. Set WASI_SDK_PATH to its directory.
+3. Run npm run build, then npm run dev.
+4. Open http://localhost:8000 in your browser.
+
+No npm dependency installation is required.
+The original author's NES game source was not recovered. The C code is a new
+implementation. Exact animation timing, enemy AI, level-specific scripts,
+palettes, and audio remain subject to further ROM analysis and validation.
+
+FILES
+src/game.c          Gameplay, collision, combat, triggers, room traversal.
+src/game.h          Browser/native interface and editable constants.
+src/level_data.h    All 14 recovered level structures, with original raw bytes.
+src/wasm_libc.c     Freestanding byte operations.
+assets/levels.json  Recovered campaign data with offsets and validation.
+assets/actors.json  ROM-derived indexed sprite candidates and provenance.
+app.js             Canvas display, browser input, map/data inspection.
+
+The parent project's analysis/rea directory contains saved Rea Evidence JSON.
+tools/extract_levels.py, tools/extract_chr.py and tools/extract_sprite_candidates.py
+reproduce extraction from the SHA256-verified user-supplied ROM.
+
+Controls: arrows / WASD move; Space jump; Shift or X action/attack;
+Up climb/interact; Down crouch/drop; R restart; P pause.
+
+Original game, character and art remain the work of their respective authors.

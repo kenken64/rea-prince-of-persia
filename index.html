@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%2310151b'/%3E%3Ctext x='5' y='25' font-size='26' fill='%23cda968'%3E%E2%99%9C%3C/text%3E%3C/svg%3E">
+  <title>Prince of Persia · A cartridge, reconstructed</title>
+  <meta name="description" content="An independent C and WebAssembly reconstruction, with graphics and fourteen levels recovered from a Prince of Persia NES cartridge.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="site-wrap">
+    <header class="masthead">
+      <a class="brand" href="#play" aria-label="Prince of Persia home"><span class="brand-mark">♜</span><span>THE CARTRIDGE ARCHIVE<small>PLAYABLE STUDY № 001</small></span></a>
+      <nav aria-label="Main navigation"><a href="#play" class="active">Play</a><a href="#explore">Explore the cartridge</a><a href="#source">The source</a></nav>
+      <span class="edition">NES · 8-BIT</span>
+    </header>
+
+    <main>
+      <section class="intro" id="play">
+        <div><p class="eyebrow"><span></span> FROM CARTRIDGE TO BROWSER</p><h1>Prince of <em>Persia</em><span class="title-dot">.</span></h1><p class="intro-copy">A familiar dungeon. A new way inside.<br>Explore an independent reconstruction built from the original NES cartridge.</p></div>
+        <div class="artifact-label"><span class="chip">128 KB</span><span>14 LEVELS RECOVERED<br><b>C → WEBASSEMBLY</b></span></div>
+      </section>
+
+      <section class="play-layout" aria-label="Game and controls">
+        <div class="game-card">
+          <div class="game-topbar"><span><i class="live-dot"></i><b id="game-status">READY WHEN YOU ARE</b></span><span id="room-label">LEVEL 01 / ROOM 01</span><button id="fullscreen" title="Full screen" aria-label="Enter full screen">⛶</button></div>
+          <div class="screen" id="screen-wrap">
+            <canvas id="game" width="256" height="240" tabindex="0" aria-label="Prince of Persia game. Arrow keys to move, Space to jump, Shift to act. Select Begin journey to start."></canvas>
+            <div class="screen-shade"></div>
+            <div class="game-overlay" id="game-overlay"><p class="overlay-kicker">THE SANDS ARE RUNNING</p><h2>One hour.<br>One chance.</h2><p>Escape the dungeon.<br>Find your sword. Reach the palace.</p><button id="start" class="gold-button">Begin journey <span>→</span></button><small>ARROWS TO MOVE · SPACE TO JUMP</small></div>
+          </div>
+          <div class="game-bottom"><span id="runtime-state">Loading the C/Wasm game…</span><div><button id="pause" disabled>Ⅱ Pause</button><button id="restart" disabled>↻ Restart</button></div></div>
+          <div class="touch-controls" aria-label="Touch game controls"><div><button data-key="1" aria-label="Move left">←</button><button data-key="4" aria-label="Climb">↑</button><button data-key="8" aria-label="Crouch">↓</button><button data-key="2" aria-label="Move right">→</button></div><div><button data-key="32">ACT</button><button data-key="16">JUMP</button></div></div>
+        </div>
+        <aside class="journey-panel">
+          <p class="eyebrow">YOUR JOURNEY</p><div class="panel-title"><h2>The dungeon</h2><span id="level-badge">01 / 14</span></div>
+          <p class="panel-copy">Watch your footing. The way forward isn’t always to the right.</p>
+          <div class="journey-stats"><div><span>TIME REMAINING</span><strong id="timer">60:00</strong></div><div><span>YOUR HEALTH</span><strong class="hearts" id="health">♥ ♥ ♥</strong></div></div>
+          <div class="key-list"><div><span><kbd>←</kbd> <kbd>→</kbd></span><span>Move</span></div><div><kbd>SPACE</kbd><span>Jump</span></div><div><span><kbd>↑</kbd> <kbd>↓</kbd></span><span>Climb / crouch</span></div><div><kbd>SHIFT</kbd><span>Grab / attack</span></div></div>
+          <label class="level-select-label" for="level-select">CHOOSE A LEVEL</label><select id="level-select" disabled></select>
+          <a class="quiet-link" href="#explore">See the recovered room map <span>↗</span></a>
+          <div class="study-note"><span>◈</span><p>A playable reconstruction.<br><a href="#source">What’s original, and what’s inferred?</a></p></div>
+        </aside>
+      </section>
+
+      <div class="archive-strip"><span><i>01</i> Original room layouts</span><span><i>02</i> Recovered cartridge art</span><span><i>03</i> Editable C gameplay</span><span class="strip-end">128 KB → A NEW BEGINNING</span></div>
+
+      <section class="explore-section" id="explore">
+        <div class="section-heading"><div><p class="eyebrow">INSIDE THE CARTRIDGE</p><h2>Every room has a story.</h2></div><p>271 recovered rooms. 146 active triggers.<br>Select a room to inspect its original data.</p></div>
+        <div class="explorer-toolbar"><div class="tabs" role="tablist" aria-label="Cartridge views"><button role="tab" aria-selected="true" data-tab="map">Room map</button><button role="tab" aria-selected="false" data-tab="graphics">Graphics</button><button role="tab" aria-selected="false" data-tab="code">Code findings</button></div><span id="map-level-label">LEVEL 01 · DUNGEON</span></div>
+        <div class="explorer-body">
+          <div id="map-panel" class="tab-panel"><div class="room-grid" id="room-grid"></div><div class="room-inspector"><p class="eyebrow" id="inspect-title">ROOM 01</p><canvas id="room-preview" width="240" height="192" aria-label="Selected room preview"></canvas><p id="inspect-data"></p><div class="room-links" id="inspect-links"></div><button id="visit-room" class="outline-button">Explore this room →</button><small>Exploration changes your position. Restart returns to the original spawn.</small></div></div>
+          <div id="graphics-panel" class="tab-panel" hidden><div class="graphics-layout"><div><canvas id="actor-atlas" width="384" height="160" aria-label="Recovered sprite assembly candidates"></canvas><p>Indexed pixels recovered from the first program bank. Palette and pose selection are reconstruction choices; original animation framing is still being traced.</p><canvas id="native-atlas" width="384" height="232" aria-label="Recovered native background compositions in dungeon and palace themes"></canvas><p>Five native background definitions in each theme, recovered through Rea’s graphics and layout routines. Their write masks are preserved. Colors and display scaling are reconstruction choices.</p><a href="assets/native-metatiles.json" download class="quiet-link">Download recovered background definitions ↗</a></div><div><p class="eyebrow">GRAPHICS MEMORY</p><h3>No separate graphics ROM.</h3><p>This cartridge uses 8 KiB of CHR RAM. Graphics are stored alongside code in its program banks and copied into graphics memory.</p><a href="assets/actors.json" download class="quiet-link">Download indexed sprite data ↗</a><a href="assets/graphics-metadata.json" download class="quiet-link">Download extraction provenance ↗</a></div></div></div>
+          <div id="code-panel" class="tab-panel" hidden><div class="findings-grid"><article><span class="finding-num">$C008</span><h3>Where it begins</h3><p>The reset routine disables rendering, waits for two vertical-blank transitions, clears RAM, then calls the initialization routines. Rea recovered the 6502 instructions and decompiler output.</p></article><article><span class="finding-num">$EB3A</span><h3>A world in pointers</h3><p>Three fourteen-entry pointer tables locate room tiles, spawn and event headers, and room connections. A room contains 30 tile bytes arranged as ten columns and three rows.</p></article><article><span class="finding-num">$F21B</span><h3>A room and a direction</h3><p>The spawn routine reads the first header byte and subtracts one for its internal room index. It then reads the starting tile and facing direction from the same header.</p></article></div><a href="assets/rea-findings.json" download class="quiet-link">Download Rea findings and evidence identifiers ↗</a><a href="assets/rea-evidence.zip" download class="quiet-link">Download complete retained Rea evidence ↗</a></div>
+        </div>
+      </section>
+
+      <section class="source-section" id="source"><div><p class="eyebrow">BUILT TO BE OPENED</p><h2>The cartridge is history.<br><em>The source is yours to edit.</em></h2><p>Movement, collision, combat and room traversal live in C. WebAssembly runs the simulation; the browser handles display and input.</p><a class="gold-button source-download" href="editable-source.zip" download>Download editable source <span>↓</span></a><a class="quiet-link build-link" href="BUILD.txt">Build instructions ↗</a></div><div class="source-card"><div><span class="file-dot"></span> src/game.c <span>C11 / WASM32</span></div><pre><code><span class="code-comment">// Original room data. Independent game logic.</span>
+<span class="code-type">void</span> game_step(<span class="code-type">void</span>) {
+    update_tiles();
+    update_player(edges);
+    update_guard();
+    update_hazards();
+}</code></pre><p>This excerpt illustrates the architecture. <a href="source/game.c">Read the actual C source ↗</a></p></div></section>
+
+      <details class="research-notes"><summary>Reconstruction notes & evidence <span>+</span></summary><div><p><b>Recovered:</b> all 14 level streams, 271 present rooms, original room links, spawn records, raw guard records, 146 active events, and selected indexed graphic bytes. The level streams round-trip to the original bytes exactly.</p><p><b>Reconstructed:</b> the C engine, physics, collision interpretation, combat, display composition and palettes. They are editable implementation choices and have not been validated as behaviorally equivalent to the original game.</p><p><b>Still unresolved:</b> original full animation tables, exact movement timing and enemy AI, cutscenes, music/audio and level-specific scripts. The 14 recovered layouts do not establish an exact full-game port.</p><p>Technical references: <a href="https://www.nesdev.org/wiki/NES_2.0">NES 2.0 header</a>, <a href="https://www.nesdev.org/wiki/UxROM">UxROM mapping</a>, and the <a href="https://habr.com/en/post/192028/">NESPrincEd author’s format investigation</a>. Extraction verifies offsets and stream boundaries against the supplied ROM. <a href="assets/levels.json">Complete recovered level data</a>.</p></div></details>
+    </main>
+    <footer><a href="#play">♜ <b>PRINCE OF PERSIA</b></a><span>A cartridge study · Independently reconstructed in C / Wasm</span><a href="#source">VIEW THE SOURCE ↗</a></footer>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

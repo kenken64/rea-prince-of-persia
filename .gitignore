@@ -1,0 +1,5 @@
+.sites/
+.DS_Store
+node_modules/
+tests/test_game
+tests/test_game_sanitized

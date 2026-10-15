@@ -1,0 +1,10 @@
+{
+  "language": "C11",
+  "target": "wasm32",
+  "simulation": "independent C gameplay",
+  "imports": [],
+  "source_files": [
+    "src/game.c",
+    "src/wasm_libc.c"
+  ]
+}
