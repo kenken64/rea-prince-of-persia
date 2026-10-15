@@ -2048,5 +2048,204 @@
     "HUD icon pixels are reconstructed; original glyph IDs and PPU positions are established.",
     "Some context variants, scene scripts, audio, sprite clipping/priority and exact AI remain incomplete.",
     "Display profile crops8 overscan lines from each end of native240px output."
-  ]
+  ],
+  "ledges": {
+    "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+    "deliverables": [
+      "tools/extract_ledge_sequences.py",
+      "analysis/graphics/ledge_sequences.h",
+      "analysis/rea/ledge-sequences.json",
+      "analysis/rea/ledge-sequence-validation.json"
+    ],
+    "conclusion": "The detached ledge pose came from using the wrong hang artwork/anchor and interpolating across a source63pixel anchor transfer. Exact source scripts keep the sprite canvas continuous within1pixel.",
+    "proven_bytecode": {
+      "vm": "Fixedbank7:F13E; literal frame0..F0 ends one logical step. CommandsF1..FF dispatch throughbank5table842B.",
+      "selector": "Bank5:8730 compares action0616 then sets script0613/0614 from table95F2+2*action, and mode0618=FF. Table9600 is7entries into95F2 and is not the action-table base.",
+      "actions": {
+        "catch": {
+          "action": 9,
+          "script_cpu": 39077,
+          "frames": [
+            91
+          ]
+        },
+        "climb": {
+          "action": 10,
+          "script_cpu": 39183,
+          "frames": [
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            149,
+            15
+          ]
+        },
+        "lower": {
+          "action": 68,
+          "script_cpu": 39160,
+          "frames": [
+            15,
+            148,
+            145,
+            144,
+            143,
+            142,
+            141,
+            140,
+            138,
+            136,
+            91
+          ]
+        },
+        "hang_swing": {
+          "action": 9,
+          "script_cpu": 39077,
+          "frames": [
+            91,
+            90,
+            89,
+            88,
+            87,
+            87,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            97,
+            96,
+            95,
+            94,
+            93,
+            92,
+            91,
+            90,
+            89,
+            88,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            95,
+            94,
+            93,
+            92,
+            83,
+            84,
+            85,
+            15
+          ]
+        },
+        "pullback": {
+          "action": 11,
+          "script_cpu": 39213,
+          "frames": [
+            83,
+            84,
+            85,
+            15
+          ]
+        },
+        "letgo": {
+          "action": 23,
+          "script_cpu": 39227,
+          "frames": [
+            106,
+            106,
+            106,
+            106,
+            106
+          ]
+        }
+      },
+      "climb": "Action0A/script990F renders135..147,149,15. FB05 meansRIGHT+10before141;FAC1 meansY\u221263;FB01 meansRIGHT+2more beforestanding15.",
+      "f5": "Handler85BD clears fall flags and does not compensate PC. VMpre/post increment therefore discards following94byte(frame148). Runtimeconfirmed148isnotrendered.",
+      "lower": "Action44/script98F8 renders15,148,145,144,143,142,141; thenFBFB+FA3FmoveRIGHT\u22129,Y+63before140,138,136,91. F902 follows91, so91stillmode1; continuation98A8renders90inmode2.",
+      "hang": "Action09/script98A5 is a finite47-step swing/settle sequence endingstanding15, not a stable loop. WithA/Bheld originalruntimeadvances it; withoutinput controllerselects992Dreleasepath.",
+      "letgo": "Action17/script993B renders106atY0,+6,+15,then+27withX+4andmode4; subsequentphysics/freefallisoutsidebytecode. ControllerinitialXadjustments are separate.",
+      "facing": "OriginalRIGHTinput runtime sets0615=FF and X increases. All exportedDXrightvaluesuse0615nonzero; zero reversesDX.",
+      "collision": "FBhelpers84BD/84DCcallFE25/FE44forplayer; nominalDXcan be suppressed by original collision predicates."
+    },
+    "anchor_geometry_from_independent_scope": {
+      "catch": "NativeanchorY=64*ledgeRow+127. RIGHTX=32*ledgeCol+25; LEFTX=32*ledgeCol+56, plus sourceboundaryexception.",
+      "c_conversion": "WithnativeactorY=CfeetY+8 andCfloorY=64*row+56, C hangingfeetmustbeledgefloor+63.",
+      "preclimb": "NormalUPcontrollerF7E2 aligns viaC8D4:RIGHTXoffset24,LEFT58,andYoffset64; then selectsaction0A. Runtimehang121,127 alignedto120,128 before script.",
+      "lower": "NormalcontrolledlowerC8D4RIGHTXoffset34,LEFT48,Yoffset64. BytecodeRIGHT\u22129/LEFT+9thenY+63 yieldsRIGHT25/LEFT57. Boundaryoffsetchoices need originalF65Bconditions."
+    },
+    "runtime_evidence": {
+      "method": "Task-localJSNES2.1.0executed original unchanged ROM with clearlymemory-seeded valid hang scenario plus realUP/A/Binput; not a naturally traversed campaign recording.",
+      "artifact": "analysis/validation/original-ledge-forced-hang-cases.json",
+      "climb_trace": "SeedX121Y127,dirFF,action9,frame91,mode2. UP+4alignX120Y128/action10;first135at+6;140at+26;141at+30X130Y65;149at+58;stand15at+62X132Y65.",
+      "cadence": "Fourvideo frames perlogicalstep in this no-guard scenario; phase-relative firstframe latency is inherited from the global scheduler.",
+      "unknown": "Scheduling in guard/combat/other original contexts is not claimed."
+    },
+    "evidence": [
+      {
+        "file": "analysis/rea/ledge-vm-f13e.json",
+        "evidence_id": "ev_4cd78abfdb627a7f65d59a64fa42e753ba0ef0db155a528c7289d8eb4d22c850"
+      },
+      {
+        "file": "analysis/rea/ledge-command-fb.json",
+        "evidence_id": "ev_1c36f8d66e99a653da1fabf191c6408b71915458aa17dccf0b8e2f9dd5c51188"
+      },
+      {
+        "file": "analysis/rea/ledge-command-fa.json",
+        "evidence_id": "ev_f1447ffe80a77b098dd0346d2eab6febca76cf91a60d8b8322ac037067dda02d"
+      },
+      {
+        "file": "analysis/rea/ledge-command-f5.json",
+        "evidence_id": "ev_4592afbf7dff5069cb708d12bafe5a46259c113891962252c4e0693a3419f05d"
+      },
+      {
+        "file": "analysis/rea/ledge-action-selector.json",
+        "evidence_id": "ev_05c26509f948add1234f787ff69272bb7b28e5ee467185bbf4af68dc1635996b"
+      },
+      {
+        "file": "analysis/rea/ledge-hang-controller.json",
+        "evidence_id": "ev_654986b8064c1d8daf9fda2c0f0e3dc488145801f1f5035fcae16bbe8ecc91ef"
+      },
+      {
+        "file": "analysis/rea/ledge-climb-input.json",
+        "evidence_id": "ev_b319f580faa007698a31f8d855eaa835531da5c912320b2be940eea3c6f7b6f0"
+      },
+      {
+        "file": "analysis/rea/ledge-geometry-function-c8d4.json",
+        "evidence_id": "ev_d4fa8e5b1413e911dd62e3f6b3f6b9bfbabe406ce22d34882065b8da7d4144db"
+      },
+      {
+        "file": "analysis/rea/ledge-geometry-function-f963.json",
+        "evidence_id": "ev_127d5db684bc7b7306f588e207d9e50746c9502fab295079114571294b41287a"
+      }
+    ],
+    "limits": [
+      "Tables are exact bytecode nominal offsets, not a complete original gameplay controller.",
+      "Sharedscript entry throughFF retains the currentaction0616, affectingFBscaling.",
+      "Originalledge collision probing and boundary room transitions are reported by the independent geometry scope.",
+      "Noweb or gameplay C source edits made by this scope."
+    ]
+  }
 }

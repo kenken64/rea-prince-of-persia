@@ -1,0 +1,45 @@
+{
+  "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+  "json_sha256": "64b3c4c649f7f520c4a0376e38e303a412c47bc5fdd9809a253837a42b5da547",
+  "header_sha256": "5c45aa169707b858de3baf783319fa25fb8d9b148e7402c346a1fdb3fc026223",
+  "validated": true,
+  "sequence_counts": {
+    "catch": 1,
+    "climb": 15,
+    "lower": 11,
+    "hang_swing": 47,
+    "pullback": 4,
+    "letgo": 5
+  },
+  "checks": [
+    "ExactclimbframeorderincludingF5discardof148.",
+    "ClimbRIGHTnominalDX+10before141,+12atstand;DY\u221263.",
+    "ControlledlowerRIGHTnominalDX\u22129,DY+63before140.",
+    "Decodedoriginalspriteboundsarecontinuouswithin1pxat140/141whenbytecodeYdeltasapply."
+  ],
+  "anchor_discontinuity_checks": [
+    {
+      "sequence": "climb",
+      "before_frame": 140,
+      "after_frame": 141,
+      "before_top_relative_start_anchor": -72,
+      "after_top_relative_start_anchor": -73,
+      "top_delta": -1
+    },
+    {
+      "sequence": "lower",
+      "before_frame": 141,
+      "after_frame": 140,
+      "before_top_relative_start_anchor": -10,
+      "after_top_relative_start_anchor": -9,
+      "top_delta": 1
+    }
+  ],
+  "limitations": [
+    "No stable hang-loop hold behavior is assumed.",
+    "Original controller snaps and collision predicates are outside this bytecode-only extraction.",
+    "No original-ROM pixel changes or synthetic gameplay-room data are introduced."
+  ],
+  "runtime_climb_confirmed": true,
+  "cadence_observed_video_frames": 4
+}

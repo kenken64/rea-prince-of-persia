@@ -119,16 +119,75 @@ static void test_combat_and_timer(void) {
     assert(game_get_flags() & GAME_FLAG_PAUSED);
 }
 static void test_ledge_grab_and_climb(void) {
-    int i;
-    arena(); game_edit_tile(0, 1, 15, 1);
-    /* Row-one ledge begins at x160 with air to its left. */
-    game_set_player(1, 150, 184, 1); steps(0, 2);
+    int i, side;
+    for (side = -1; side <= 1; side += 2) {
+        arena(); game_edit_tile(0, 1, 15, 1);
+        game_set_player(1, side > 0 ? 150 : 202, 184, side); steps(0, 2);
+        steps(GAME_INPUT_ACTION | GAME_INPUT_JUMP, 1);
+        for (i = 0; i < 70 && game_get_player_state() != GAME_HANG; ++i) steps(GAME_INPUT_ACTION, 1);
+        assert(game_get_player_state() == GAME_HANG);
+        /* ROM F882 catch anchors for ledge column5,row1. Frame79 was the
+         * incorrect reach pose; native91 grips at nativeY191-58=133. */
+        assert(game_get_player_native_frame() == 91);
+        assert(game_get_player_render_x() == (side > 0 ? 185 : 216));
+        assert(game_get_player_render_y() == 191);
+        steps(GAME_INPUT_ACTION, 4); assert(game_get_player_native_frame() == 90);
+        assert(game_get_player_render_y() == 191);
+        steps(GAME_INPUT_ACTION | GAME_INPUT_UP, 1);
+        assert(game_get_player_state() == GAME_CLIMB);
+        assert(game_get_player_native_frame() == 135);
+        assert(game_get_player_render_x() == (side > 0 ? 184 : 218));
+        assert(game_get_player_render_y() == 192);
+        steps(0, 23); assert(game_get_player_native_frame() == 140);
+        assert(game_get_player_render_y() == 192);
+        steps(0, 1); assert(game_get_player_native_frame() == 141);
+        assert(game_get_player_render_x() == (side > 0 ? 194 : 208));
+        assert(game_get_player_render_y() == 129);
+        steps(0, 28); assert(game_get_player_native_frame() == 149);
+        steps(0, 4); assert(game_get_player_state() == GAME_STAND);
+        assert(game_get_player_y() == 121);
+        assert(game_get_player_x() == (side > 0 ? 176 : 186));
+        assert(game_get_player_grounded());
+        /* Lower from each exposed edge, then release without an instant
+         * re-grab or accidental second climb. */
+        game_set_player(1, side > 0 ? 166 : 186, 120, -side); steps(0, 2);
+        steps(GAME_INPUT_DOWN, 1); assert(game_get_player_state() == GAME_LOWER);
+        steps(GAME_INPUT_ACTION, 44); assert(game_get_player_state() == GAME_HANG);
+        assert(game_get_player_native_frame() == 91);
+        assert(game_get_player_render_x() == (side > 0 ? 185 : 217));
+        assert(game_get_player_render_y() == 191);
+        steps(side > 0 ? GAME_INPUT_ACTION | GAME_INPUT_DOWN : 0, 1); assert(game_get_player_state() == GAME_RELEASE);
+        assert(game_get_player_native_frame() == 83);
+        steps(GAME_INPUT_ACTION, 12); assert(game_get_player_state() != GAME_HANG);
+        assert(game_get_player_grounded());
+    }
+    /* An interior Down press remains a crouch; there is no exposed edge. */
+    arena(); steps(GAME_INPUT_DOWN, 1); assert(game_get_player_state() == GAME_CROUCH);
+    /* A closed gate at the destination blocks climbing through it. */
+    arena(); game_edit_tile(0, 1, 15, 4); game_set_player(1, 150, 184, 1); steps(0, 2);
     steps(GAME_INPUT_ACTION | GAME_INPUT_JUMP, 1);
     for (i = 0; i < 70 && game_get_player_state() != GAME_HANG; ++i) steps(GAME_INPUT_ACTION, 1);
     assert(game_get_player_state() == GAME_HANG);
-    steps(GAME_INPUT_ACTION | GAME_INPUT_UP, 1); assert(game_get_player_state() == GAME_CLIMB);
-    steps(0, 24); assert(game_get_player_y() == 120); assert(game_get_player_x() == 176);
-    assert(game_get_player_grounded());
+    steps(GAME_INPUT_ACTION | GAME_INPUT_UP, 1); assert(game_get_player_state() == GAME_HANG);
+    /* Grip animation is finite in the source: it settles onto a floor below
+     * instead of freezing frame92 forever while Action remains held. */
+    arena(); game_edit_tile(0, 1, 15, 1); game_set_player(1, 150, 184, 1); steps(0, 2);
+    steps(GAME_INPUT_ACTION | GAME_INPUT_JUMP, 1);
+    for (i = 0; i < 70 && game_get_player_state() != GAME_HANG; ++i) steps(GAME_INPUT_ACTION, 1);
+    steps(GAME_INPUT_ACTION, 172); assert(game_get_player_state() == GAME_RELEASE);
+    assert(game_get_player_native_frame() == 83);
+    steps(GAME_INPUT_ACTION, 12); assert(game_get_player_grounded());
+    /* An upper-room ledge uses that room's final local coordinates, with no
+     * interpolation across a whole screen. */
+    arena(); game_edit_tile(0, 1, 4, 1); game_edit_link(0, 1, GAME_LINK_UP, 2);
+    for (i = 20; i < 30; ++i) game_edit_tile(0, 2, i, i == 25 ? 1 : 0);
+    game_set_player(1, 150, 56, 1); steps(0, 2);
+    steps(GAME_INPUT_ACTION | GAME_INPUT_JUMP, 1);
+    for (i = 0; i < 70 && game_get_player_state() != GAME_HANG; ++i) steps(GAME_INPUT_ACTION, 1);
+    assert(game_get_player_state() == GAME_HANG); assert(game_get_room() == 1);
+    steps(GAME_INPUT_ACTION | GAME_INPUT_UP, 1); steps(0, 56);
+    assert(game_get_room() == 2); assert(game_get_player_x() == 176);
+    assert(game_get_player_y() == 185); assert(game_get_player_grounded());
 }
 static void test_campaign_stress(void) {
     uint32_t seed = 0x71337337u;

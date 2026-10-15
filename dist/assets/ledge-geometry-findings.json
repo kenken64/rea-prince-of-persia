@@ -1,0 +1,1377 @@
+{
+  "schema": "pop-nes-ledge-geometry-v1",
+  "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+  "scope": "Original ROM static geometry/controller observations. No game or web edits. Native coordinates before camera subtraction.",
+  "status": "Same-room normal grab and pre-climb anchor rules proven from6502 instructions; facing independently runtime-verified. Boundary/specialtile paths preserved as caveats.",
+  "ram": {
+    "actor_x": [
+      1551,
+      1552
+    ],
+    "actor_y": 1553,
+    "facing": 1557,
+    "action": 1558,
+    "frame": 1559,
+    "motion_mode": 1560,
+    "input": 1034,
+    "candidate_cell": 1201,
+    "second_cell": 1202,
+    "saved_below_cell": 1226,
+    "grab_pending": 1225
+  },
+  "facing": {
+    "right": {
+      "ram0615": "nonzero",
+      "runtime_observed_value": 255
+    },
+    "left": {
+      "ram0615": 0
+    },
+    "runtime_evidence": "analysis/validation/original-ledge-facing-proof.json",
+    "correction": "Earlier inference from F785 was reversed. F785 steps behind/outside: LEFT +1 cell, RIGHT -1 cell; it does not define facing."
+  },
+  "position_table": {
+    "source": {
+      "bank": 2,
+      "cpu_start": 42485,
+      "cpu_end": 42574,
+      "file_offset": 42501,
+      "length": 90,
+      "sha256": "1cbaa236951a5c02e17a209043a0eec0aa99448608ff257c3194a5e4b58f2e87",
+      "bytes_hex": "000000200000400000600000800000a00000c00000e00000000100200100000040200040400040600040800040a00040c00040e00040000140200140000080200080400080600080800080a00080c00080e00080000180200180"
+    },
+    "entries": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        32,
+        0,
+        0
+      ],
+      [
+        64,
+        0,
+        0
+      ],
+      [
+        96,
+        0,
+        0
+      ],
+      [
+        128,
+        0,
+        0
+      ],
+      [
+        160,
+        0,
+        0
+      ],
+      [
+        192,
+        0,
+        0
+      ],
+      [
+        224,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        32,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        64
+      ],
+      [
+        32,
+        0,
+        64
+      ],
+      [
+        64,
+        0,
+        64
+      ],
+      [
+        96,
+        0,
+        64
+      ],
+      [
+        128,
+        0,
+        64
+      ],
+      [
+        160,
+        0,
+        64
+      ],
+      [
+        192,
+        0,
+        64
+      ],
+      [
+        224,
+        0,
+        64
+      ],
+      [
+        0,
+        1,
+        64
+      ],
+      [
+        32,
+        1,
+        64
+      ],
+      [
+        0,
+        0,
+        128
+      ],
+      [
+        32,
+        0,
+        128
+      ],
+      [
+        64,
+        0,
+        128
+      ],
+      [
+        96,
+        0,
+        128
+      ],
+      [
+        128,
+        0,
+        128
+      ],
+      [
+        160,
+        0,
+        128
+      ],
+      [
+        192,
+        0,
+        128
+      ],
+      [
+        224,
+        0,
+        128
+      ],
+      [
+        0,
+        1,
+        128
+      ],
+      [
+        32,
+        1,
+        128
+      ]
+    ],
+    "formula": "Xbase=32*(cell%10);Ybase=64*floor(cell/10)",
+    "writer": "D7DF passes offsets A,X into bank2 AE78; actor anchor = base + offset. If 04FE != 0 and facing LEFT, AE9C additionally subtracts30 from X low byte."
+  },
+  "grab": {
+    "controller_cpu": 63618,
+    "normal_action": 9,
+    "motion_mode": 2,
+    "initial_gate_if_04c9_zero": {
+      "ram06c6_less_than": 6,
+      "anchor_y_less_than": 160,
+      "input_mask_any": 192,
+      "allowed_actions": [
+        7,
+        23,
+        18,
+        21
+      ]
+    },
+    "probe": {
+      "right_x": "anchorX-5",
+      "left_x": "anchorX-45",
+      "column": "floor(probeX/32), capped9; A89A special left/room-boundary branches apply.",
+      "below_row": "floor(((anchorY+16)&255)/64), capped/wrapped by D172 helper.",
+      "sample_saved_before_support_lookup": true,
+      "support_cell": "saved04CA -10; underflow accesses above-room source through DE0B."
+    },
+    "support_rejected_type_ids": [
+      0,
+      9,
+      7,
+      12,
+      20
+    ],
+    "additional_support_rules": [
+      "Type11 also calls DB18; a nonzero result rejects.",
+      "RIGHT additionally rejects type4 gate."
+    ],
+    "commit_frame_ids": [
+      105,
+      106
+    ],
+    "commit_cell": "Restores saved04CA, which is ONE ROW BELOW the checked ledge support.",
+    "normal_anchor_offsets_from_saved_cell": {
+      "right": [
+        25,
+        63
+      ],
+      "left": [
+        56,
+        63
+      ]
+    },
+    "same_room_anchor_formula": {
+      "right": [
+        "32*ledgeCol+25",
+        "64*ledgeRow+127"
+      ],
+      "left": [
+        "32*ledgeCol+56",
+        "64*ledgeRow+127"
+      ]
+    },
+    "special_branches": [
+      "For LEFT with saved cell9/19/29, subtract9 from cell and use X offset24. Do not apply the ordinary formula across this boundary.",
+      "If below-cell type20 or12, action25 is selected instead of normal hang9.",
+      "Pending grab04C9 bypasses initial input/action/Y gates but still checks06C6.",
+      "Further collision controller fallback at CB00/A804 is outside this bounded trace."
+    ]
+  },
+  "pre_climb_alignment": {
+    "controller_cpu": 63458,
+    "input_mask_any": 8,
+    "action": 10,
+    "writer_cpu": 51412,
+    "writer_instructions": [
+      "TYA",
+      "LDX#64",
+      "JMPD7DF"
+    ],
+    "normal_offsets_from_current_below_cell": {
+      "right": [
+        24,
+        64
+      ],
+      "left": [
+        58,
+        64
+      ]
+    },
+    "same_room_anchor_formula": {
+      "right": [
+        "32*ledgeCol+24",
+        "64*ledgeRow+128"
+      ],
+      "left": [
+        "32*ledgeCol+58",
+        "64*ledgeRow+128"
+      ]
+    },
+    "skip_alignment_if": "actorX<50 (high byte0, low byte<0x32).",
+    "special_gate_path": "F80C..F842 tests04E7 type4; it can replace alignment/action with49 hex. Preserve separately."
+  },
+  "controlled_lower": {
+    "controller_cpu": 63067,
+    "action": 68,
+    "writer_cpu": 51412,
+    "cell": "04B2 copied to04B1 after collision helper D499.",
+    "anchor_y_offset": 64,
+    "horizontal_offset_rules": {
+      "left": [
+        {
+          "if": "actorX>=288",
+          "offset": 56
+        },
+        {
+          "if": "24<=actorX<288",
+          "offset": 48
+        },
+        {
+          "if": "actorX<24",
+          "offset": 18
+        }
+      ],
+      "right": [
+        {
+          "if": "actorX>=68",
+          "offset": 34
+        },
+        {
+          "if": "actorX<68",
+          "offset": 26
+        }
+      ]
+    },
+    "normal_animation_delta_to_frame91": {
+      "right": [
+        -9,
+        63
+      ],
+      "left": [
+        9,
+        63
+      ]
+    },
+    "normal_final_offset": {
+      "right": [
+        25,
+        127
+      ],
+      "left": [
+        57,
+        127
+      ]
+    },
+    "limitation": "Lowering and catching differ by1px for the ordinary LEFT case; do not silently force all paths to one anchor. Identification of the04B2 cell depends on preceding native collision helpers; not claimed equivalent to an arbitrary nearest floor."
+  },
+  "animation": {
+    "source": "analysis/rea/ledge-sequences.json",
+    "generated_header": "analysis/graphics/ledge_sequences.h",
+    "native_hang_frames": [
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "incorrect_previous_frame": 79,
+    "climb_vertical_delta": -63,
+    "climb_nominal_right_dx_terminal": 12,
+    "frame140_to141_anchor_discontinuity": "FA C1 Y-63 cancels the native frame-origin jump; applying only frame pixels without anchor steps detaches the actor.",
+    "source_is_nominal": "FB horizontal steps may be blocked by original collision predicates."
+  },
+  "frame_contact_pixels": [
+    {
+      "frame": 87,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67376
+      ]
+    },
+    {
+      "frame": 88,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67385
+      ]
+    },
+    {
+      "frame": 89,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67385
+      ]
+    },
+    {
+      "frame": 90,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67394
+      ]
+    },
+    {
+      "frame": 91,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67394
+      ]
+    },
+    {
+      "frame": 92,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67403
+      ]
+    },
+    {
+      "frame": 93,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67403
+      ]
+    },
+    {
+      "frame": 94,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67412
+      ]
+    },
+    {
+      "frame": 95,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67412
+      ]
+    },
+    {
+      "frame": 96,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67421
+      ]
+    },
+    {
+      "frame": 97,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67421
+      ]
+    },
+    {
+      "frame": 98,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67430
+      ]
+    },
+    {
+      "frame": 99,
+      "native_default_facing": "left",
+      "left_top_pixels_x": [
+        0,
+        1,
+        2
+      ],
+      "right_top_pixels_x": [
+        5,
+        6,
+        7
+      ],
+      "top_y": -58,
+      "oam_attributes": [
+        1
+      ],
+      "record_offsets": [
+        67430
+      ]
+    }
+  ],
+  "background_geometry": {
+    "pitch": [
+      32,
+      64
+    ],
+    "metatile_art_origin": [
+      "16+32*col",
+      "64*row"
+    ],
+    "native_floor_type": 1,
+    "normal_floor_bitmap_nonzero_y": [
+      64,
+      79
+    ],
+    "source": "analysis/graphics/native-metatiles-v2.json",
+    "contact_example_right_frame91": {
+      "ledge": [
+        3,
+        0
+      ],
+      "grab_anchor": [
+        121,
+        127
+      ],
+      "top_hand_pixels_x": [
+        126,
+        127,
+        128
+      ],
+      "top_hand_y": 69,
+      "floor_art_origin_x": 112,
+      "floor_local_hand_x": [
+        14,
+        15,
+        16
+      ]
+    }
+  },
+  "occlusion": {
+    "observed": "Hang contact frames87..99 each have part OAM attribute1, with no0x20 bit in these records. The original grid renderer uses hardware OAM and may apply other global conditions.",
+    "unknown": "Full foreground sprite priority and scanline-limit behavior was not traced. Do not add an unproven wall/floor mask to correct anchor errors."
+  },
+  "examples": [
+    {
+      "ledge_row": 0,
+      "ledge_col": 1,
+      "facing": "right",
+      "grab_anchor": [
+        57,
+        127
+      ],
+      "climb_start_anchor": [
+        56,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        68,
+        65
+      ]
+    },
+    {
+      "ledge_row": 0,
+      "ledge_col": 1,
+      "facing": "left",
+      "grab_anchor": [
+        88,
+        127
+      ],
+      "climb_start_anchor": [
+        90,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        78,
+        65
+      ]
+    },
+    {
+      "ledge_row": 0,
+      "ledge_col": 3,
+      "facing": "right",
+      "grab_anchor": [
+        121,
+        127
+      ],
+      "climb_start_anchor": [
+        120,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        132,
+        65
+      ]
+    },
+    {
+      "ledge_row": 0,
+      "ledge_col": 3,
+      "facing": "left",
+      "grab_anchor": [
+        152,
+        127
+      ],
+      "climb_start_anchor": [
+        154,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        142,
+        65
+      ]
+    },
+    {
+      "ledge_row": 0,
+      "ledge_col": 8,
+      "facing": "right",
+      "grab_anchor": [
+        281,
+        127
+      ],
+      "climb_start_anchor": [
+        280,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        292,
+        65
+      ]
+    },
+    {
+      "ledge_row": 0,
+      "ledge_col": 8,
+      "facing": "left",
+      "grab_anchor": [
+        312,
+        127
+      ],
+      "climb_start_anchor": [
+        314,
+        128
+      ],
+      "nominal_climb_terminal_anchor": [
+        302,
+        65
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 1,
+      "facing": "right",
+      "grab_anchor": [
+        57,
+        191
+      ],
+      "climb_start_anchor": [
+        56,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        68,
+        129
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 1,
+      "facing": "left",
+      "grab_anchor": [
+        88,
+        191
+      ],
+      "climb_start_anchor": [
+        90,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        78,
+        129
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 3,
+      "facing": "right",
+      "grab_anchor": [
+        121,
+        191
+      ],
+      "climb_start_anchor": [
+        120,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        132,
+        129
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 3,
+      "facing": "left",
+      "grab_anchor": [
+        152,
+        191
+      ],
+      "climb_start_anchor": [
+        154,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        142,
+        129
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 8,
+      "facing": "right",
+      "grab_anchor": [
+        281,
+        191
+      ],
+      "climb_start_anchor": [
+        280,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        292,
+        129
+      ]
+    },
+    {
+      "ledge_row": 1,
+      "ledge_col": 8,
+      "facing": "left",
+      "grab_anchor": [
+        312,
+        191
+      ],
+      "climb_start_anchor": [
+        314,
+        192
+      ],
+      "nominal_climb_terminal_anchor": [
+        302,
+        129
+      ]
+    }
+  ],
+  "runtime_verification": {
+    "facing": "analysis/validation/original-ledge-facing-proof.json",
+    "climb": "The original-ROM runtime agent observed seeded RIGHT anchor121,127; UP begins at120,128; later frame141 has anchor130,65; terminal132,65. The runtime artifact is owned by that agent. This matches the static snap, but is not evidence of unmodified gameplay reachability.",
+    "caught_left": {
+      "source": "analysis/validation/original-ledge-fall-grab-search.json",
+      "sha256": "0e1dc076ba0334afe8501f3d277761fb7c07ce37f357e8cde2d0c563c068e36e",
+      "original_rom_unpatched": true,
+      "controlled_ram_initialization": true,
+      "initial_ram_diff": [
+        {
+          "address": "0x60f",
+          "old": 53,
+          "value": 152
+        },
+        {
+          "address": "0x610",
+          "old": 0,
+          "value": 0
+        },
+        {
+          "address": "0x611",
+          "old": 128,
+          "value": 110
+        },
+        {
+          "address": "0x613",
+          "old": 222,
+          "value": 78
+        },
+        {
+          "address": "0x614",
+          "old": 150,
+          "value": 153
+        },
+        {
+          "address": "0x615",
+          "old": 255,
+          "value": 0
+        },
+        {
+          "address": "0x616",
+          "old": 0,
+          "value": 7
+        },
+        {
+          "address": "0x617",
+          "old": 15,
+          "value": 105
+        },
+        {
+          "address": "0x618",
+          "old": 0,
+          "value": 3
+        }
+      ],
+      "input": 128,
+      "initial_anchor": [
+        152,
+        110
+      ],
+      "facing": 0,
+      "native_snap_calls": [
+        {
+          "videoFrame": 3,
+          "pc": 63902,
+          "a": 56,
+          "x": 63,
+          "y": 56,
+          "candidate_04ca": 0,
+          "tile_04b1": 13
+        },
+        {
+          "videoFrame": 3,
+          "pc": 55263,
+          "a": 56,
+          "x": 63,
+          "y": 56,
+          "candidate_04ca": 0,
+          "tile_04b1": 13
+        }
+      ],
+      "first_ten_video_frames": [
+        {
+          "frame": 1,
+          "actor_x": 152,
+          "actor_y": 110,
+          "direction_raw": 0,
+          "action": 7,
+          "metasprite": 105
+        },
+        {
+          "frame": 2,
+          "actor_x": 152,
+          "actor_y": 110,
+          "direction_raw": 0,
+          "action": 7,
+          "metasprite": 106
+        },
+        {
+          "frame": 3,
+          "actor_x": 152,
+          "actor_y": 110,
+          "direction_raw": 0,
+          "action": 7,
+          "metasprite": 106
+        },
+        {
+          "frame": 4,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 106
+        },
+        {
+          "frame": 5,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 106
+        },
+        {
+          "frame": 6,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 91
+        },
+        {
+          "frame": 7,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 91
+        },
+        {
+          "frame": 8,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 91
+        },
+        {
+          "frame": 9,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 91
+        },
+        {
+          "frame": 10,
+          "actor_x": 152,
+          "actor_y": 127,
+          "direction_raw": 0,
+          "action": 9,
+          "metasprite": 90
+        }
+      ],
+      "interpretation": "F99E and D7DF receive horizontal56 and vertical63 with04B1=13, producing anchor152,127 for support cell3. 04CA=0 at these calls is expected because F975 cleared it after restoring04B1. The actual CPU catch and its resulting anchor match the static formula; reachability from an unmodified initial actor state is not claimed."
+    },
+    "final_report": {
+      "source": "analysis/validation/original-ledge-runtime-verification.json",
+      "sha256": "0e20cb503d8b93b77bc70cccfbbf16b6a9c3cfe1e32647bd525580ff170c96c4",
+      "original_rom_unpatched": true,
+      "controlled_actor_ram_initialization": true,
+      "script": "tools/original_ledge_verify.mjs",
+      "experiments": [
+        {
+          "name": "catch-left",
+          "trace_file": "analysis/validation/original-ledge-catch-left-trace.json",
+          "captures": [
+            {
+              "video_frame": 7,
+              "metasprite": 91,
+              "anchor": [
+                152,
+                127
+              ]
+            },
+            {
+              "video_frame": 43,
+              "metasprite": 90,
+              "anchor": [
+                152,
+                127
+              ]
+            },
+            {
+              "video_frame": 191,
+              "metasprite": 15,
+              "anchor": [
+                140,
+                127
+              ]
+            }
+          ]
+        },
+        {
+          "name": "catch-release",
+          "trace_file": "analysis/validation/original-ledge-catch-release-trace.json",
+          "captures": [
+            {
+              "video_frame": 7,
+              "metasprite": 91,
+              "anchor": [
+                152,
+                127
+              ]
+            },
+            {
+              "video_frame": 15,
+              "metasprite": 83,
+              "anchor": [
+                148,
+                127
+              ]
+            }
+          ]
+        },
+        {
+          "name": "catch-climb-left",
+          "trace_file": "analysis/validation/original-ledge-catch-climb-left-trace.json",
+          "captures": [
+            {
+              "video_frame": 7,
+              "metasprite": 91,
+              "anchor": [
+                152,
+                127
+              ]
+            },
+            {
+              "video_frame": 35,
+              "metasprite": 140,
+              "anchor": [
+                154,
+                128
+              ]
+            },
+            {
+              "video_frame": 39,
+              "metasprite": 141,
+              "anchor": [
+                144,
+                65
+              ]
+            },
+            {
+              "video_frame": 67,
+              "metasprite": 149,
+              "anchor": [
+                144,
+                65
+              ]
+            },
+            {
+              "video_frame": 71,
+              "metasprite": 15,
+              "anchor": [
+                142,
+                65
+              ]
+            }
+          ]
+        },
+        {
+          "name": "climb-right",
+          "trace_file": "analysis/validation/original-ledge-climb-right-trace.json",
+          "captures": [
+            {
+              "video_frame": 27,
+              "metasprite": 140,
+              "anchor": [
+                120,
+                128
+              ]
+            },
+            {
+              "video_frame": 31,
+              "metasprite": 141,
+              "anchor": [
+                130,
+                65
+              ]
+            },
+            {
+              "video_frame": 59,
+              "metasprite": 149,
+              "anchor": [
+                130,
+                65
+              ]
+            },
+            {
+              "video_frame": 63,
+              "metasprite": 15,
+              "anchor": [
+                132,
+                65
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "bank": 7,
+      "cpu_start": 63618,
+      "cpu_end": 63910,
+      "file_offset": 129170,
+      "length": 293,
+      "sha256": "aaf58af4f5f26a1b3c92baaf997fd43e18d4b27bb25394bd0bb6a0773be9d07c",
+      "bytes_hex": "adc606c906b00fadc904f0034c3cf9ad1106c9a090034ca1f9ad0a0429c0f0f6ad1606c90af010c907f00fc917f00bc912f007c915f0034ca1f920a2d4a22dad1506f002a2052060faad1106186910382064d1adb104cdca04d00160adb1048dca04adb10438e90ab00b691e48200bdea901855468a88db1042066cec90bd0082018dbf0034ca1f92066cef010c909f00cc907f008c90cf004c914d0034ca1f98dbf04ad1506f007adbf04c904f0702085f78cb104a9018dc904ad1706c96af004c969d05aadca048db10420bcf7a2192063cec914f009c90cf005a2098e05048a20d8d6a20720ced6a9028d1806a9008dc9048dca048dc606a019ad1506d019a038adb104c909f008c913f004c91dd00838e9098db104a018a23f984cdfd72000cb4c04a8"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 63365,
+      "cpu_end": 63373,
+      "file_offset": 128917,
+      "length": 9,
+      "sha256": "066aee7118b28b5b5a3e0fe997ab8bd5b310832f535c4937fbe5bfb35c63f9ef",
+      "bytes_hex": "c8ad1506f002888860"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 63420,
+      "cpu_end": 63438,
+      "file_offset": 128972,
+      "length": 19,
+      "sha256": "62c35f8a39f5cd0076edc2a9b887a840824734f5f52db9cf38ab3064692a5e1f",
+      "bytes_hex": "ade704c9ffd00badb10438e90a90038de70460"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 63458,
+      "cpu_end": 63559,
+      "file_offset": 129010,
+      "length": 102,
+      "sha256": "99b28392c33fa67a81ebc0d86d2d425662cd16c24bf2356eeb0268300074b2df",
+      "bytes_hex": "ad0a042908f07220bcf7a03aad1006d007ad0f06c932900aad1506f002a01820d4c8a90a20d8d620e1e0ace7042066cec904d02fadb2048db104adb20438e90a8db204a570c905f00720abcac91a9013a018ad0f06c9509002a03820d4c8a94920d8d64c10d0"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 63067,
+      "cpu_end": 63202,
+      "file_offset": 128619,
+      "length": 136,
+      "sha256": "1ba7dda80e7a44e6981af14729d20e03a90718e16cc9c36be22327aec980488a",
+      "bytes_hex": "20a2d4ad1506d00ba2002070f8202cd14c73f6a22c2060fa2047d12063cec908f065c90bd0072018dbc903f0052066ced0552099d4adb2048db104a238ad1006c901d005ad0f06c920b015a230ad1006c900d005ad0f06c918b005a2124cc1f6adb2048de704ad1506f012a222ad1006c900d005ad0f06c944b002a21a8aa820d4c8a9444cd8d660"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 51412,
+      "cpu_end": 51417,
+      "file_offset": 116964,
+      "length": 6,
+      "sha256": "3526fc1628f0bf5dc7a33d9a78ca51840c46357c6b80d8f8c0f138be51a2b0c8",
+      "bytes_hex": "98a2404cdfd7"
+    },
+    {
+      "bank": 7,
+      "cpu_start": 55263,
+      "cpu_end": 55275,
+      "file_offset": 120815,
+      "length": 13,
+      "sha256": "0ffaca0b88a276e845ebfd7af646469c27fdaa8d534235613fce06704df16afc",
+      "bytes_hex": "851786182041d12078ae4c3bd1"
+    },
+    {
+      "bank": 2,
+      "cpu_start": 44664,
+      "cpu_end": 44719,
+      "file_offset": 44680,
+      "length": 56,
+      "sha256": "a53e64438cf974bf2fdae541c86c296ae11cf302531280459a56b46f68e9c804",
+      "bytes_hex": "a000adb1040a6db104aabdf5a5186517990f06bdf6a56900991006bdf7a5186518991106ad1506d00eadfe04f009ad0f0638e91e8d0f0660"
+    },
+    {
+      "bank": 2,
+      "cpu_start": 43114,
+      "cpu_end": 43161,
+      "file_offset": 43130,
+      "length": 48,
+      "sha256": "1aff8aee78b1e5433b7a206cab8cd3ba6ede75bf3ba5786b05202bd009efb3b8",
+      "bytes_hex": "a9008518a20646186617cad0f9a51729030a85180a0a18651818486db1042072d18db10468186db2042072d18db20460"
+    },
+    {
+      "bank": 2,
+      "cpu_start": 43162,
+      "cpu_end": 43245,
+      "file_offset": 43178,
+      "length": 84,
+      "sha256": "87f207242808f9cf82a0fcfcbbc629ec5ce9f9e23afd5bbec642bb9d97e4d7b5",
+      "bytes_hex": "adfe04f012ad1506d00da5171869148517a51869008518a9008554a518d006a517c9059008a518f013c97f900f207ae0a90985548db104a9004ceaa8a20546186617cad0f9a517c9099002a9098db1048db20460"
+    }
+  ],
+  "rea_evidence": [
+    {
+      "path": "analysis/rea/ledge-geometry-function-f963.json",
+      "evidence_id": "ev_127d5db684bc7b7306f588e207d9e50746c9502fab295079114571294b41287a",
+      "procedure": "0xf882"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-f785.json",
+      "evidence_id": "ev_154f6c00e71b5dbde9b2578feedd88541ecd23b4267d3b378e6059332fb0449c",
+      "procedure": "0xf785"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-f7bc.json",
+      "evidence_id": "ev_037737d41e5c830c2c9d15f0f14b4cde4364565cc519a4c6318ede6a18bd97e3",
+      "procedure": "0xf7bc"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-d164.json",
+      "evidence_id": "ev_73fea2825a3303d13bb33d77bc8e02ebccae8bf6b0bac117a93477883d8bc996",
+      "procedure": "0xd164"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-bank02-function-a86a.json",
+      "evidence_id": "ev_58620f38004ed3c4e7cbbc2c7de81762f2e0b0bcc2831618b60a1b8092f9d5a8",
+      "procedure": "0xa86a"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-bank02-function-a89a-seeded.json",
+      "evidence_id": "ev_406211d1260d7515b0182d91147f0a7d578bcc74affa8e0537840a508d55215e",
+      "procedure": "0xa89a"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-c8d4.json",
+      "evidence_id": "ev_d4fa8e5b1413e911dd62e3f6b3f6b9bfbabe406ce22d34882065b8da7d4144db",
+      "procedure": "0xc8d4"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-f65b.json",
+      "evidence_id": "ev_92f17d90f7641da25c9adca8848dec7441e9c330dd3d81e446cfa1a3bd04161d",
+      "procedure": "0xf65b"
+    },
+    {
+      "path": "analysis/rea/ledge-geometry-function-f7e2.json",
+      "evidence_id": "ev_0e8d87cc57995788589fb6c85e48b350772e33ac89e22bbfae337d80b369501d",
+      "procedure": "0xf7e2"
+    },
+    {
+      "path": "analysis/rea/actor-spawn-d7df.json",
+      "evidence_id": "ev_0c60ee61fab87b601d8bc4ef86cabbfcc27476bb0e63879634e8fdf6bf765428",
+      "procedure": "0xd7df"
+    },
+    {
+      "path": "analysis/rea/actor-spawn-ae78.json",
+      "evidence_id": "ev_0c55705554692aeeec121626955a44560e95f80d7eca9f471ed26c7e0b6ebb76",
+      "procedure": "0xae78"
+    }
+  ],
+  "derived_target_provenance": {
+    "path": "analysis/rea/ledge-geometry-bank02-a89a.bin",
+    "sha256": "08666e67491a93871260a486e962dc3fc47d4e0327dac19b0d1e346aeac169fd",
+    "mapping": "Original PRG bank2 mapped8000..BFFF plus fixed bank7 C000..FFFF. Bytes at8000..8002 replaced with synthetic JMP A89A only to seed Ghidra analysis; original ROM unchanged; procedure A89A is original data.",
+    "snapshot": "analysis/rea/ledge-geometry-bank02-a89a-snapshot.json"
+  },
+  "validation": {
+    "rom_hash_verified": true,
+    "position_table30entries_verified": true,
+    "grab_snap_checked_against6502_assembly": true,
+    "facing_conflict_resolved_by_runtime": true,
+    "same_room_example_count": 12,
+    "game_files_changed": false
+  },
+  "limitations": [
+    "No emulator is added to the runtime game; original-ROM emulation is used by a separate agent only for observations.",
+    "Cross-room grab/lowering and gate special cases are not fully reconstructed.",
+    "Native anchor coordinates are not universal collision feet; actor frame origin and VM anchor changes must both be applied."
+  ]
+}

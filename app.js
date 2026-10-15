@@ -1,4 +1,4 @@
-import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js';
+import {NativeRenderer,ROOM_WIDTH,ROOM_HEIGHT} from './native-renderer.js?v=ledge-20261015';
 const $ = s => document.querySelector(s);
 const canvas = $('#game');
 const ctx = canvas.getContext('2d', { alpha: false });
@@ -7,7 +7,7 @@ let game, campaign, actors, nativeTiles, palettes, renderer, started = false, pa
 let camera = 8, cameraTick = -1, cameraRoom = null;
 let selectedRoom = 1, keyboard = 0, touch = 0, lastTime = 0, accumulator = 0, lastRoom = 0;
 const names = ['Empty','Floor','Spikes','Pillar','Gate','Stuck plate','Closing plate','Tapestry','Pillar base','Pillar top','Potion','Loose floor','Tapestry top','Mirror','Rubble','Opening plate','Exit left','Exit right','Chopper','Torch','Wall','Skeleton','Sword','Balcony','Lattice pillar','Lattice support','Small lattice','Lattice left','Lattice right','Torch rubble'];
-const stateNames = ['STANDING','RUNNING','CROUCHING','JUMPING','FALLING','HANGING','CLIMBING','HURT','FALLEN','SWORD READY','ATTACKING','DRINKING','LEVEL COMPLETE'];
+const stateNames = ['STANDING','RUNNING','CROUCHING','JUMPING','FALLING','HANGING','CLIMBING','HURT','FALLEN','SWORD READY','ATTACKING','DRINKING','LEVEL COMPLETE','LOWERING','RELEASING'];
 const g = (name, ...args) => game[`game_${name}`](...args);
 const levelData = () => campaign.levels[ready ? g('get_level') : 0];
 const roomData = room => levelData().rooms.find(r => r.id === room);
@@ -20,12 +20,12 @@ function draw() {
   const world=renderer.world,w=world.getContext('2d');w.imageSmoothingEnabled=false;
   roomDraw(w,room,true,tick);
   if(ready)for(let i=0;i<g('get_effect_count');i++)if(g('get_effect_value',i,0)&&g('get_effect_value',i,1)===room)renderer.drawLooseFloor(w,g('get_effect_value',i,2),g('get_effect_value',i,3));
-  if(ready&&g('get_guard_active',room))renderer.drawActor(w,30+g('get_guard_x',room),11+g('get_guard_y',room),g('get_guard_facing',room),g('get_guard_state',room)===2?10:9,tick,true);
-  if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawActor(w,30+g('get_player_x'),11+g('get_player_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'));
+  if(ready&&g('get_guard_active',room))renderer.drawActor(w,20+g('get_guard_x',room),8+g('get_guard_y',room),g('get_guard_facing',room),g('get_guard_state',room)===2?10:9,tick,true);
+  if(ready&&(!g('get_player_invulnerable')||tick%8<5))renderer.drawActor(w,g('get_player_render_x'),g('get_player_render_y'),g('get_player_facing'),g('get_player_state'),g('get_player_animation'),false,g('get_player_native_frame'));
   // Display profile: crop8 overscan lines from each end of the native240-line image.
   ctx.save();ctx.translate(0,-8);ctx.fillStyle='#000';ctx.fillRect(0,0,256,240);
   // Bank5 $87E9..$884E: clamp scroll8..80, approach by4px/update.
-  const actorX=g('get_player_x')+20;
+  const actorX=g('get_player_render_x');
   const desired=Math.max(8,Math.min(80,(actorX&~3)-120));
   const scene=`${g('get_level')}:${room}`;
   if(cameraRoom!==scene||tick<cameraTick){camera=desired;cameraRoom=scene;}
@@ -143,7 +143,7 @@ function renderActorAtlas(){
 }
 
 async function boot(){
-  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
+  const [wasmResponse,levelsJson,actorsJson,paletteJson,nativeJson,animationJson]=await Promise.all([fetch('game.wasm?v=ledge-20261015'),fetch('assets/levels.json').then(r=>r.json()),fetch('assets/actor-frames.json').then(r=>r.json()),fetch('assets/palettes.json').then(r=>r.json()),fetch('assets/native-metatiles.json').then(r=>r.json()),fetch('assets/background-animations.json').then(r=>r.json())]);
   if(!wasmResponse.ok)throw new Error(`Wasm fetch returned ${wasmResponse.status}`);
   const {instance}=await WebAssembly.instantiate(await wasmResponse.arrayBuffer(),{});
   game=instance.exports;campaign=levelsJson;actors=actorsJson;palettes=paletteJson;nativeTiles=nativeJson;

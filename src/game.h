@@ -16,7 +16,7 @@ enum {
 enum {
     GAME_STAND, GAME_RUN, GAME_CROUCH, GAME_JUMP, GAME_FALL,
     GAME_HANG, GAME_CLIMB, GAME_HURT, GAME_DEAD, GAME_SWORD,
-    GAME_ATTACK, GAME_DRINK, GAME_FINISH
+    GAME_ATTACK, GAME_DRINK, GAME_FINISH, GAME_LOWER, GAME_RELEASE
 };
 enum { GAME_FLAG_DEAD = 1, GAME_FLAG_LEVEL_COMPLETE = 2,
        GAME_FLAG_COMPLETE = 4, GAME_FLAG_PAUSED = 8 };
@@ -48,6 +48,11 @@ int game_get_player_state(void);
 int game_get_player_grounded(void);
 int game_get_player_height(void);
 int game_get_player_animation(void);
+/* Native sprite anchor and explicit frame for recovered ledge sequences.
+ * A frame of -1 leaves other reconstructed animations to the renderer. */
+int game_get_player_render_x(void);
+int game_get_player_render_y(void);
+int game_get_player_native_frame(void);
 int game_get_player_attack_frame(void);
 int game_get_player_invulnerable(void);
 

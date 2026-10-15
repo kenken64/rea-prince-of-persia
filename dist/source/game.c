@@ -1,6 +1,7 @@
 #include "game.h"
 #include <stdint.h>
 #include "level_data.h"
+#include "ledge_sequences.h"
 
 /* This is independent C gameplay, not a 6502 interpreter. The extracted tiles,
  * room graph, spawns, guards, and button/door event records are exact ROM data.
@@ -15,6 +16,8 @@
 #define CROUCH_HEIGHT 22
 #define FLOOR_Y(row) ((row) * GAME_TILE_HEIGHT + GAME_TILE_FLOOR_OFFSET)
 #define MAX_EFFECTS 16
+/* Logical animation updates are distinct from the 60 Hz physics ticks. */
+#define LEDGE_STEP_TICKS 4
 
 /* The low five tile bits follow the recovered map's tile vocabulary. The
  * complete vocabulary is a compatibility interpretation; floor, pillar, gate,
@@ -39,6 +42,7 @@ typedef struct {
     int frame, invulnerable, attack, attack_cooldown, hurt, drink;
     int fall_distance, hang_room, hang_position, hang_side;
     int climb, climb_x, climb_y, climb_room, finish;
+    int ledge_x, ledge_y, ledge_step, ledge_clock, native_frame, grab_cooldown, release_program;
 } Player;
 typedef struct {
     int32_t x, y;
@@ -205,6 +209,7 @@ void game_reset(void) {
     player.health = player.max_health; player.frame = player.invulnerable = 0;
     player.attack = player.attack_cooldown = player.hurt = player.drink = 0;
     player.fall_distance = player.climb = player.finish = 0; player.hang_room = 0;
+    player.native_frame = -1; player.ledge_step = player.ledge_clock = player.grab_cooldown = 0;
     previous_input = input; last_event = attack_hit = 0; complete = 0;
 }
 
@@ -315,10 +320,22 @@ static void touch_floor(int room, int pos, int impact) {
         if (impact > 28 || !(input & GAME_INPUT_ACTION) || absolute(player.vx) > 220) die();
     }
 }
+static void begin_hang(int rr, int pp, int col, int row, int side) {
+    /* Original F882 -> D7DF: offset25 facing right,56 facing left;
+     * the sampled cell is BELOW the ledge, with Y offset63. Native
+     * anchors are (C x+20,C y+8). Frame91's hands then meet the artwork. */
+    player.x = PX(col * 32 + (side > 0 ? 5 : 36));
+    player.y = PX(FLOOR_Y(row) + 63);
+    player.vx = player.vy = 0; player.state = GAME_HANG; player.grounded = 0;
+    player.facing = side; player.hang_room = rr; player.hang_position = pp; player.hang_side = side;
+    player.ledge_x = to_pixel(player.x); player.ledge_y = to_pixel(player.y);
+    player.ledge_step = player.ledge_clock = player.frame = 0;
+    player.native_frame = 91; player.fall_distance = 0;
+}
 static int try_grab(void) {
     int row, side = player.facing, edge_x = to_pixel(player.x) + side * 11;
     int hands = to_pixel(player.y) - BODY_HEIGHT + 3;
-    if (!(input & (GAME_INPUT_ACTION | GAME_INPUT_UP)) || (input & GAME_INPUT_DOWN) || player.vy < -PX(2)) return 0;
+    if (player.grab_cooldown || !(input & (GAME_INPUT_ACTION | GAME_INPUT_UP)) || (input & GAME_INPUT_DOWN) || player.vy < -PX(2)) return 0;
     for (row = -1; row <= 3; ++row) {
         int surface = FLOOR_Y(row), rr, pp, air_room, air_pos;
         if (absolute(hands - surface) > 9 ||
@@ -328,39 +345,124 @@ static int try_grab(void) {
         {
             int edge = side > 0 ? floor_div(edge_x, GAME_TILE_WIDTH) * GAME_TILE_WIDTH : (floor_div(edge_x, GAME_TILE_WIDTH) + 1) * GAME_TILE_WIDTH;
             if (absolute(to_pixel(player.x) - edge) > 17) continue;
-            player.x = PX(edge - side * 6); player.y = PX(surface + BODY_HEIGHT - 3);
-            player.vx = player.vy = 0; player.state = GAME_HANG; player.grounded = 0;
-            player.hang_room = rr; player.hang_position = pp; player.hang_side = side;
-            player.fall_distance = 0; player.frame = 0; return 1;
+            begin_hang(rr, pp, floor_div(edge_x, 32), row, side); return 1;
         }
     }
     return 0;
 }
-static void update_hanging(int edges) {
-    if (input & GAME_INPUT_DOWN) {
-        player.state = GAME_FALL; player.vy = FP; player.y += PX(6);
-        player.hang_room = 0; return;
+static void finish_release(void) {
+    int rr, pp;
+    player.state = GAME_FALL; player.vy = FP;
+    if (standing_tile(&rr, &pp)) {
+        player.state = GAME_STAND; player.grounded = 1; player.vy = 0;
+        touch_floor(rr, pp, 0);
     }
-    if (edges & (GAME_INPUT_UP | GAME_INPUT_JUMP)) {
-        player.state = GAME_CLIMB; player.climb = 24;
+    player.native_frame = -1; player.grab_cooldown = 18;
+    player.frame = 0; player.hang_room = 0; player.fall_distance = 0;
+}
+static void begin_release(void) {
+    int rr, pp;
+    /* Keep the recovered release poses/offsets. Selection uses the C floor
+     * collision model; the NES controller's additional tile probes and gate
+     * exceptions have not been ported. */
+    player.release_program = standing_tile(&rr, &pp) ? 1 : 2;
+    player.x += PX(player.release_program == 2 ? 6 : player.facing < 0 ? -4 : 0);
+    player.state = GAME_RELEASE; player.ledge_step = player.ledge_clock = 0;
+    player.ledge_x = to_pixel(player.x); player.ledge_y = to_pixel(player.y);
+    player.native_frame = player.release_program == 1 ? 83 : 106;
+}
+static void update_releasing(void) {
+    const PopLedgeStep *pose;
+    int last = player.release_program == 1 ? POP_LEDGE_PULLBACK_COUNT - 1 :
+               player.release_program == 2 ? 3 : POP_LEDGE_HANG_SWING_COUNT - 1;
+    if (++player.ledge_clock < LEDGE_STEP_TICKS) return;
+    player.ledge_clock = 0; ++player.ledge_step;
+    pose = player.release_program == 1 ? &pop_ledge_pullback[player.ledge_step] :
+           player.release_program == 2 ? &pop_ledge_letgo[player.ledge_step] :
+                                        &pop_ledge_hang_swing[player.ledge_step];
+    player.x = PX(player.ledge_x + player.facing * pose->dx_right);
+    player.y = PX(player.ledge_y + pose->dy); player.native_frame = pose->frame;
+    if (player.ledge_step == last) finish_release();
+}
+static void update_hanging(int edges) {
+    if ((input & GAME_INPUT_DOWN) || !(input & (GAME_INPUT_ACTION | GAME_INPUT_UP | GAME_INPUT_JUMP))) {
+        begin_release(); return;
+    }
+    if ((input & GAME_INPUT_UP) || (edges & GAME_INPUT_JUMP)) {
+        /* F7E2/C8D4 realign a grip to X24/58,Y64 before script990F. */
+        int ledge_col = floor_div(to_pixel(player.x) - (player.facing > 0 ? 5 : 36), 32);
+        int aligned_x = ledge_col * 32 + (player.facing > 0 ? 4 : 38);
+        int aligned_y = to_pixel(player.y) + 1;
+        int snap = to_pixel(player.x) + 20 >= 50;
+        if (!snap) { aligned_x = to_pixel(player.x); aligned_y = to_pixel(player.y); }
+        int end_x = aligned_x + player.facing * 12;
+        int end_y = aligned_y - 63;
+        if (blocked(PX(end_x), PX(end_y), BODY_HEIGHT)) return;
+        player.state = GAME_CLIMB;
         player.climb_room = player.hang_room;
-        player.climb_x = (player.hang_position % 10) * GAME_TILE_WIDTH + GAME_TILE_WIDTH / 2;
-        player.climb_y = FLOOR_Y(player.hang_position / 10);
-        player.frame = 0;
+        player.climb_x = (player.hang_position % 10) * 32 +
+                         (snap ? (player.facing > 0 ? 16 : 26) : (player.facing > 0 ? 17 : 24));
+        player.climb_y = FLOOR_Y(player.hang_position / 10) + snap;
+        player.ledge_step = player.ledge_clock = player.frame = 0;
+        player.ledge_x = aligned_x; player.ledge_y = aligned_y;
+        player.x = PX(aligned_x); player.y = PX(aligned_y);
+        player.native_frame = pop_ledge_climb[0].frame;
+        return;
+    }
+    /* The ROM swing is finite: 43 hanging poses, then four settling poses.
+     * Do not invent an infinite hold of its final frame. */
+    if (++player.ledge_clock >= LEDGE_STEP_TICKS) {
+        player.ledge_clock = 0;
+        ++player.ledge_step;
+        player.native_frame = pop_ledge_hang_swing[player.ledge_step].frame;
+        if (player.ledge_step == 43) {
+            player.state = GAME_RELEASE; player.release_program = 3;
+            player.x = PX(player.ledge_x + player.facing * 4);
+        }
     }
 }
 static void update_climbing(void) {
-    /* The actor interpolates toward the ledge in the same room. A ledge across
-     * a room boundary changes room at completion, avoiding a screen-wide tween. */
-    if (player.room == player.climb_room && player.climb > 0) {
-        player.x += (PX(player.climb_x) - player.x) / player.climb;
-        player.y += (PX(player.climb_y) - player.y) / player.climb;
-    }
-    if (--player.climb <= 0) {
+    const PopLedgeStep *pose;
+    if (++player.ledge_clock < LEDGE_STEP_TICKS) return;
+    player.ledge_clock = 0; ++player.ledge_step;
+    pose = &pop_ledge_climb[player.ledge_step];
+    player.x = PX(player.ledge_x + player.facing * pose->dx_right);
+    player.y = PX(player.ledge_y + pose->dy); player.native_frame = pose->frame;
+    if (player.ledge_step == POP_LEDGE_CLIMB_COUNT - 1) {
         player.room = player.climb_room; player.x = PX(player.climb_x); player.y = PX(player.climb_y);
         player.state = GAME_STAND; player.grounded = 1; player.vx = player.vy = 0;
-        player.hang_room = 0;
+        player.hang_room = 0; player.native_frame = -1; player.frame = 0;
     }
+}
+static int try_lower(int edges) {
+    int rr, pp, row, col, air_room, air_pos, side, edge;
+    if (!(edges & GAME_INPUT_DOWN) || !standing_tile(&rr, &pp)) return 0;
+    if (tile_type(rr, pp) == TILE_WALL || tile_type(rr, pp) == TILE_SPIKES) return 0;
+    row = floor_div(to_pixel(player.y) - 56, 64); col = floor_div(to_pixel(player.x), 32);
+    /* Down at the edge lowers the Prince with his face toward the platform. */
+    side = -player.facing;
+    edge = (col + (side < 0)) * 32;
+    if (absolute(to_pixel(player.x) - edge) > 18 ||
+        support_at(player.room, (col - side) * 32 + 16, row, &air_room, &air_pos)) return 0;
+    begin_hang(rr, pp, col, row, side);
+    player.state = GAME_LOWER;
+    player.ledge_x += side * 9 + (side < 0); player.ledge_y -= 63;
+    player.x = PX(player.ledge_x); player.y = PX(player.ledge_y);
+    player.native_frame = pop_ledge_lower[0].frame;
+    return 1;
+}
+static void update_lowering(void) {
+    const PopLedgeStep *pose;
+    if (++player.ledge_clock < LEDGE_STEP_TICKS) return;
+    player.ledge_clock = 0;
+    if (++player.ledge_step >= POP_LEDGE_LOWER_COUNT) {
+        player.state = GAME_HANG; player.ledge_step = 0;
+        player.ledge_x = to_pixel(player.x); player.ledge_y = to_pixel(player.y);
+        return;
+    }
+    pose = &pop_ledge_lower[player.ledge_step];
+    player.x = PX(player.ledge_x + player.facing * pose->dx_right);
+    player.y = PX(player.ledge_y + pose->dy); player.native_frame = pose->frame;
 }
 static void interact(int edges) {
     int rr, pp, type, mod;
@@ -417,6 +519,10 @@ static void update_player(int edges) {
     }
     if (player.state == GAME_HANG) { update_hanging(edges); return; }
     if (player.state == GAME_CLIMB) { update_climbing(); return; }
+    if (player.state == GAME_LOWER) { update_lowering(); return; }
+    if (player.state == GAME_RELEASE) { update_releasing(); return; }
+    player.native_frame = -1;
+    if (player.grab_cooldown) --player.grab_cooldown;
     if (player.invulnerable) --player.invulnerable;
     if (player.attack_cooldown) --player.attack_cooldown;
     if (player.hurt) --player.hurt;
@@ -431,6 +537,7 @@ static void update_player(int edges) {
     interact(edges);
     if (player.state == GAME_FINISH) return;
     if (player.drink) direction = 0;
+    if (player.grounded && !player.drink && !player.hurt && !combat && try_lower(edges)) return;
     if (direction && !player.attack && !player.hurt && !player.drink) player.facing = direction;
     if (player.grounded && !player.hurt && !player.drink) {
         int crouching = (input & GAME_INPUT_DOWN) != 0;
@@ -611,6 +718,9 @@ int game_get_player_state(void) { return player.state; }
 int game_get_player_grounded(void) { return player.grounded; }
 int game_get_player_height(void) { return height(); }
 int game_get_player_animation(void) { return player.frame; }
+int game_get_player_render_x(void) { return to_pixel(player.x) + 20; }
+int game_get_player_render_y(void) { return to_pixel(player.y) + 8; }
+int game_get_player_native_frame(void) { return player.native_frame; }
 int game_get_player_attack_frame(void) { return player.attack ? 18 - player.attack : -1; }
 int game_get_player_invulnerable(void) { return player.invulnerable; }
 int game_get_room_present(int room) { return exists(room); }
@@ -689,6 +799,7 @@ int game_set_player(int room, int x, int y, int facing) {
     player.room = room; player.x = PX(x); player.y = PX(y); player.facing = facing < 0 ? -1 : 1;
     player.vx = player.vy = 0; player.state = GAME_STAND; player.grounded = 0;
     player.fall_distance = player.hurt = player.invulnerable = player.attack = player.drink = 0;
+    player.native_frame = -1; player.hang_room = player.grab_cooldown = player.ledge_step = player.ledge_clock = 0;
     return 1;
 }
 void game_set_health(int health) { player.health = clamp(health, 0, player.max_health); if (!player.health) die(); }

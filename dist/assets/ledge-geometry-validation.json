@@ -1,0 +1,87 @@
+{
+  "schema": "pop-nes-ledge-geometry-validation-v1",
+  "findings_sha256": "6c6c6bf1c9a10770b9493effbbf00dc0b9117aa6e257b2f857915769abe530fa",
+  "source_ranges": [
+    {
+      "bank": 7,
+      "start": 63618,
+      "end": 63910,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 63365,
+      "end": 63373,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 63420,
+      "end": 63438,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 63458,
+      "end": 63559,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 63067,
+      "end": 63202,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 51412,
+      "end": 51417,
+      "bytes_match": true
+    },
+    {
+      "bank": 7,
+      "start": 55263,
+      "end": 55275,
+      "bytes_match": true
+    },
+    {
+      "bank": 2,
+      "start": 44664,
+      "end": 44719,
+      "bytes_match": true
+    },
+    {
+      "bank": 2,
+      "start": 43114,
+      "end": 43161,
+      "bytes_match": true
+    },
+    {
+      "bank": 2,
+      "start": 43162,
+      "end": 43245,
+      "bytes_match": true
+    },
+    {
+      "bank": 2,
+      "start": 42485,
+      "end": 42574,
+      "bytes_match": true
+    }
+  ],
+  "source_range_count": 11,
+  "rea_evidence_count": 11,
+  "derived_target_differing_byte_offsets": [
+    0,
+    1,
+    2
+  ],
+  "seed_patch_hex": "4c9aa8",
+  "all_nonseed_bytes_match_original": true,
+  "anchor_examples_checked": 12,
+  "hang_frame_contacts_checked": 13,
+  "result": "passed",
+  "original_cpu_catch_matched_static_anchor": true,
+  "catch_runtime_source": "analysis/validation/original-ledge-fall-grab-search.json",
+  "original_cpu_left_and_right_climb_alignment_matched": true
+}

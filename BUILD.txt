@@ -24,6 +24,7 @@ FILES
 src/game.c          Gameplay, collision, combat, triggers, room traversal.
 src/game.h          Browser/native interface and editable constants.
 src/level_data.h    All 14 recovered level structures, with original raw bytes.
+src/ledge_sequences.h  Recovered ledge frames and nominal anchor deltas.
 src/wasm_libc.c     Freestanding byte operations.
 assets/levels.json  Recovered campaign data with offsets and validation.
 assets/actor-frames.json  Original multipart indexed sprite frames and provenance.
@@ -39,6 +40,17 @@ tools/extract_palettes.py and tools/extract_native_metatiles.py --fidelity-v2
 reproduce extraction from the SHA256-verified user-supplied ROM.
 
 Controls: arrows / WASD move; Space jump; Shift or X action/attack;
-Up climb/interact; Down crouch/drop; R restart; P pause.
+Hold Shift/X to grab; while hanging, Up climbs and releasing Shift/X lets go.
+Down at an exposed edge lowers the Prince; Down while hanging lets go.
+Up also interacts; Down elsewhere crouches. R restart; P pause.
+The original hanging swing is finite, so climb before it finishes.
+
+LEDGE VALIDATION
+ROM bytecode and controlled original-ROM execution establish the catch anchors,
+pre-climb alignment, frame order (including skipped frame148), and +/-63 pixel
+anchor transfers during climb/lower. Climb uses four 60Hz ticks per pose, as
+observed in the original Level1 scenario. General jump/catch tolerance, release
+branch selection and room-boundary transitions still use the independent C
+collision model; this does not establish complete controller equivalence.
 
 Original game, character and art remain the work of their respective authors.

@@ -1,0 +1,1631 @@
+{
+  "rom_sha256": "5f14d4d31cc588ddcdfb2b4d46eb7051b06d02655c9208037ef7ae137c4740e4",
+  "classification": "Original animation bytecode frame order and nominal anchor deltas; no interpolated poses",
+  "selector": {
+    "cpu_address": 34608,
+    "bank": 5,
+    "pointer_table_cpu_address": 38386,
+    "action_ram": 1558,
+    "script_pointer_ram": [
+      1555,
+      1556
+    ]
+  },
+  "vm": {
+    "cpu_address": 61758,
+    "fixed_bank": 7,
+    "opcode_dispatch_table": 33835,
+    "frame_ram": 1559,
+    "anchor_x_ram": [
+      1551,
+      1552
+    ],
+    "anchor_y_ram": 1553,
+    "mode_ram": 1560,
+    "right_facing": "0615nonzero; verified by original-ROM RIGHT-input runtime trace",
+    "logical_step": "F13E consumes commands until one literal frame0..F0, then stores frame/pointer and renders actor",
+    "cadence": "Original-ROM runtime verified one logical step per4video frames in the controlled level1 no-guard climb; other scheduling contexts remain unverified"
+  },
+  "sequences": {
+    "catch": {
+      "name": "catch",
+      "action": 9,
+      "script_cpu_address": 39077,
+      "script_file_offset": 88245,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39079,
+          "file_offset": 88247,
+          "frame": 91,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39077,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 2
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39077,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 2
+        }
+      ],
+      "continuation_pc": 39080,
+      "source_bank": 5
+    },
+    "climb": {
+      "name": "climb",
+      "action": 10,
+      "script_cpu_address": 39183,
+      "script_file_offset": 88351,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39186,
+          "file_offset": 88354,
+          "frame": 135,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": [
+            {
+              "pc": 39183,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 1
+            },
+            {
+              "pc": 39185,
+              "opcode": 253,
+              "kind": "ledge_flag_reset"
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "pc": 39187,
+          "file_offset": 88355,
+          "frame": 136,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 2,
+          "pc": 39188,
+          "file_offset": 88356,
+          "frame": 137,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 3,
+          "pc": 39189,
+          "file_offset": 88357,
+          "frame": 138,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 4,
+          "pc": 39190,
+          "file_offset": 88358,
+          "frame": 139,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 5,
+          "pc": 39191,
+          "file_offset": 88359,
+          "frame": 140,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 6,
+          "pc": 39196,
+          "file_offset": 88364,
+          "frame": 141,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": [
+            {
+              "pc": 39192,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 5,
+              "factor": 2,
+              "encoded": 10,
+              "delta_right": 10,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39194,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 193,
+              "delta": -63
+            }
+          ]
+        },
+        {
+          "step": 7,
+          "pc": 39197,
+          "file_offset": 88365,
+          "frame": 142,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 8,
+          "pc": 39198,
+          "file_offset": 88366,
+          "frame": 143,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 9,
+          "pc": 39199,
+          "file_offset": 88367,
+          "frame": 144,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 10,
+          "pc": 39200,
+          "file_offset": 88368,
+          "frame": 145,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 11,
+          "pc": 39201,
+          "file_offset": 88369,
+          "frame": 146,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 12,
+          "pc": 39202,
+          "file_offset": 88370,
+          "frame": 147,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": []
+        },
+        {
+          "step": 13,
+          "pc": 39205,
+          "file_offset": 88373,
+          "frame": 149,
+          "dx_right": 10,
+          "dy": -63,
+          "mode": 1,
+          "action": 10,
+          "commands_before": [
+            {
+              "pc": 39203,
+              "opcode": 245,
+              "kind": "clear_fall_flags",
+              "discarded_byte": 148
+            }
+          ]
+        },
+        {
+          "step": 14,
+          "pc": 38621,
+          "file_offset": 87789,
+          "frame": 15,
+          "dx_right": 12,
+          "dy": -63,
+          "mode": 0,
+          "action": 10,
+          "commands_before": [
+            {
+              "pc": 39206,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 1
+            },
+            {
+              "pc": 39208,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 1,
+              "factor": 2,
+              "encoded": 2,
+              "delta_right": 2,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39210,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38619
+            },
+            {
+              "pc": 38619,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39183,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 1
+        },
+        {
+          "pc": 39185,
+          "opcode": 253,
+          "kind": "ledge_flag_reset"
+        },
+        {
+          "pc": 39192,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 5,
+          "factor": 2,
+          "encoded": 10,
+          "delta_right": 10,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39194,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 193,
+          "delta": -63
+        },
+        {
+          "pc": 39203,
+          "opcode": 245,
+          "kind": "clear_fall_flags",
+          "discarded_byte": 148
+        },
+        {
+          "pc": 39206,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 1
+        },
+        {
+          "pc": 39208,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 1,
+          "factor": 2,
+          "encoded": 2,
+          "delta_right": 2,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39210,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38619
+        },
+        {
+          "pc": 38619,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 0
+        }
+      ],
+      "continuation_pc": 38622,
+      "source_bank": 5
+    },
+    "lower": {
+      "name": "lower",
+      "action": 68,
+      "script_cpu_address": 39160,
+      "script_file_offset": 88328,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39162,
+          "file_offset": 88330,
+          "frame": 15,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": [
+            {
+              "pc": 39160,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "pc": 39163,
+          "file_offset": 88331,
+          "frame": 148,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 2,
+          "pc": 39164,
+          "file_offset": 88332,
+          "frame": 145,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 3,
+          "pc": 39165,
+          "file_offset": 88333,
+          "frame": 144,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 4,
+          "pc": 39166,
+          "file_offset": 88334,
+          "frame": 143,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 5,
+          "pc": 39168,
+          "file_offset": 88336,
+          "frame": 142,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": [
+            {
+              "pc": 39167,
+              "opcode": 252,
+              "kind": "edge_flag_reset"
+            }
+          ]
+        },
+        {
+          "step": 6,
+          "pc": 39169,
+          "file_offset": 88337,
+          "frame": 141,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 7,
+          "pc": 39174,
+          "file_offset": 88342,
+          "frame": 140,
+          "dx_right": -9,
+          "dy": 63,
+          "mode": 1,
+          "action": 68,
+          "commands_before": [
+            {
+              "pc": 39170,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 251,
+              "factor": 2,
+              "encoded": 246,
+              "delta_right": -9,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39172,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 63,
+              "delta": 63
+            }
+          ]
+        },
+        {
+          "step": 8,
+          "pc": 39175,
+          "file_offset": 88343,
+          "frame": 138,
+          "dx_right": -9,
+          "dy": 63,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 9,
+          "pc": 39176,
+          "file_offset": 88344,
+          "frame": 136,
+          "dx_right": -9,
+          "dy": 63,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        },
+        {
+          "step": 10,
+          "pc": 39177,
+          "file_offset": 88345,
+          "frame": 91,
+          "dx_right": -9,
+          "dy": 63,
+          "mode": 1,
+          "action": 68,
+          "commands_before": []
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39160,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 1
+        },
+        {
+          "pc": 39167,
+          "opcode": 252,
+          "kind": "edge_flag_reset"
+        },
+        {
+          "pc": 39170,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 251,
+          "factor": 2,
+          "encoded": 246,
+          "delta_right": -9,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39172,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 63,
+          "delta": 63
+        }
+      ],
+      "continuation_pc": 39178,
+      "source_bank": 5
+    },
+    "hang_swing": {
+      "name": "hang_swing",
+      "action": 9,
+      "script_cpu_address": 39077,
+      "script_file_offset": 88245,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39079,
+          "file_offset": 88247,
+          "frame": 91,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39077,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "pc": 39083,
+          "file_offset": 88251,
+          "frame": 90,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39080,
+              "opcode": 248,
+              "kind": "fall_state_reset",
+              "arguments": [
+                0,
+                0
+              ],
+              "ram06da": 0,
+              "ram06db": 104
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "pc": 39084,
+          "file_offset": 88252,
+          "frame": 89,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 3,
+          "pc": 39085,
+          "file_offset": 88253,
+          "frame": 88,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 4,
+          "pc": 39086,
+          "file_offset": 88254,
+          "frame": 87,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 5,
+          "pc": 39087,
+          "file_offset": 88255,
+          "frame": 87,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 6,
+          "pc": 39088,
+          "file_offset": 88256,
+          "frame": 87,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 7,
+          "pc": 39089,
+          "file_offset": 88257,
+          "frame": 88,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 8,
+          "pc": 39090,
+          "file_offset": 88258,
+          "frame": 89,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 9,
+          "pc": 39091,
+          "file_offset": 88259,
+          "frame": 90,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 10,
+          "pc": 39092,
+          "file_offset": 88260,
+          "frame": 91,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 11,
+          "pc": 39093,
+          "file_offset": 88261,
+          "frame": 92,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 12,
+          "pc": 39094,
+          "file_offset": 88262,
+          "frame": 93,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 13,
+          "pc": 39095,
+          "file_offset": 88263,
+          "frame": 94,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 14,
+          "pc": 39096,
+          "file_offset": 88264,
+          "frame": 95,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 15,
+          "pc": 39097,
+          "file_offset": 88265,
+          "frame": 96,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 16,
+          "pc": 39098,
+          "file_offset": 88266,
+          "frame": 97,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 17,
+          "pc": 39099,
+          "file_offset": 88267,
+          "frame": 98,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 18,
+          "pc": 39100,
+          "file_offset": 88268,
+          "frame": 99,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 19,
+          "pc": 39101,
+          "file_offset": 88269,
+          "frame": 97,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 20,
+          "pc": 39102,
+          "file_offset": 88270,
+          "frame": 96,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 21,
+          "pc": 39103,
+          "file_offset": 88271,
+          "frame": 95,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 22,
+          "pc": 39104,
+          "file_offset": 88272,
+          "frame": 94,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 23,
+          "pc": 39105,
+          "file_offset": 88273,
+          "frame": 93,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 24,
+          "pc": 39106,
+          "file_offset": 88274,
+          "frame": 92,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 25,
+          "pc": 39107,
+          "file_offset": 88275,
+          "frame": 91,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 26,
+          "pc": 39108,
+          "file_offset": 88276,
+          "frame": 90,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 27,
+          "pc": 39109,
+          "file_offset": 88277,
+          "frame": 89,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 28,
+          "pc": 39110,
+          "file_offset": 88278,
+          "frame": 88,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 29,
+          "pc": 39111,
+          "file_offset": 88279,
+          "frame": 87,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 30,
+          "pc": 39112,
+          "file_offset": 88280,
+          "frame": 88,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 31,
+          "pc": 39113,
+          "file_offset": 88281,
+          "frame": 89,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 32,
+          "pc": 39114,
+          "file_offset": 88282,
+          "frame": 90,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 33,
+          "pc": 39115,
+          "file_offset": 88283,
+          "frame": 91,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 34,
+          "pc": 39116,
+          "file_offset": 88284,
+          "frame": 92,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 35,
+          "pc": 39117,
+          "file_offset": 88285,
+          "frame": 93,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 36,
+          "pc": 39118,
+          "file_offset": 88286,
+          "frame": 94,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 37,
+          "pc": 39119,
+          "file_offset": 88287,
+          "frame": 95,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 38,
+          "pc": 39120,
+          "file_offset": 88288,
+          "frame": 96,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 39,
+          "pc": 39121,
+          "file_offset": 88289,
+          "frame": 95,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 40,
+          "pc": 39122,
+          "file_offset": 88290,
+          "frame": 94,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 41,
+          "pc": 39123,
+          "file_offset": 88291,
+          "frame": 93,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 42,
+          "pc": 39124,
+          "file_offset": 88292,
+          "frame": 92,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 2,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 43,
+          "pc": 39215,
+          "file_offset": 88383,
+          "frame": 83,
+          "dx_right": 4,
+          "dy": 0,
+          "mode": 5,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39125,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 1,
+              "factor": 4,
+              "encoded": 4,
+              "delta_right": 4,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39127,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 39213
+            },
+            {
+              "pc": 39213,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "step": 44,
+          "pc": 39219,
+          "file_offset": 88387,
+          "frame": 84,
+          "dx_right": 4,
+          "dy": 0,
+          "mode": 5,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39216,
+              "opcode": 252,
+              "kind": "edge_flag_reset"
+            },
+            {
+              "pc": 39217,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "step": 45,
+          "pc": 39220,
+          "file_offset": 88388,
+          "frame": 85,
+          "dx_right": 4,
+          "dy": 0,
+          "mode": 5,
+          "action": 9,
+          "commands_before": []
+        },
+        {
+          "step": 46,
+          "pc": 38621,
+          "file_offset": 87789,
+          "frame": 15,
+          "dx_right": 12,
+          "dy": 0,
+          "mode": 0,
+          "action": 9,
+          "commands_before": [
+            {
+              "pc": 39221,
+              "opcode": 244,
+              "kind": "land_flags"
+            },
+            {
+              "pc": 39222,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 4,
+              "factor": 2,
+              "encoded": 8,
+              "delta_right": 8,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39224,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38619
+            },
+            {
+              "pc": 38619,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39077,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 2
+        },
+        {
+          "pc": 39080,
+          "opcode": 248,
+          "kind": "fall_state_reset",
+          "arguments": [
+            0,
+            0
+          ],
+          "ram06da": 0,
+          "ram06db": 104
+        },
+        {
+          "pc": 39125,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 1,
+          "factor": 4,
+          "encoded": 4,
+          "delta_right": 4,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39127,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 39213
+        },
+        {
+          "pc": 39213,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 5
+        },
+        {
+          "pc": 39216,
+          "opcode": 252,
+          "kind": "edge_flag_reset"
+        },
+        {
+          "pc": 39217,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 5
+        },
+        {
+          "pc": 39221,
+          "opcode": 244,
+          "kind": "land_flags"
+        },
+        {
+          "pc": 39222,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 4,
+          "factor": 2,
+          "encoded": 8,
+          "delta_right": 8,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39224,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38619
+        },
+        {
+          "pc": 38619,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 0
+        }
+      ],
+      "continuation_pc": 38622,
+      "source_bank": 5
+    },
+    "pullback": {
+      "name": "pullback",
+      "action": 11,
+      "script_cpu_address": 39213,
+      "script_file_offset": 88381,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39215,
+          "file_offset": 88383,
+          "frame": 83,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 11,
+          "commands_before": [
+            {
+              "pc": 39213,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "pc": 39219,
+          "file_offset": 88387,
+          "frame": 84,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 11,
+          "commands_before": [
+            {
+              "pc": 39216,
+              "opcode": 252,
+              "kind": "edge_flag_reset"
+            },
+            {
+              "pc": 39217,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "pc": 39220,
+          "file_offset": 88388,
+          "frame": 85,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 5,
+          "action": 11,
+          "commands_before": []
+        },
+        {
+          "step": 3,
+          "pc": 38621,
+          "file_offset": 87789,
+          "frame": 15,
+          "dx_right": 4,
+          "dy": 0,
+          "mode": 0,
+          "action": 11,
+          "commands_before": [
+            {
+              "pc": 39221,
+              "opcode": 244,
+              "kind": "land_flags"
+            },
+            {
+              "pc": 39222,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 4,
+              "factor": 1,
+              "encoded": 4,
+              "delta_right": 4,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39224,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 38619
+            },
+            {
+              "pc": 38619,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 0
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39213,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 5
+        },
+        {
+          "pc": 39216,
+          "opcode": 252,
+          "kind": "edge_flag_reset"
+        },
+        {
+          "pc": 39217,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 5
+        },
+        {
+          "pc": 39221,
+          "opcode": 244,
+          "kind": "land_flags"
+        },
+        {
+          "pc": 39222,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 4,
+          "factor": 1,
+          "encoded": 4,
+          "delta_right": 4,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39224,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 38619
+        },
+        {
+          "pc": 38619,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 0
+        }
+      ],
+      "continuation_pc": 38622,
+      "source_bank": 5
+    },
+    "letgo": {
+      "name": "letgo",
+      "action": 23,
+      "script_cpu_address": 39227,
+      "script_file_offset": 88395,
+      "steps": [
+        {
+          "step": 0,
+          "pc": 39229,
+          "file_offset": 88397,
+          "frame": 106,
+          "dx_right": 0,
+          "dy": 0,
+          "mode": 3,
+          "action": 23,
+          "commands_before": [
+            {
+              "pc": 39227,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "step": 1,
+          "pc": 39232,
+          "file_offset": 88400,
+          "frame": 106,
+          "dx_right": 0,
+          "dy": 6,
+          "mode": 3,
+          "action": 23,
+          "commands_before": [
+            {
+              "pc": 39230,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 6,
+              "delta": 6
+            }
+          ]
+        },
+        {
+          "step": 2,
+          "pc": 39235,
+          "file_offset": 88403,
+          "frame": 106,
+          "dx_right": 0,
+          "dy": 15,
+          "mode": 3,
+          "action": 23,
+          "commands_before": [
+            {
+              "pc": 39233,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 9,
+              "delta": 9
+            }
+          ]
+        },
+        {
+          "step": 3,
+          "pc": 39248,
+          "file_offset": 88416,
+          "frame": 106,
+          "dx_right": 4,
+          "dy": 27,
+          "mode": 4,
+          "action": 23,
+          "commands_before": [
+            {
+              "pc": 39236,
+              "opcode": 250,
+              "kind": "vertical",
+              "argument": 12,
+              "delta": 12
+            },
+            {
+              "pc": 39238,
+              "opcode": 251,
+              "kind": "horizontal",
+              "argument": 2,
+              "factor": 2,
+              "encoded": 4,
+              "delta_right": 4,
+              "conditional": "Original FE44/FE25 may block player X movement"
+            },
+            {
+              "pc": 39240,
+              "opcode": 248,
+              "kind": "fall_state_reset",
+              "arguments": [
+                0,
+                12
+              ],
+              "ram06da": 0,
+              "ram06db": 104
+            },
+            {
+              "pc": 39243,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 39246
+            },
+            {
+              "pc": 39246,
+              "opcode": 249,
+              "kind": "motion_mode",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "step": 4,
+          "pc": 39248,
+          "file_offset": 88416,
+          "frame": 106,
+          "dx_right": 4,
+          "dy": 27,
+          "mode": 4,
+          "action": 23,
+          "commands_before": [
+            {
+              "pc": 39249,
+              "opcode": 255,
+              "kind": "jump",
+              "target": 39248
+            }
+          ]
+        }
+      ],
+      "commands": [
+        {
+          "pc": 39227,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 3
+        },
+        {
+          "pc": 39230,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 6,
+          "delta": 6
+        },
+        {
+          "pc": 39233,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 9,
+          "delta": 9
+        },
+        {
+          "pc": 39236,
+          "opcode": 250,
+          "kind": "vertical",
+          "argument": 12,
+          "delta": 12
+        },
+        {
+          "pc": 39238,
+          "opcode": 251,
+          "kind": "horizontal",
+          "argument": 2,
+          "factor": 2,
+          "encoded": 4,
+          "delta_right": 4,
+          "conditional": "Original FE44/FE25 may block player X movement"
+        },
+        {
+          "pc": 39240,
+          "opcode": 248,
+          "kind": "fall_state_reset",
+          "arguments": [
+            0,
+            12
+          ],
+          "ram06da": 0,
+          "ram06db": 104
+        },
+        {
+          "pc": 39243,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 39246
+        },
+        {
+          "pc": 39246,
+          "opcode": 249,
+          "kind": "motion_mode",
+          "value": 4
+        },
+        {
+          "pc": 39249,
+          "opcode": 255,
+          "kind": "jump",
+          "target": 39248
+        }
+      ],
+      "continuation_pc": 39249,
+      "source_bank": 5
+    }
+  },
+  "important": [
+    "Climb consumesF5's following byte148 as an unused argument: rendered frames135..147,149,15.",
+    "Climb FA C1 moves original anchor UP63px before frame141; this cancels its frame-origin discontinuity.",
+    "Lower FA3F moves anchor DOWN63px before frame140; inverse compensation is required.",
+    "Lower's final frame91 is still mode1; following F902 changes mode2 before continuing at98A8/frame90.",
+    "98A5 hang_swing is FINITE and eventually jumps992D thenstanding96DB. It is not a proven stable idle loop.",
+    "Controllers can interrupt or replace scripts, snap anchors, or block FB movement; tables alone do not reconstruct those conditions.",
+    "letgo action17/script993B reaches repeated frame106 with fall mode4; ongoing gravity is external to this bytecode table.",
+    "All DX values use original right-facing0615nonzero. Left-facing DX is the negative; Y is unchanged."
+  ],
+  "evidence": [
+    "analysis/rea/ledge-vm-f13e.json",
+    "analysis/rea/ledge-command-fb.json",
+    "analysis/rea/ledge-command-fa.json",
+    "analysis/rea/ledge-command-f9.json",
+    "analysis/rea/ledge-command-f8.json",
+    "analysis/rea/ledge-command-fc.json",
+    "analysis/rea/ledge-command-fd.json",
+    "analysis/rea/ledge-command-f4.json",
+    "analysis/rea/ledge-command-f5.json",
+    "analysis/rea/ledge-subtract-x.json",
+    "analysis/rea/ledge-add-x.json"
+  ],
+  "limitations": [
+    "No stable hang-loop hold behavior is assumed.",
+    "Original controller snaps and collision predicates are outside this bytecode-only extraction.",
+    "No original-ROM pixel changes or synthetic gameplay-room data are introduced."
+  ]
+}
